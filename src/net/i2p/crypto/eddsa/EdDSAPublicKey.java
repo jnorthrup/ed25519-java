@@ -43,6 +43,7 @@ public class EdDSAPublicKey implements EdDSAKey, PublicKey {
     private final GroupElement Aneg;
     private final byte[] Abyte;
     private final EdDSAParameterSpec edDsaSpec;
+    private boolean aNegPrecomputed = false;
 
     // OID 1.3.101.xxx
     private static final int OID_OLD = 100;
@@ -78,10 +79,10 @@ public class EdDSAPublicKey implements EdDSAKey, PublicKey {
      * This implements the following specs:
      *<ul><li>
      * General encoding: https://tools.ietf.org/html/draft-ietf-curdle-pkix-04
-     *</li></li>
+     *</li><li>
      * Key encoding: https://tools.ietf.org/html/rfc8032
      *</li></ul>
-     *</p><p>
+     *<p>
      * For keys in older formats, decoding and then re-encoding is sufficient to
      * migrate them to the canonical encoding.
      *</p>
@@ -250,6 +251,10 @@ public class EdDSAPublicKey implements EdDSAKey, PublicKey {
     }
 
     public GroupElement getNegativeA() {
+        if (!this.aNegPrecomputed){
+            Aneg.precompute(false);
+            this.aNegPrecomputed = true;
+        }
         return Aneg;
     }
 
