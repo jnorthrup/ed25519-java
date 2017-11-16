@@ -34,7 +34,6 @@ public class EdDSAPublicKeySpec implements KeySpec {
             throw new IllegalArgumentException("public-key length is wrong");
 
         this.A = new GroupElement(spec.getCurve(), pk);
-        // Precompute -A for use in verification.
         this.Aneg = A.negate();
         this.spec = spec;
     }
