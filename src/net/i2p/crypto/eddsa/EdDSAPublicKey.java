@@ -249,9 +249,11 @@ public class EdDSAPublicKey implements EdDSAKey, PublicKey {
     }
 
     public GroupElement getNegativeA() {
-        if (Aneg == null){
-            Aneg = A.negate();
-            Aneg.precompute(false);
+        synchronized (this) {
+            if (Aneg == null) {
+                Aneg = A.negate();
+                Aneg.precompute(false);
+            }
         }
         return Aneg;
     }
