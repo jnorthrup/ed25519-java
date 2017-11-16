@@ -40,10 +40,9 @@ import net.i2p.crypto.eddsa.spec.EdDSAPublicKeySpec;
 public class EdDSAPublicKey implements EdDSAKey, PublicKey {
     private static final long serialVersionUID = 9837459837498475L;
     private final GroupElement A;
-    private final GroupElement Aneg;
+    private GroupElement Aneg = null;
     private final byte[] Abyte;
     private final EdDSAParameterSpec edDsaSpec;
-    private boolean aNegPrecomputed = false;
 
     // OID 1.3.101.xxx
     private static final int OID_OLD = 100;
@@ -53,7 +52,6 @@ public class EdDSAPublicKey implements EdDSAKey, PublicKey {
 
     public EdDSAPublicKey(EdDSAPublicKeySpec spec) {
         this.A = spec.getA();
-        this.Aneg = spec.getNegativeA();
         this.Abyte = this.A.toByteArray();
         this.edDsaSpec = spec.getParams();
     }
@@ -251,9 +249,9 @@ public class EdDSAPublicKey implements EdDSAKey, PublicKey {
     }
 
     public GroupElement getNegativeA() {
-        if (!this.aNegPrecomputed){
+        if (Aneg == null){
+            Aneg = A.negate();
             Aneg.precompute(false);
-            this.aNegPrecomputed = true;
         }
         return Aneg;
     }
