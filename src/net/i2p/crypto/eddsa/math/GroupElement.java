@@ -236,6 +236,10 @@ public class GroupElement implements Serializable {
      * @param s The encoded point.
      */
     public GroupElement(final Curve curve, final byte[] s) {
+        this(curve, s, false);
+    }
+
+    public GroupElement(final Curve curve, final byte[] s, final boolean preCompute) {
         FieldElement x, y, yy, u, v, v3, vxx, check;
         y = curve.getField().fromByteArray(s);
         yy = y.square();
@@ -278,6 +282,8 @@ public class GroupElement implements Serializable {
         this.Y = y;
         this.Z = curve.getField().ONE;
         this.T = this.X.multiply(this.Y);
+
+        if(preCompute) precompute(true);
     }
 
     /**
@@ -458,7 +464,7 @@ public class GroupElement implements Serializable {
      *
      * @param precomputeSingle should the matrix for scalarMultiply() be precomputed?
      */
-    public synchronized void precompute(final boolean precomputeSingle) {
+     public void precompute(final boolean precomputeSingle) {
         GroupElement Bi;
 
         if (precomputeSingle && this.precmp == null) {
@@ -877,7 +883,7 @@ public class GroupElement implements Serializable {
         final byte[] e = toRadix16(a);
 
         GroupElement h = this.curve.getZero(Representation.P3);
-        synchronized(this) {
+        //synchronized(this) {
             // TODO: Get opinion from a crypto professional.
             // This should in practice never be necessary, the only point that
             // this should get called on is EdDSA's B.
@@ -893,7 +899,7 @@ public class GroupElement implements Serializable {
                 t = select(i/2, e[i]);
                 h = h.madd(t).toP3();
             }
-        }
+        //}
 
         return h;
     }
@@ -969,7 +975,7 @@ public class GroupElement implements Serializable {
             if (aslide[i] != 0 || bslide[i] != 0) break;
         }
 
-        synchronized(this) {
+        //synchronized(this) {
             // TODO-CR BR strange comment below.
             // TODO: Get opinion from a crypto professional.
             // This should in practice never be necessary, the only point that
@@ -992,7 +998,7 @@ public class GroupElement implements Serializable {
 
                 r = t.toP2();
             }
-        }
+        //}
 
         return r;
     }
