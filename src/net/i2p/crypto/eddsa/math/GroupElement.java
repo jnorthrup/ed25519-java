@@ -49,6 +49,8 @@ public class GroupElement implements Serializable {
         P2,
         /** Extended ($P^3$): $(X:Y:Z:T)$ satisfying $x=X/Z, y=Y/Z, XY=ZT$ */
         P3,
+        /** As above, but we call precompute(false) in the constructor */
+        P3PRECOMPUTED,
         /** Completed ($P \times P$): $((X:Z),(Y:T))$ satisfying $x=X/Z, y=Y/T$ */
         P1P1,
         /** Precomputed (Duif): $(y+x,y-x,2dxy)$ */
@@ -91,6 +93,25 @@ public class GroupElement implements Serializable {
             final FieldElement Z,
             final FieldElement T) {
         return new GroupElement(curve, Representation.P3, X, Y, Z, T);
+    }
+
+    /**
+     * Creates a new group element in P3 representation, but precomputed.
+     *
+     * @param curve The curve.
+     * @param X The $X$ coordinate.
+     * @param Y The $Y$ coordinate.
+     * @param Z The $Z$ coordinate.
+     * @param T The $T$ coordinate.
+     * @return The group element in P3 representation after calling precompute(false).
+     */
+    public static GroupElement p3Precomputed(
+            final Curve curve,
+            final FieldElement X,
+            final FieldElement Y,
+            final FieldElement Z,
+            final FieldElement T) {
+        return new GroupElement(curve, Representation.P3PRECOMPUTED, X, Y, Z, T);
     }
 
     /**
@@ -217,6 +238,8 @@ public class GroupElement implements Serializable {
         this.Y = Y;
         this.Z = Z;
         this.T = T;
+        // Precompute inside the constructor so visible to all threads.
+        if(repr == Representation.P3PRECOMPUTED) precompute(false);
     }
 
     /**
@@ -383,6 +406,15 @@ public class GroupElement implements Serializable {
     }
 
     /**
+     * Converts the group element to the P3 representation, but also precomputes it.
+     *
+     * @return The group element in the P3 representation.
+     */
+    public GroupElement toP3Precomputed() {
+        return toRep(Representation.P3PRECOMPUTED);
+    }
+
+    /**
      * Converts the group element to the CACHED representation.
      *
      * @return The group element in the CACHED representation.
@@ -432,6 +464,8 @@ public class GroupElement implements Serializable {
                         return p2(this.curve, this.X.multiply(this.T), Y.multiply(this.Z), this.Z.multiply(this.T));
                     case P3:
                         return p3(this.curve, this.X.multiply(this.T), Y.multiply(this.Z), this.Z.multiply(this.T), this.X.multiply(this.Y));
+                    case P3PRECOMPUTED:
+                        return p3Precomputed(this.curve, this.X.multiply(this.T), Y.multiply(this.Z), this.Z.multiply(this.T), this.X.multiply(this.Y));
                     case P1P1:
                         return p1p1(this.curve, this.X, this.Y, this.Z, this.T);
                     default:
@@ -727,7 +761,7 @@ public class GroupElement implements Serializable {
     public GroupElement negate() {
         if (this.repr != Representation.P3)
             throw new UnsupportedOperationException();
-        return this.curve.getZero(Representation.P3).sub(toCached()).toP3();
+        return this.curve.getZero(Representation.P3).sub(toCached()).toP3Precomputed();
     }
 
     @Override
