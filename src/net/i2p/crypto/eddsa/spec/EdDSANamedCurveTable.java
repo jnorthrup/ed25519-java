@@ -35,7 +35,7 @@ public class EdDSANamedCurveTable {
             Utils.hexToBytes("a3785913ca4deb75abd841414d0a700098e879777940c78c73fe6f2bee6c0352"), // d
             ed25519field.fromByteArray(Utils.hexToBytes("b0a00e4a271beec478e42fad0618432fa7d7fb3d99004d2b0bdfc14f8024832b"))); // I
 
-    public static final EdDSANamedCurveSpec ed25519 = new EdDSANamedCurveSpec(
+    public static final EdDSANamedCurveSpec ED_25519 = new EdDSANamedCurveSpec(
             "Ed25519",
             ed25519curve,
             "SHA-512", // H
@@ -66,7 +66,7 @@ public class EdDSANamedCurveTable {
 
     static {
         // RFC 8032
-        defineCurve(ed25519);
+        defineCurve(ED_25519);
     }
 
     public static EdDSANamedCurveSpec getByName(String name) {

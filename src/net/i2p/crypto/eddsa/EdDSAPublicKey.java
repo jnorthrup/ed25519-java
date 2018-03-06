@@ -113,7 +113,7 @@ public class EdDSAPublicKey implements EdDSAKey, PublicKey {
      */
     @Override
     public byte[] getEncoded() {
-        if (!edDsaSpec.equals(EdDSANamedCurveTable.ed25519))
+        if (!edDsaSpec.equals(EdDSANamedCurveTable.ED_25519))
             return null;
         int totlen = 12 + Abyte.length;
         byte[] rv = new byte[totlen];
