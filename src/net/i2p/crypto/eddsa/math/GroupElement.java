@@ -31,7 +31,7 @@ import java.util.Arrays;
  *
  * @author str4d
  */
-public class GroupElement implements Serializable {
+public class GroupElement   {
     private static final long serialVersionUID = 2395879087349587L;
 
     /**

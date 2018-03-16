@@ -19,7 +19,7 @@ import net.i2p.crypto.eddsa.math.Encoding;
 import net.i2p.crypto.eddsa.math.Field;
 import net.i2p.crypto.eddsa.math.FieldElement;
 
-public class BigIntegerLittleEndianEncoding extends Encoding implements Serializable {
+public class BigIntegerLittleEndianEncoding extends Encoding   {
     private static final long serialVersionUID = 3984579843759837L;
     /**
      * Mask where only the first b-1 bits are set.

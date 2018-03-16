@@ -18,7 +18,7 @@ import java.io.Serializable;
  * @author str4d
  *
  */
-public class Field implements Serializable {
+public class Field   {
     private static final long serialVersionUID = 8746587465875676L;
 
     public final FieldElement ZERO;

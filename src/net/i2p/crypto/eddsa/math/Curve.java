@@ -19,7 +19,7 @@ import java.io.Serializable;
  * @author str4d
  *
  */
-public class Curve implements Serializable {
+public class Curve   {
     private static final long serialVersionUID = 4578920872509827L;
     private final Field f;
     private final FieldElement d;
