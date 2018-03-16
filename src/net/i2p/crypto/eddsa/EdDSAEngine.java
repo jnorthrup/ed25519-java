@@ -69,14 +69,15 @@ import sun.security.x509.X509Key;
  */
 public final class EdDSAEngine extends Signature {
     public static final String SIGNATURE_ALGORITHM = "NONEwithEdDSA";
+    public static final byte[] BYTES = new byte[0];
 
-    private MessageDigest digest;
-    private ByteArrayOutputStream baos;
-    private EdDSAKey key;
-    private boolean oneShotMode;
-    private byte[] oneShotBytes;
-    private int oneShotOffset;
-    private int oneShotLength;
+    private MessageDigest digest = null;
+    private ByteArrayOutputStream baos = null;
+    private EdDSAKey key = null;
+    private boolean oneShotMode = false;
+    private byte[] oneShotBytes = null;
+    private int oneShotOffset = 0;
+    private int oneShotLength = 0;
 
     /**
      *  To efficiently sign or verify data in one shot, pass this to setParameters()
@@ -106,9 +107,9 @@ public final class EdDSAEngine extends Signature {
     }
 
     private void reset() {
-        if (digest != null)
+        if (null != digest)
             digest.reset();
-        if (baos != null)
+        if (null != baos)
             baos.reset();
         oneShotMode = false;
         oneShotBytes = null;
@@ -121,7 +122,7 @@ public final class EdDSAEngine extends Signature {
             final EdDSAPrivateKey privKey = (EdDSAPrivateKey) privateKey;
             key = privKey;
 
-            if (digest == null) {
+            if (null == digest) {
                 // Instantiate the digest from the key parameters
                 try {
                     digest = MessageDigest.getInstance(key.getParams().getHashAlgorithm());
@@ -140,7 +141,7 @@ public final class EdDSAEngine extends Signature {
         // Preparing for hash
         // r = H(h_b,...,h_2b-1,M)
         final int b = privKey.getParams().getCurve().getField().getb();
-        digest.update(privKey.getH(), b/8, b/4 - b/8);
+        digest.update(privKey.getH(), b/8, (b / 4) - (b / 8));
     }
 
     @Override
@@ -149,7 +150,7 @@ public final class EdDSAEngine extends Signature {
         if (publicKey instanceof EdDSAPublicKey) {
             key = (EdDSAPublicKey) publicKey;
 
-            if (digest == null) {
+            if (null == digest) {
                 // Instantiate the digest from the key parameters
                 try {
                     digest = MessageDigest.getInstance(key.getParams().getHashAlgorithm());
@@ -180,7 +181,7 @@ public final class EdDSAEngine extends Signature {
     protected void engineUpdate(final byte b) throws SignatureException {
         if (oneShotMode)
             throw new SignatureException("unsupported in one-shot mode");
-        if (baos == null)
+        if (null == baos)
             baos = new ByteArrayOutputStream(256);
         baos.write((int) b);
     }
@@ -192,13 +193,13 @@ public final class EdDSAEngine extends Signature {
     protected void engineUpdate(final byte[] b, final int off, final int len)
             throws SignatureException {
         if (oneShotMode) {
-            if (oneShotBytes != null)
+            if (null != oneShotBytes)
                 throw new SignatureException("update() already called");
             oneShotBytes = b;
             oneShotOffset = off;
             oneShotLength = len;
         } else {
-            if (baos == null)
+            if (null == baos)
                 baos = new ByteArrayOutputStream(256);
             baos.write(b, off, len);
         }
@@ -226,16 +227,13 @@ public final class EdDSAEngine extends Signature {
         final int offset;
         final int length;
         if (oneShotMode) {
-            if (oneShotBytes == null)
+            if (null == oneShotBytes)
                 throw new SignatureException("update() not called first");
             message = oneShotBytes;
             offset = oneShotOffset;
             length = oneShotLength;
         } else {
-            if (baos == null)
-                message = new byte[0];
-            else
-                message = baos.toByteArray();
+            message = baos == null ? BYTES : baos.toByteArray();
             offset = 0;
             length = message.length;
         }
@@ -278,7 +276,7 @@ public final class EdDSAEngine extends Signature {
     private boolean x_engineVerify(final byte[] sigBytes) throws SignatureException {
         final Curve curve = key.getParams().getCurve();
         final int b = curve.getField().getb();
-        if (sigBytes.length != b/4)
+        if (sigBytes.length != (b / 4))
             throw new SignatureException("signature length is wrong");
 
         // R is first b/8 bytes of sigBytes, S is second b/8 bytes
@@ -289,16 +287,13 @@ public final class EdDSAEngine extends Signature {
         final int offset;
         final int length;
         if (oneShotMode) {
-            if (oneShotBytes == null)
+            if (null == oneShotBytes)
                 throw new SignatureException("update() not called first");
             message = oneShotBytes;
             offset = oneShotOffset;
             length = oneShotLength;
         } else {
-            if (baos == null)
-                message = new byte[0];
-            else
-                message = baos.toByteArray();
+            message = baos == null ? BYTES : baos.toByteArray();
             offset = 0;
             length = message.length;
         }
@@ -465,7 +460,7 @@ public final class EdDSAEngine extends Signature {
     @Override
     protected void engineSetParameter(final AlgorithmParameterSpec spec) throws InvalidAlgorithmParameterException {
         if (spec.equals(ONE_SHOT_MODE)) {
-            if (oneShotBytes != null || (baos != null && baos.size() > 0))
+            if ((null != oneShotBytes) || ((null != baos) && (0 < baos.size())))
                 throw new InvalidAlgorithmParameterException("update() already called");
             oneShotMode = true;
         } else {

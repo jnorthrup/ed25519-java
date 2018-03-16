@@ -1014,7 +1014,7 @@ public class GroupElement implements Serializable {
             // This should in practice never be necessary, the only point that
             // this should get called on is EdDSA's B.
             //precompute();
-            for (; i >= 0; --i) {
+            while (i >= 0) {
                 GroupElement t = r.dbl();
 
                 if (aslide[i] > 0) {
@@ -1030,6 +1030,7 @@ public class GroupElement implements Serializable {
                 }
 
                 r = t.toP2();
+                --i;
             }
         }
 
