@@ -455,7 +455,7 @@ public class GroupElementTest {
             Assert.assertThat(h1.getX(), IsEqual.equalTo(g.getY().add(g.getX())));
             Assert.assertThat(h1.getY(), IsEqual.equalTo(g.getY().subtract(g.getX())));
             Assert.assertThat(h1.getZ(), IsEqual.equalTo(g.getZ()));
-            Assert.assertThat(h1.getT(), IsEqual.equalTo(g.getT().multiply(curve.get2D())));
+            Assert.assertThat(h1.getT(), IsEqual.equalTo(g.getT().multiply(curve.getD2())));
         }
     }
 

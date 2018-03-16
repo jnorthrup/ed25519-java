@@ -416,7 +416,7 @@ public class GroupElement implements Serializable {
                     case P3:
                         return p3(this.curve, this.X, this.Y, this.Z, this.T);
                     case CACHED:
-                        return cached(this.curve, this.Y.add(this.X), this.Y.subtract(this.X), this.Z, this.T.multiply(this.curve.get2D()));
+                        return cached(this.curve, this.Y.add(this.X), this.Y.subtract(this.X), this.Z, this.T.multiply(this.curve.getD2()));
                     default:
                         throw new IllegalArgumentException();
                 }
@@ -472,7 +472,7 @@ public class GroupElement implements Serializable {
                     final FieldElement recip = Bij.Z.invert();
                     final FieldElement x = Bij.X.multiply(recip);
                     final FieldElement y = Bij.Y.multiply(recip);
-                    this.precmp[i][j] = precomp(this.curve, y.add(x), y.subtract(x), x.multiply(y).multiply(this.curve.get2D()));
+                    this.precmp[i][j] = precomp(this.curve, y.add(x), y.subtract(x), x.multiply(y).multiply(this.curve.getD2()));
                     Bij = Bij.add(Bi.toCached()).toP3();
                 }
                 // Only every second summand is precomputed (16^2 = 256)
@@ -492,7 +492,7 @@ public class GroupElement implements Serializable {
             final FieldElement recip = Bi.Z.invert();
             final FieldElement x = Bi.X.multiply(recip);
             final FieldElement y = Bi.Y.multiply(recip);
-            this.dblPrecmp[i] = precomp(this.curve, y.add(x), y.subtract(x), x.multiply(y).multiply(this.curve.get2D()));
+            this.dblPrecmp[i] = precomp(this.curve, y.add(x), y.subtract(x), x.multiply(y).multiply(this.curve.getD2()));
             // Bi = edwards(B,edwards(B,Bi))
             Bi = this.add(this.add(Bi.toCached()).toP3().toCached()).toP3();
         }
@@ -790,6 +790,7 @@ public class GroupElement implements Serializable {
         int i;
         // Radix 16 notation
         for (i = 0; i < 32; i++) {
+
             e[2*i+0] = (byte) (a[i] & 15);
             e[2*i+1] = (byte) ((a[i] >> 4) & 15);
         }

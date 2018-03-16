@@ -15,6 +15,7 @@ import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.*;
 
 import java.math.BigInteger;
+import java.security.SecureRandom;
 import java.util.Random;
 
 import net.i2p.crypto.eddsa.Utils;
@@ -44,7 +45,7 @@ public class BigIntegerFieldElementTest extends AbstractFieldElementTest {
 
     protected FieldElement getRandomFieldElement() {
         BigInteger r;
-        Random rnd = new Random();
+        Random rnd = new SecureRandom();
         do {
             r = new BigInteger(255, rnd);
         } while (r.compareTo(getQ()) >= 0);

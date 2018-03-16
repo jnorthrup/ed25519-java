@@ -3,3 +3,6 @@
 /.settings/
 *.class
 *.iml
+.idea
+.classpath
+.project

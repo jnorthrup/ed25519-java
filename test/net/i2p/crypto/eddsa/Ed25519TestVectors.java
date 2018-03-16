@@ -19,8 +19,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-public class Ed25519TestVectors {
-    public static class TestTuple {
+public interface  Ed25519TestVectors {
+    class TestTuple {
         public static int numCases;
         public int caseNum;
         public byte[] seed;
@@ -29,7 +29,7 @@ public class Ed25519TestVectors {
         public byte[] sig;
 
         public TestTuple(String line) {
-            caseNum = ++numCases;
+            caseNum = ++TestTuple.numCases;
             String[] x = line.split(":");
             seed = Utils.hexToBytes(x[0].substring(0, 64));
             pk = Utils.hexToBytes(x[1]);
@@ -38,9 +38,9 @@ public class Ed25519TestVectors {
         }
     }
 
-    public static Collection<TestTuple> testCases = getTestData("test.data");
+    Collection<TestTuple> testCases = Ed25519TestVectors.getTestData("test.data");
 
-    public static Collection<TestTuple> getTestData(String fileName) {
+    static Collection<TestTuple> getTestData(String fileName) {
         List<TestTuple> testCases = new ArrayList<TestTuple>();
         BufferedReader file = null;
         try {

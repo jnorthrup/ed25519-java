@@ -51,7 +51,7 @@ public class Curve implements Serializable {
         return d;
     }
 
-    public FieldElement get2D() {
+    public FieldElement getD2() {
         return d2;
     }
 

@@ -25,7 +25,8 @@ import net.i2p.crypto.eddsa.math.ed25519.Ed25519ScalarOps;
  * @author str4d
  *
  */
-public class EdDSANamedCurveTable {
+@SuppressWarnings("UtilityClass")
+public final class  EdDSANamedCurveTable {
     public static final String ED_25519 = "Ed25519";
 
     private static final Field ed25519field = new Field(

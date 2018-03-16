@@ -18,14 +18,14 @@ package net.i2p.crypto.eddsa;
  * @author str4d
  *
  */
-public class Utils {
+public interface Utils {
     /**
      * Constant-time byte comparison.
      * @param b a byte
      * @param c a byte
      * @return 1 if b and c are equal, 0 otherwise.
      */
-    public static int equal(int b, int c) {
+    static int equal(int b, int c) {
         int result = 0;
         int xor = b ^ c;
         for (int i = 0; i < 8; i++) {
@@ -40,7 +40,7 @@ public class Utils {
      * @param c a byte[]
      * @return 1 if b and c are equal, 0 otherwise.
      */
-    public static int equal(byte[] b, byte[] c) {
+    static int equal(byte[] b, byte[] c) {
         int result = 0;
         for (int i = 0; i < 32; i++) {
             result |= b[i] ^ c[i];
@@ -54,7 +54,7 @@ public class Utils {
      * @param b the byte to check.
      * @return 1 if the byte is negative, 0 otherwise.
      */
-    public static int negative(int b) {
+    static int negative(int b) {
         return (b >> 8) & 1;
     }
 
@@ -64,7 +64,7 @@ public class Utils {
      * @param i the bit index.
      * @return 0 or 1, the value of the i'th bit in h
      */
-    public static int bit(byte[] h, int i) {
+    static int bit(byte[] h, int i) {
         return (h[i >> 3] >> (i & 7)) & 1;
     }
 
@@ -73,7 +73,7 @@ public class Utils {
      * @param s the hex string to be converted.
      * @return the byte[]
      */
-    public static byte[] hexToBytes(String s) {
+    static byte[] hexToBytes(String s) {
         int len = s.length();
         byte[] data = new byte[len / 2];
         for (int i = 0; i < len; i += 2) {
@@ -88,7 +88,7 @@ public class Utils {
      * @param raw the byte[] to be converted.
      * @return the hex representation as a string.
      */
-    public static String bytesToHex(byte[] raw) {
+    static String bytesToHex(byte[] raw) {
         if ( raw == null ) {
             return null;
         }
