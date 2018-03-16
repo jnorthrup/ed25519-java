@@ -77,9 +77,16 @@ public class Ed25519FieldElement extends FieldElement {
     public FieldElement add(FieldElement val) {
         int[] g = ((Ed25519FieldElement)val).t;
         int[] h = new int[10];
-        for (int i = 0; i < 10; i++) {
-            h[i] = t[i] + g[i];
-        }
+        h[0] = t[0] + g[0];
+        h[1] = t[1] + g[1];
+        h[2] = t[2] + g[2];
+        h[3] = t[3] + g[3];
+        h[4] = t[4] + g[4];
+        h[5] = t[5] + g[5];
+        h[6] = t[6] + g[6];
+        h[7] = t[7] + g[7];
+        h[8] = t[8] + g[8];
+        h[9] = t[9] + g[9];
         return new Ed25519FieldElement(f, h);
     }
 
@@ -106,9 +113,16 @@ public class Ed25519FieldElement extends FieldElement {
     public FieldElement subtract(FieldElement val) {
         int[] g = ((Ed25519FieldElement)val).t;
         int[] h = new int[10];
-        for (int i = 0; i < 10; i++) {
-            h[i] = t[i] - g[i];
-        }
+        h[0] = t[0] - g[0];
+        h[1] = t[1] - g[1];
+        h[2] = t[2] - g[2];
+        h[3] = t[3] - g[3];
+        h[4] = t[4] - g[4];
+        h[5] = t[5] - g[5];
+        h[6] = t[6] - g[6];
+        h[7] = t[7] - g[7];
+        h[8] = t[8] - g[8];
+        h[9] = t[9] - g[9];
         return new Ed25519FieldElement(f, h);
     }
 
@@ -130,9 +144,16 @@ public class Ed25519FieldElement extends FieldElement {
      */
     public FieldElement negate() {
         int[] h = new int[10];
-        for (int i = 0; i < 10; i++) {
-            h[i] = - t[i];
-        }
+        h[0] = -t[0];
+        h[1] = -t[1];
+        h[2] = -t[2];
+        h[3] = -t[3];
+        h[4] = -t[4];
+        h[5] = -t[5];
+        h[6] = -t[6];
+        h[7] = -t[7];
+        h[8] = -t[8];
+        h[9] = -t[9];
         return new Ed25519FieldElement(f, h);
     }
 

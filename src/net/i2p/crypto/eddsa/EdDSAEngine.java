@@ -25,6 +25,7 @@ import java.security.spec.AlgorithmParameterSpec;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.X509EncodedKeySpec;
 import java.util.Arrays;
+import java.util.stream.IntStream;
 
 import net.i2p.crypto.eddsa.math.Curve;
 import net.i2p.crypto.eddsa.math.GroupElement;
@@ -313,11 +314,8 @@ public final class EdDSAEngine extends Signature {
         // Variable time. This should be okay, because there are no secret
         // values used anywhere in verification.
         byte[] Rcalc = R.toByteArray();
-        for (int i = 0; i < Rcalc.length; i++) {
-            if (Rcalc[i] != sigBytes[i])
-                return false;
-        }
-        return true;
+        int bound = Rcalc.length;
+        return IntStream.range(0, bound).noneMatch(i -> Rcalc[i] != sigBytes[i]);
     }
 
     /**

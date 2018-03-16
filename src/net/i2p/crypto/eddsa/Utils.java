@@ -28,9 +28,14 @@ public interface Utils {
     static int equal(int b, int c) {
         int result = 0;
         int xor = b ^ c;
-        for (int i = 0; i < 8; i++) {
-            result |= xor >> i;
-        }
+        result = result | xor >> 0;
+        result = result | xor >> 1;
+        result = result | xor >> 2;
+        result = result | xor >> 3;
+        result = result | xor >> 4;
+        result = result | xor >> 5;
+        result = result | xor >> 6;
+        result = result | xor >> 7;
         return (result ^ 0x01) & 0x01;
     }
 
@@ -42,9 +47,38 @@ public interface Utils {
      */
     static int equal(byte[] b, byte[] c) {
         int result = 0;
-        for (int i = 0; i < 32; i++) {
-            result |= b[i] ^ c[i];
-        }
+        result = result | b[0] ^ c[0];
+        result = result | b[1] ^ c[1];
+        result = result | b[2] ^ c[2];
+        result = result | b[3] ^ c[3];
+        result = result | b[4] ^ c[4];
+        result = result | b[5] ^ c[5];
+        result = result | b[6] ^ c[6];
+        result = result | b[7] ^ c[7];
+        result = result | b[8] ^ c[8];
+        result = result | b[9] ^ c[9];
+        result = result | b[10] ^ c[10];
+        result = result | b[11] ^ c[11];
+        result = result | b[12] ^ c[12];
+        result = result | b[13] ^ c[13];
+        result = result | b[14] ^ c[14];
+        result = result | b[15] ^ c[15];
+        result = result | b[16] ^ c[16];
+        result = result | b[17] ^ c[17];
+        result = result | b[18] ^ c[18];
+        result = result | b[19] ^ c[19];
+        result = result | b[20] ^ c[20];
+        result = result | b[21] ^ c[21];
+        result = result | b[22] ^ c[22];
+        result = result | b[23] ^ c[23];
+        result = result | b[24] ^ c[24];
+        result = result | b[25] ^ c[25];
+        result = result | b[26] ^ c[26];
+        result = result | b[27] ^ c[27];
+        result = result | b[28] ^ c[28];
+        result = result | b[29] ^ c[29];
+        result = result | b[30] ^ c[30];
+        result = result | b[31] ^ c[31];
 
         return equal(result, 0);
     }
