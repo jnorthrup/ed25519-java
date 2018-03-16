@@ -1,24 +1,23 @@
 /**
  * EdDSA-Java by str4d
- *
+ * <p>
  * To the extent possible under law, the person who associated CC0 with
  * EdDSA-Java has waived all copyright and related or neighboring rights
  * to EdDSA-Java.
- *
+ * <p>
  * You should have received a copy of the CC0 legalcode along with this
  * work. If not, see <https://creativecommons.org/publicdomain/zero/1.0/>.
- *
  */
 package net.i2p.crypto.eddsa.math;
+
+import net.i2p.crypto.eddsa.Utils;
+import net.i2p.crypto.eddsa.spec.EdDSANamedCurveSpec;
+import net.i2p.crypto.eddsa.spec.EdDSANamedCurveTable;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-
-import net.i2p.crypto.eddsa.Utils;
-import net.i2p.crypto.eddsa.spec.EdDSANamedCurveSpec;
-import net.i2p.crypto.eddsa.spec.EdDSANamedCurveTable;
 
 public interface PrecomputationTestVectors {
     // Test files were generated using base.py and base2.py from ref10
@@ -38,33 +37,40 @@ public interface PrecomputationTestVectors {
             if (is == null)
                 throw new IOException("Resource not found: " + fileName);
             file = new BufferedReader(new InputStreamReader(is));
-            String line;
-            while ((line = file.readLine()) != null) {
-                if (line.equals(" },"))
-                    col += 1;
-                else if (line.equals("},")) {
-                    col = 0;
-                    row += 1;
-                } else if (line.startsWith("  { ")) {
-                    String ypxStr = line.substring(4, line.lastIndexOf(' '));
-                    FieldElement ypx = field.fromByteArray(
-                            Utils.hexToBytes(ypxStr));
-                    line = file.readLine();
-                    String ymxStr = line.substring(4, line.lastIndexOf(' '));
-                    FieldElement ymx = field.fromByteArray(
-                            Utils.hexToBytes(ymxStr));
-                    line = file.readLine();
-                    String xy2dStr = line.substring(4, line.lastIndexOf(' '));
-                    FieldElement xy2d = field.fromByteArray(
-                            Utils.hexToBytes(xy2dStr));
-                    precmp[row][col] = GroupElement.precomp(curve,
-                            ypx, ymx, xy2d);
+            while (true) {
+                String line = file.readLine();
+                if (null != (line)) {
+                    if (line.equals(" },"))
+                        col += 1;
+                    else if (line.equals("},")) {
+                        col = 0;
+                        row += 1;
+                    } else if (line.startsWith("  { ")) {
+                        String ypxStr = line.substring(4, line.lastIndexOf(' '));
+                        FieldElement ypx = field.fromByteArray(
+                                Utils.hexToBytes(ypxStr));
+                        line = file.readLine();
+                        String ymxStr = line.substring(4, line.lastIndexOf(' '));
+                        FieldElement ymx = field.fromByteArray(
+                                Utils.hexToBytes(ymxStr));
+                        line = file.readLine();
+                        String xy2dStr = line.substring(4, line.lastIndexOf(' '));
+                        FieldElement xy2d = field.fromByteArray(
+                                Utils.hexToBytes(xy2dStr));
+                        precmp[row][col] = GroupElement.precomp(curve,
+                                ypx, ymx, xy2d);
+                    }
+                } else {
+                    break;
                 }
             }
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
-            if (file != null) try { file.close(); } catch (IOException e) {}
+            if (null != file) try {
+                file.close();
+            } catch (IOException e) {
+            }
         }
         return precmp;
     }
@@ -82,29 +88,37 @@ public interface PrecomputationTestVectors {
                 throw new IOException("Resource not found: " + fileName);
             file = new BufferedReader(new InputStreamReader(is));
             String line;
-            while ((line = file.readLine()) != null) {
-                if (line.equals(" },")) {
-                    row += 1;
-                } else if (line.startsWith("  { ")) {
-                    String ypxStr = line.substring(4, line.lastIndexOf(' '));
-                    FieldElement ypx = field.fromByteArray(
-                            Utils.hexToBytes(ypxStr));
-                    line = file.readLine();
-                    String ymxStr = line.substring(4, line.lastIndexOf(' '));
-                    FieldElement ymx = field.fromByteArray(
-                            Utils.hexToBytes(ymxStr));
-                    line = file.readLine();
-                    String xy2dStr = line.substring(4, line.lastIndexOf(' '));
-                    FieldElement xy2d = field.fromByteArray(
-                            Utils.hexToBytes(xy2dStr));
-                    dblPrecmp[row] = GroupElement.precomp(curve,
-                            ypx, ymx, xy2d);
+            do {
+                line = file.readLine();
+                if (null != line) {
+                    if (line.equals(" },")) {
+                        row += 1;
+                    } else if (line.startsWith("  { ")) {
+                        String ypxStr = line.substring(4, line.lastIndexOf(' '));
+                        FieldElement ypx = field.fromByteArray(
+                                Utils.hexToBytes(ypxStr));
+                        line = file.readLine();
+                        String ymxStr = line.substring(4, line.lastIndexOf(' '));
+                        FieldElement ymx = field.fromByteArray(
+                                Utils.hexToBytes(ymxStr));
+                        line = file.readLine();
+                        String xy2dStr = line.substring(4, line.lastIndexOf(' '));
+                        FieldElement xy2d = field.fromByteArray(
+                                Utils.hexToBytes(xy2dStr));
+                        dblPrecmp[row] = GroupElement.precomp(curve,
+                                ypx, ymx, xy2d);
+                    }
+                } else {
+                    break;
                 }
-            }
+            } while (true);
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
-            if (file != null) try { file.close(); } catch (IOException e) {}
+            if (file != null) try {
+                file.close();
+            } catch (IOException e) {
+            }
         }
         return dblPrecmp;
     }

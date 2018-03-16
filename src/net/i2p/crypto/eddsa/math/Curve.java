@@ -19,7 +19,7 @@ import java.io.Serializable;
  * @author str4d
  *
  */
-public class Curve   {
+public final class Curve   {
     private static final long serialVersionUID = 4578920872509827L;
     private final Field f;
     private final FieldElement d;
@@ -43,23 +43,23 @@ public class Curve   {
         zeroPrecomp = GroupElement.precomp(this, one, one, zero);
     }
 
-    public Field getField() {
+    public final Field getField() {
         return f;
     }
 
-    public FieldElement getD() {
+    public final FieldElement getD() {
         return d;
     }
 
-    public FieldElement getD2() {
+    public final FieldElement getD2() {
         return d2;
     }
 
-    public FieldElement getI() {
+    public final FieldElement getI() {
         return I;
     }
 
-    public GroupElement getZero(final GroupElement.Representation repr) {
+    public final GroupElement getZero(final GroupElement.Representation repr) {
         switch (repr) {
         case P2:
             return zeroP2;
@@ -72,7 +72,7 @@ public class Curve   {
         }
     }
 
-    public GroupElement createPoint(final byte[] P, final boolean precompute) {
+    public final GroupElement createPoint(final byte[] P, final boolean precompute) {
         final GroupElement ge = new GroupElement(this, P);
         if (precompute)
             ge.precompute(true);
@@ -80,14 +80,14 @@ public class Curve   {
     }
 
     @Override
-    public int hashCode() {
+    public final int hashCode() {
         return f.hashCode() ^
                d.hashCode() ^
                I.hashCode();
     }
 
     @Override
-    public boolean equals(final Object o) {
+    public final boolean equals(final Object o) {
         if (o == this)
             return true;
         if (!(o instanceof Curve))

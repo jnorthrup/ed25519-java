@@ -1,19 +1,17 @@
 /**
  * EdDSA-Java by str4d
- *
+ * <p>
  * To the extent possible under law, the person who associated CC0 with
  * EdDSA-Java has waived all copyright and related or neighboring rights
  * to EdDSA-Java.
- *
+ * <p>
  * You should have received a copy of the CC0 legalcode along with this
  * work. If not, see <https://creativecommons.org/publicdomain/zero/1.0/>.
- *
  */
 package net.i2p.crypto.eddsa.math;
 
 import net.i2p.crypto.eddsa.Utils;
 
-import java.io.Serializable;
 import java.util.Arrays;
 
 /**
@@ -31,30 +29,138 @@ import java.util.Arrays;
  *
  * @author str4d
  */
-public class GroupElement   {
+public final class GroupElement {
     private static final long serialVersionUID = 2395879087349587L;
+    /**
+     * Variable is package private only so that tests run.
+     */
+    final Curve curve;
+    /**
+     * Variable is package private only so that tests run.
+     */
+    final Representation repr;
+    /**
+     * Variable is package private only so that tests run.
+     */
+    final FieldElement X;
+    /**
+     * Variable is package private only so that tests run.
+     */
+    final FieldElement Y;
+    /**
+     * Variable is package private only so that tests run.
+     */
+    final FieldElement Z;
+    /**
+     * Variable is package private only so that tests run.
+     */
+    final FieldElement T;
+    /**
+     * Precomputed table for {@link #scalarMultiply(byte[])},
+     * filled if necessary.
+     * <p>
+     * Variable is package private only so that tests run.
+     */
+    GroupElement[][] precmp;
+    /**
+     * Precomputed table for {@link #doubleScalarMultiplyVariableTime(GroupElement, byte[], byte[])},
+     * filled if necessary.
+     * <p>
+     * Variable is package private only so that tests run.
+     */
+    GroupElement[] dblPrecmp;
 
     /**
-     * Available representations for a group element.
-     * <ul>
-     * <li>P2: Projective representation $(X:Y:Z)$ satisfying $x=X/Z, y=Y/Z$.
-     * <li>P3: Extended projective representation $(X:Y:Z:T)$ satisfying $x=X/Z, y=Y/Z, XY=ZT$.
-     * <li>P1P1: Completed representation $((X:Z), (Y:T))$ satisfying $x=X/Z, y=Y/T$.
-     * <li>PRECOMP: Precomputed representation $(y+x, y-x, 2dxy)$.
-     * <li>CACHED: Cached representation $(Y+X, Y-X, Z, 2dT)$
-     * </ul>
+     * Creates a group element for a curve.
+     *
+     * @param curve The curve.
+     * @param repr The representation used to represent the group element.
+     * @param X The $X$ coordinate.
+     * @param Y The $Y$ coordinate.
+     * @param Z The $Z$ coordinate.
+     * @param T The $T$ coordinate.
      */
-    public enum Representation {
-        /** Projective ($P^2$): $(X:Y:Z)$ satisfying $x=X/Z, y=Y/Z$ */
-        P2,
-        /** Extended ($P^3$): $(X:Y:Z:T)$ satisfying $x=X/Z, y=Y/Z, XY=ZT$ */
-        P3,
-        /** Completed ($P \times P$): $((X:Z),(Y:T))$ satisfying $x=X/Z, y=Y/T$ */
-        P1P1,
-        /** Precomputed (Duif): $(y+x,y-x,2dxy)$ */
-        PRECOMP,
-        /** Cached: $(Y+X,Y-X,Z,2dT)$ */
-        CACHED
+    public GroupElement(
+            Curve curve,
+            Representation repr,
+            FieldElement X,
+            FieldElement Y,
+            FieldElement Z,
+            FieldElement T) {
+        this.curve = curve;
+        this.repr = repr;
+        this.X = X;
+        this.Y = Y;
+        this.Z = Z;
+        this.T = T;
+    }
+
+    /**
+     * Creates a group element for a curve from a given encoded point.
+     * <p>
+     * A point $(x,y)$ is encoded by storing $y$ in bit 0 to bit 254 and the sign of $x$ in bit 255.
+     * $x$ is recovered in the following way:
+     * </p><ul>
+     * <li>$x = sign(x) * \sqrt{(y^2 - 1) / (d * y^2 + 1)} = sign(x) * \sqrt{u / v}$ with $u = y^2 - 1$ and $v = d * y^2 + 1$.
+     * <li>Setting $β = (u * v^3) * (u * v^7)^{((q - 5) / 8)}$ one has $β^2 = \pm(u / v)$.
+     * <li>If $v * β = -u$ multiply $β$ with $i=\sqrt{-1}$.
+     * <li>Set $x := β$.
+     * <li>If $sign(x) \ne$ bit 255 of $s$ then negate $x$.
+     * </ul>
+     *
+     * @param curve The curve.
+     * @param s The encoded point.
+     */
+    public GroupElement(Curve curve, byte[] s) {
+        FieldElement x;
+        FieldElement y;
+        FieldElement yy;
+        FieldElement u;
+        FieldElement v;
+        FieldElement v3;
+        FieldElement vxx;
+        FieldElement check;
+        y = curve.getField().fromByteArray(s);
+        yy = y.square();
+
+        // u = y^2-1
+        u = yy.subtractOne();
+
+        // v = dy^2+1
+        v = yy.multiply(curve.getD()).addOne();
+
+        // v3 = v^3
+        v3 = v.square().multiply(v);
+
+        // x = (v3^2)vu, aka x = uv^7
+        x = v3.square().multiply(v).multiply(u);
+
+        //  x = (uv^7)^((q-5)/8)
+        x = x.pow22523();
+
+        // x = uv^3(uv^7)^((q-5)/8)
+        x = v3.multiply(u).multiply(x);
+
+        vxx = x.square().multiply(v);
+        check = vxx.subtract(u);            // vx^2-u
+        if (check.isNonZero()) {
+            check = vxx.add(u);             // vx^2+u
+
+            if (check.isNonZero())
+                throw new IllegalArgumentException("not a valid GroupElement");
+            x = x.multiply(curve.getI());
+        }
+
+        if ((x.isNegative() ? 1 : 0) != Utils.bit(s, curve.getField().getb() - 1)) {
+            x = x.negate();
+        }
+
+        this.curve = curve;
+        repr = Representation.P3;
+        X = x;
+        Y = y;
+        Z = curve.getField().ONE;
+        T = X.multiply(Y);
     }
 
     /**
@@ -149,142 +255,82 @@ public class GroupElement   {
     }
 
     /**
-     * Variable is package private only so that tests run.
-     */
-    final Curve curve;
-
-    /**
-     * Variable is package private only so that tests run.
-     */
-    final Representation repr;
-
-    /**
-     * Variable is package private only so that tests run.
-     */
-    final FieldElement X;
-
-    /**
-     * Variable is package private only so that tests run.
-     */
-    final FieldElement Y;
-
-    /**
-     * Variable is package private only so that tests run.
-     */
-    final FieldElement Z;
-
-    /**
-     * Variable is package private only so that tests run.
-     */
-    final FieldElement T;
-
-    /**
-     * Precomputed table for {@link #scalarMultiply(byte[])},
-     * filled if necessary.
+     * Convert a to radix 16.
      * <p>
-     * Variable is package private only so that tests run.
-     */
-    GroupElement[][] precmp;
-
-    /**
-     * Precomputed table for {@link #doubleScalarMultiplyVariableTime(GroupElement, byte[], byte[])},
-     * filled if necessary.
-     * <p>
-     * Variable is package private only so that tests run.
-     */
-    GroupElement[] dblPrecmp;
-
-    /**
-     * Creates a group element for a curve.
+     * Method is package private only so that tests run.
      *
-     * @param curve The curve.
-     * @param repr The representation used to represent the group element.
-     * @param X The $X$ coordinate.
-     * @param Y The $Y$ coordinate.
-     * @param Z The $Z$ coordinate.
-     * @param T The $T$ coordinate.
+     * @param a $= a[0]+256*a[1]+...+256^{31} a[31]$
+     * @return 64 bytes, each between -8 and 7
      */
-    public GroupElement(
-            Curve curve,
-            Representation repr,
-            FieldElement X,
-            FieldElement Y,
-            FieldElement Z,
-            FieldElement T) {
-        this.curve = curve;
-        this.repr = repr;
-        this.X = X;
-        this.Y = Y;
-        this.Z = Z;
-        this.T = T;
+    static byte[] toRadix16(byte[] a) {
+        byte[] e = new byte[64];
+        int i;
+        // Radix 16 notation
+        for (i = 0; i < 32; i++) {
+            int i1 = 2 * i;
+            e[i1] = (byte) (a[i] & 15);
+            e[i1 + 1] = (byte) ((a[i] >> 4) & 15);
+        }
+        /* each e[i] is between 0 and 15 */
+        /* e[63] is between 0 and 7 */
+        int carry = 0;
+        for (i = 0; i < 63; i++) {
+            e[i] = (byte) (e[i] + carry);
+            carry = e[i] + 8;
+            carry = carry >> 4;
+            e[i] = (byte) (e[i] - (carry << 4));
+        }
+        e[63] = (byte) (e[63] + carry);
+        /* each e[i] is between -8 and 7 */
+        return e;
     }
 
     /**
-     * Creates a group element for a curve from a given encoded point.
+     * Calculates a sliding-windows base 2 representation for a given value $a$.
+     * To learn more about it see [6] page 8.
      * <p>
-     * A point $(x,y)$ is encoded by storing $y$ in bit 0 to bit 254 and the sign of $x$ in bit 255.
-     * $x$ is recovered in the following way:
-     * </p><ul>
-     * <li>$x = sign(x) * \sqrt{(y^2 - 1) / (d * y^2 + 1)} = sign(x) * \sqrt{u / v}$ with $u = y^2 - 1$ and $v = d * y^2 + 1$.
-     * <li>Setting $β = (u * v^3) * (u * v^7)^{((q - 5) / 8)}$ one has $β^2 = \pm(u / v)$.
-     * <li>If $v * β = -u$ multiply $β$ with $i=\sqrt{-1}$.
-     * <li>Set $x := β$.
-     * <li>If $sign(x) \ne$ bit 255 of $s$ then negate $x$.
-     * </ul>
+     * Output: $r$ which satisfies
+     * $a = r0 * 2^0 + r1 * 2^1 + \dots + r255 * 2^{255}$ with $ri$ in $\{-15, -13, -11, -9, -7, -5, -3, -1, 0, 1, 3, 5, 7, 9, 11, 13, 15\}$
+     * <p>
+     * Method is package private only so that tests run.
      *
-     * @param curve The curve.
-     * @param s The encoded point.
+     * @param a $= a[0]+256*a[1]+\dots+256^{31} a[31]$.
+     * @return The byte array $r$ in the above described form.
      */
-    public GroupElement(Curve curve, byte[] s) {
-        FieldElement x;
-        FieldElement y;
-        FieldElement yy;
-        FieldElement u;
-        FieldElement v;
-        FieldElement v3;
-        FieldElement vxx;
-        FieldElement check;
-        y = curve.getField().fromByteArray(s);
-        yy = y.square();
+    private static byte[] slide(byte[] a) {
+        byte[] r = new byte[256];
 
-        // u = y^2-1
-        u = yy.subtractOne();
-
-        // v = dy^2+1
-        v = yy.multiply(curve.getD()).addOne();
-
-        // v3 = v^3
-        v3 = v.square().multiply(v);
-
-        // x = (v3^2)vu, aka x = uv^7
-        x = v3.square().multiply(v).multiply(u);
-
-        //  x = (uv^7)^((q-5)/8)
-        x = x.pow22523();
-
-        // x = uv^3(uv^7)^((q-5)/8)
-        x = v3.multiply(u).multiply(x);
-
-        vxx = x.square().multiply(v);
-        check = vxx.subtract(u);            // vx^2-u
-        if (check.isNonZero()) {
-            check = vxx.add(u);             // vx^2+u
-
-            if (check.isNonZero())
-                throw new IllegalArgumentException("not a valid GroupElement");
-            x = x.multiply(curve.getI());
+        // Put each bit of 'a' into a separate byte, 0 or 1
+        for (int i = 0; i < 256; ++i) {
+            r[i] = (byte) (1 & (a[i >> 3] >> (i & 7)));
         }
 
-        if ((x.isNegative() ? 1 : 0) != Utils.bit(s, curve.getField().getb()-1)) {
-            x = x.negate();
+        // Note: r[i] will always be odd.
+        for (int i = 0; i < 256; ++i) {
+            if (r[i] != 0) {
+                // Accumulate bits if possible
+                for (int b = 1; b <= 6 && i + b < 256; ++b) {
+                    if (r[i + b] != 0) {
+                        if (r[i] + (r[i + b] << b) <= 15) {
+                            r[i] = (byte) (r[i] + (r[i + b] << b));
+                            r[i + b] = (byte) 0;
+                        } else if (r[i] - (r[i + b] << b) >= -15) {
+                            r[i] = (byte) (r[i] - (r[i + b] << b));
+                            for (int k = i + b; k < 256; ++k) {
+                                if (r[k] == 0) {
+                                    r[k] = (byte) 1;
+                                    break;
+                                }
+                                r[k] = (byte) 0;
+                            }
+                        } else
+                            break;
+                    }
+                }
+            }
         }
 
-        this.curve = curve;
-        repr = Representation.P3;
-        X = x;
-        Y = y;
-        Z = curve.getField().ONE;
-        T = X.multiply(Y);
+        return r;
     }
 
     /**
@@ -292,7 +338,7 @@ public class GroupElement   {
      *
      * @return The curve.
      */
-    public Curve getCurve() {
+    public final Curve getCurve() {
         return curve;
     }
 
@@ -301,7 +347,7 @@ public class GroupElement   {
      *
      * @return The representation.
      */
-    public Representation getRepresentation() {
+    public final Representation getRepresentation() {
         return repr;
     }
 
@@ -311,7 +357,7 @@ public class GroupElement   {
      *
      * @return The $X$ value.
      */
-    public FieldElement getX() {
+    public final FieldElement getX() {
         return X;
     }
 
@@ -321,7 +367,7 @@ public class GroupElement   {
      *
      * @return The $Y$ value.
      */
-    public FieldElement getY() {
+    public final FieldElement getY() {
         return Y;
     }
 
@@ -331,7 +377,7 @@ public class GroupElement   {
      *
      * @return The $Z$ value.
      */
-    public FieldElement getZ() {
+    public final FieldElement getZ() {
         return Z;
     }
 
@@ -341,7 +387,7 @@ public class GroupElement   {
      *
      * @return The $T$ value.
      */
-    public FieldElement getT() {
+    public final FieldElement getT() {
         return T;
     }
 
@@ -350,7 +396,7 @@ public class GroupElement   {
      *
      * @return The encoded point as byte array.
      */
-    public byte[] toByteArray() {
+    public final byte[] toByteArray() {
         switch (repr) {
             case P2:
             case P3:
@@ -360,7 +406,7 @@ public class GroupElement   {
                 byte[] s = y.toByteArray();
                 int i = s.length - 1;
                 boolean negative = x.isNegative();
-                byte b = negative ? (byte) 0x80  : (byte) 0 ;
+                byte b = (byte) (negative ? 0x80 : 0);
                 s[i] = (byte) (s[i] | (int) b);
                 return s;
             default:
@@ -373,7 +419,7 @@ public class GroupElement   {
      *
      * @return The group element in the P2 representation.
      */
-    public GroupElement toP2() {
+    public final GroupElement toP2() {
         return toRep(Representation.P2);
     }
 
@@ -382,7 +428,7 @@ public class GroupElement   {
      *
      * @return The group element in the P3 representation.
      */
-    public GroupElement toP3() {
+    public final GroupElement toP3() {
         return toRep(Representation.P3);
     }
 
@@ -391,7 +437,7 @@ public class GroupElement   {
      *
      * @return The group element in the CACHED representation.
      */
-    public GroupElement toCached() {
+    public final GroupElement toCached() {
         return toRep(Representation.CACHED);
     }
 
@@ -399,14 +445,14 @@ public class GroupElement   {
      * Convert a GroupElement from one Representation to another.
      * TODO-CR: Add additional conversion?
      * $r = p$
-     * <p>
      * Supported conversions:
-     * <p><ul>
+     *
+     * <ul>
      * <li>P3 $\rightarrow$ P2
      * <li>P3 $\rightarrow$ CACHED (1 multiply, 1 add, 1 subtract)
      * <li>P1P1 $\rightarrow$ P2 (3 multiply)
      * <li>P1P1 $\rightarrow$ P3 (4 multiply)
-     *
+     *</ul>
      * @param repr The representation to convert to.
      * @return A new group element in the given representation.
      */
@@ -468,7 +514,7 @@ public class GroupElement   {
      *
      * @param precomputeSingle should the matrix for scalarMultiply() be precomputed?
      */
-    public synchronized void precompute(boolean precomputeSingle) {
+    public final synchronized void precompute(boolean precomputeSingle) {
         GroupElement Bi;
 
         if (precomputeSingle && precmp == null) {
@@ -546,27 +592,27 @@ public class GroupElement   {
      *
      * @return The P1P1 representation
      */
-    public GroupElement dbl() {
+    public final GroupElement dbl() {
         switch (repr) {
-        case P2:
-        case P3: // Ignore T for P3 representation
-            FieldElement XX;
-            FieldElement YY;
-            FieldElement B;
-            FieldElement A;
-            FieldElement AA;
-            FieldElement Yn;
-            FieldElement Zn;
-            XX = X.square();
-            YY = Y.square();
-            B = Z.squareAndDouble();
-            A = X.add(Y);
-            AA = A.square();
-            Yn = YY.add(XX);
-            Zn = YY.subtract(XX);
-            return p1p1(curve, AA.subtract(Yn), Yn, Zn, B.subtract(Zn));
-        default:
-            throw new UnsupportedOperationException();
+            case P2:
+            case P3: // Ignore T for P3 representation
+                FieldElement XX;
+                FieldElement YY;
+                FieldElement B;
+                FieldElement A;
+                FieldElement AA;
+                FieldElement Yn;
+                FieldElement Zn;
+                XX = X.square();
+                YY = Y.square();
+                B = Z.squareAndDouble();
+                A = X.add(Y);
+                AA = A.square();
+                Yn = YY.add(XX);
+                Zn = YY.subtract(XX);
+                return p1p1(curve, AA.subtract(Yn), Yn, Zn, B.subtract(Zn));
+            default:
+                throw new UnsupportedOperationException();
         }
     }
 
@@ -696,7 +742,7 @@ public class GroupElement   {
      * @param q the CACHED representation of the GroupElement to add.
      * @return the P1P1 representation of the result.
      */
-    public GroupElement add(GroupElement q) {
+    public final GroupElement add(GroupElement q) {
         if (repr != Representation.P3)
             throw new UnsupportedOperationException();
         if (q.repr != Representation.CACHED)
@@ -731,7 +777,7 @@ public class GroupElement   {
      * @param q the PRECOMP representation of the GroupElement to subtract.
      * @return the P1P1 representation of the result.
      */
-    public GroupElement sub(GroupElement q) {
+    public final GroupElement sub(GroupElement q) {
         if (repr != Representation.P3)
             throw new UnsupportedOperationException();
         if (q.repr != Representation.CACHED)
@@ -761,19 +807,19 @@ public class GroupElement   {
      *
      * @return The negative of this group element.
      */
-    public GroupElement negate() {
+    public final GroupElement negate() {
         if (repr != Representation.P3)
             throw new UnsupportedOperationException();
         return curve.getZero(Representation.P3).sub(toCached()).toP3();
     }
 
     @Override
-    public int hashCode() {
+    public final int hashCode() {
         return Arrays.hashCode(toByteArray());
     }
 
     @Override
-    public boolean equals(Object obj) {
+    public final boolean equals(Object obj) {
         if (obj == this)
             return true;
         if (!(obj instanceof GroupElement))
@@ -821,37 +867,6 @@ public class GroupElement   {
     }
 
     /**
-     * Convert a to radix 16.
-     * <p>
-     * Method is package private only so that tests run.
-     *
-     * @param a $= a[0]+256*a[1]+...+256^{31} a[31]$
-     * @return 64 bytes, each between -8 and 7
-     */
-    static byte[] toRadix16(byte[] a) {
-        byte[] e = new byte[64];
-        int i;
-        // Radix 16 notation
-        for (i = 0; i < 32; i++) {
-            int i1 = 2 * i;
-            e[i1] = (byte) (a[i] & 15);
-            e[i1 +1] = (byte) ((a[i] >> 4) & 15);
-        }
-        /* each e[i] is between 0 and 15 */
-        /* e[63] is between 0 and 7 */
-        int carry = 0;
-        for (i = 0; i < 63; i++) {
-            e[i] = (byte) (e[i] + carry);
-            carry = e[i] + 8;
-            carry = carry >> 4;
-            e[i] = (byte) (e[i] - (carry << 4));
-        }
-        e[63] = (byte) (e[63] + carry);
-        /* each e[i] is between -8 and 7 */
-        return e;
-    }
-
-    /**
      * Constant-time conditional move.
      * <p>
      * Replaces this with $u$ if $b == 1$.<br>
@@ -863,7 +878,7 @@ public class GroupElement   {
      * @param b in $\{0, 1\}$
      * @return $u$ if $b == 1$; this if $b == 0$. Results undefined if $b$ is not in $\{0, 1\}$.
      */
-    GroupElement cmov(GroupElement u, int b) {
+    final GroupElement cmov(GroupElement u, int b) {
         return precomp(curve, X.cmov(u.X, b), Y.cmov(u.Y, b), Z.cmov(u.Z, b));
     }
 
@@ -881,7 +896,7 @@ public class GroupElement   {
      * @param b $= r_i$
      * @return the GroupElement
      */
-    GroupElement select(int pos, int b) {
+    final GroupElement select(int pos, int b) {
         // Is r_i negative?
         int bnegative = Utils.negative(b);
         // |r_i|
@@ -914,77 +929,29 @@ public class GroupElement   {
      * @param a $= a[0]+256*a[1]+\dots+256^{31} a[31]$
      * @return the GroupElement
      */
-    public GroupElement scalarMultiply(byte[] a) {
+    public final GroupElement scalarMultiply(byte[] a) {
         int i;
 
         byte[] e = toRadix16(a);
 
         GroupElement h = curve.getZero(Representation.P3);
-        synchronized(this) {
+        synchronized (this) {
             // TODO: Get opinion from a crypto professional.
             // This should in practice never be necessary, the only point that
             // this should get called on is EdDSA's B.
             //precompute();
             for (i = 1; i < 64; i = i + 2) {
-                h = h.madd(select(i/2, e[i])).toP3();
+                h = h.madd(select(i / 2, e[i])).toP3();
             }
 
             h = h.dbl().toP2().dbl().toP2().dbl().toP2().dbl().toP3();
 
             for (i = 0; i < 64; i = i + 2) {
-                h = h.madd(select(i/2, e[i])).toP3();
+                h = h.madd(select(i / 2, e[i])).toP3();
             }
         }
 
         return h;
-    }
-
-    /**
-     * Calculates a sliding-windows base 2 representation for a given value $a$.
-     * To learn more about it see [6] page 8.
-     * <p>
-     * Output: $r$ which satisfies
-     * $a = r0 * 2^0 + r1 * 2^1 + \dots + r255 * 2^{255}$ with $ri$ in $\{-15, -13, -11, -9, -7, -5, -3, -1, 0, 1, 3, 5, 7, 9, 11, 13, 15\}$
-     * <p>
-     * Method is package private only so that tests run.
-     *
-     * @param a $= a[0]+256*a[1]+\dots+256^{31} a[31]$.
-     * @return The byte array $r$ in the above described form.
-     */
-    static byte[] slide(byte[] a) {
-        byte[] r = new byte[256];
-
-        // Put each bit of 'a' into a separate byte, 0 or 1
-        for (int i = 0; i < 256; ++i) {
-            r[i] = (byte) (1 & (a[i >> 3] >> (i & 7)));
-        }
-
-        // Note: r[i] will always be odd.
-        for (int i = 0; i < 256; ++i) {
-            if (r[i] != 0) {
-                // Accumulate bits if possible
-                for (int b = 1; b <= 6 && i + b < 256; ++b) {
-                    if (r[i + b] != 0) {
-                        if (r[i] + (r[i + b] << b) <= 15) {
-                            r[i] = (byte) (r[i] + (r[i + b] << b));
-                            r[i + b] = (byte) 0;
-                        } else if (r[i] - (r[i + b] << b) >= -15) {
-                            r[i] = (byte) (r[i] - (r[i + b] << b));
-                            for (int k = i + b; k < 256; ++k) {
-                                if (r[k] == 0) {
-                                    r[k] = (byte) 1;
-                                    break;
-                                }
-                                r[k] = (byte) 0;
-                            }
-                        } else
-                            break;
-                    }
-                }
-            }
-        }
-
-        return r;
     }
 
     /**
@@ -998,7 +965,7 @@ public class GroupElement   {
      * @param b $= b[0]+256*b[1]+\dots+256^{31} b[31]$
      * @return the GroupElement
      */
-    public GroupElement doubleScalarMultiplyVariableTime(GroupElement A, byte[] a, byte[] b) {
+    public final GroupElement doubleScalarMultiplyVariableTime(GroupElement A, byte[] a, byte[] b) {
         // TODO-CR BR: A check that this is the base point is needed.
         byte[] aslide = slide(a);
         byte[] bslide = slide(b);
@@ -1010,7 +977,7 @@ public class GroupElement   {
             if (aslide[i] != 0 || bslide[i] != 0) break;
         }
 
-        synchronized(this) {
+        synchronized (this) {
             // TODO-CR BR strange comment below.
             // TODO: Get opinion from a crypto professional.
             // This should in practice never be necessary, the only point that
@@ -1020,15 +987,15 @@ public class GroupElement   {
                 GroupElement t = r.dbl();
 
                 if (aslide[i] > 0) {
-                    t = t.toP3().madd(A.dblPrecmp[aslide[i]/2]);
-                } else if(aslide[i] < 0) {
-                    t = t.toP3().msub(A.dblPrecmp[(-aslide[i])/2]);
+                    t = t.toP3().madd(A.dblPrecmp[aslide[i] / 2]);
+                } else if (aslide[i] < 0) {
+                    t = t.toP3().msub(A.dblPrecmp[(-aslide[i]) / 2]);
                 }
 
                 if (bslide[i] > 0) {
-                    t = t.toP3().madd(dblPrecmp[bslide[i]/2]);
-                } else if(bslide[i] < 0) {
-                    t = t.toP3().msub(dblPrecmp[(-bslide[i])/2]);
+                    t = t.toP3().madd(dblPrecmp[bslide[i] / 2]);
+                } else if (bslide[i] < 0) {
+                    t = t.toP3().msub(dblPrecmp[(-bslide[i]) / 2]);
                 }
 
                 r = t.toP2();
@@ -1043,7 +1010,7 @@ public class GroupElement   {
      * Verify that a point is on its curve.
      * @return true if the point lies on its curve.
      */
-    public boolean isOnCurve() {
+    public final boolean isOnCurve() {
         return isOnCurve(curve);
     }
 
@@ -1052,25 +1019,48 @@ public class GroupElement   {
      * @param curve The curve to check.
      * @return true if the point lies on the curve.
      */
-    public boolean isOnCurve(Curve curve) {
+    public final boolean isOnCurve(Curve curve) {
         switch (repr) {
-        case P2:
-        case P3:
-            FieldElement recip = Z.invert();
-            FieldElement x = X.multiply(recip);
-            FieldElement y = Y.multiply(recip);
-            FieldElement xx = x.square();
-            FieldElement yy = y.square();
-            FieldElement dxxyy = curve.getD().multiply(xx).multiply(yy);
-            return curve.getField().ONE.add(dxxyy).add(xx).equals(yy);
+            case P2:
+            case P3:
+                FieldElement recip = Z.invert();
+                FieldElement x = X.multiply(recip);
+                FieldElement y = Y.multiply(recip);
+                FieldElement xx = x.square();
+                FieldElement yy = y.square();
+                FieldElement dxxyy = curve.getD().multiply(xx).multiply(yy);
+                return curve.getField().ONE.add(dxxyy).add(xx).equals(yy);
 
-        default:
-            return toP2().isOnCurve(curve);
+            default:
+                return toP2().isOnCurve(curve);
         }
     }
 
     @Override
-    public String toString() {
-        return "[GroupElement\nX="+X+"\nY="+Y+"\nZ="+Z+"\nT="+T+"\n]";
+    public final String toString() {
+        return "[GroupElement\nX=" + X + "\nY=" + Y + "\nZ=" + Z + "\nT=" + T + "\n]";
+    }
+
+    /**
+     * Available representations for a group element.
+     * <ul>
+     * <li>P2: Projective representation $(X:Y:Z)$ satisfying $x=X/Z, y=Y/Z$.
+     * <li>P3: Extended projective representation $(X:Y:Z:T)$ satisfying $x=X/Z, y=Y/Z, XY=ZT$.
+     * <li>P1P1: Completed representation $((X:Z), (Y:T))$ satisfying $x=X/Z, y=Y/T$.
+     * <li>PRECOMP: Precomputed representation $(y+x, y-x, 2dxy)$.
+     * <li>CACHED: Cached representation $(Y+X, Y-X, Z, 2dT)$
+     * </ul>
+     */
+    public enum Representation {
+        /** Projective ($P^2$): $(X:Y:Z)$ satisfying $x=X/Z, y=Y/Z$ */
+        P2,
+        /** Extended ($P^3$): $(X:Y:Z:T)$ satisfying $x=X/Z, y=Y/Z, XY=ZT$ */
+        P3,
+        /** Completed ($P \times P$): $((X:Z),(Y:T))$ satisfying $x=X/Z, y=Y/T$ */
+        P1P1,
+        /** Precomputed (Duif): $(y+x,y-x,2dxy)$ */
+        PRECOMP,
+        /** Cached: $(Y+X,Y-X,Z,2dT)$ */
+        CACHED
     }
 }

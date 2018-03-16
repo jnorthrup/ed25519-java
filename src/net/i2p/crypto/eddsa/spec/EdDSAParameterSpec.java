@@ -40,8 +40,8 @@ public class EdDSAParameterSpec implements AlgorithmParameterSpec, Serializable 
      * @param B the parameter B
      * @throws IllegalArgumentException if hash algorithm is unsupported or length is wrong
      */
-    public EdDSAParameterSpec(final Curve curve, final String hashAlgo,
-                              final ScalarOps sc, final GroupElement B) {
+    EdDSAParameterSpec(final Curve curve, final String hashAlgo,
+                       final ScalarOps sc, final GroupElement B) {
         try {
             final MessageDigest hash = MessageDigest.getInstance(hashAlgo);
             // EdDSA hash function must produce 2b-bit output
@@ -57,34 +57,34 @@ public class EdDSAParameterSpec implements AlgorithmParameterSpec, Serializable 
         this.B = B;
     }
 
-    public Curve getCurve() {
+    public final Curve getCurve() {
         return curve;
     }
 
-    public String getHashAlgorithm() {
+    public final String getHashAlgorithm() {
         return hashAlgo;
     }
 
-    public ScalarOps getScalarOps() {
+    public final ScalarOps getScalarOps() {
         return sc;
     }
 
     /**
      *  @return the base (generator)
      */
-    public GroupElement getB() {
+    public final GroupElement getB() {
         return B;
     }
 
     @Override
-    public int hashCode() {
+    public final int hashCode() {
         return hashAlgo.hashCode() ^
                curve.hashCode() ^
                B.hashCode();
     }
 
     @Override
-    public boolean equals(final Object o) {
+    public final boolean equals(final Object o) {
         if (o == this)
             return true;
         if (!(o instanceof EdDSAParameterSpec))

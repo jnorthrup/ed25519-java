@@ -88,7 +88,7 @@ public final class EdDSAEngine extends Signature {
      */
     public static final AlgorithmParameterSpec ONE_SHOT_MODE = new OneShotSpec();
 
-    private static class OneShotSpec implements AlgorithmParameterSpec {}
+    private static final class OneShotSpec implements AlgorithmParameterSpec {}
 
     /**
      * No specific EdDSA-internal hash requested, allows any EdDSA key.

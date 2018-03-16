@@ -37,7 +37,7 @@ import net.i2p.crypto.eddsa.spec.EdDSAPublicKeySpec;
  * @author str4d
  *
  */
-public class EdDSAPublicKey implements EdDSAKey, PublicKey {
+public final class EdDSAPublicKey implements EdDSAKey, PublicKey {
     private static final long serialVersionUID = 9837459837498475L;
     private final GroupElement A;
     private final GroupElement Aneg;
@@ -63,12 +63,12 @@ public class EdDSAPublicKey implements EdDSAKey, PublicKey {
     }
 
     @Override
-    public String getAlgorithm() {
+    public final String getAlgorithm() {
         return KEY_ALGORITHM;
     }
 
     @Override
-    public String getFormat() {
+    public final String getFormat() {
         return "X.509";
     }
 
@@ -112,7 +112,7 @@ public class EdDSAPublicKey implements EdDSAKey, PublicKey {
      * @return 44 bytes for Ed25519, null for other curves
      */
     @Override
-    public byte[] getEncoded() {
+    public final byte[] getEncoded() {
         if (edDsaSpec.equals(EdDSANamedCurveTable.getByName(EdDSANamedCurveTable.ED_25519))) {
             final int totlen = 12 + Abyte.length;
             final byte[] rv = new byte[totlen];
@@ -241,29 +241,29 @@ public class EdDSAPublicKey implements EdDSAKey, PublicKey {
     }
 
     @Override
-    public EdDSAParameterSpec getParams() {
+    public final EdDSAParameterSpec getParams() {
         return edDsaSpec;
     }
 
-    public GroupElement getA() {
+    public final GroupElement getA() {
         return A;
     }
 
-    public GroupElement getNegativeA() {
+    public final GroupElement getNegativeA() {
         return Aneg;
     }
 
-    public byte[] getAbyte() {
+    public final byte[] getAbyte() {
         return Abyte;
     }
 
     @Override
-    public int hashCode() {
+    public final int hashCode() {
         return Arrays.hashCode(Abyte);
     }
 
     @Override
-    public boolean equals(final Object o) {
+    public final boolean equals(final Object o) {
         if (o == this)
             return true;
         if (!(o instanceof EdDSAPublicKey))

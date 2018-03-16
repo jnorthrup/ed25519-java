@@ -38,8 +38,8 @@ import java.util.Map;
  *
  * @author str4d
  */
-public class EdDSAPrivateKey implements EdDSAKey, PrivateKey {
-    final static Map<Integer, byte[]> stubs = new LinkedHashMap<>();
+public final class EdDSAPrivateKey implements EdDSAKey, PrivateKey {
+    private final static Map<Integer, byte[]> stubs = new LinkedHashMap<>();
     private static final long serialVersionUID = 23495873459878957L;
     // OID 1.3.101.xxx
     private static final int OID_OLD = 100;
@@ -173,12 +173,12 @@ public class EdDSAPrivateKey implements EdDSAKey, PrivateKey {
     }
 
     @Override
-    public String getAlgorithm() {
+    public final String getAlgorithm() {
         return KEY_ALGORITHM;
     }
 
     @Override
-    public String getFormat() {
+    public final String getFormat() {
         return "PKCS#8";
     }
 
@@ -241,7 +241,7 @@ public class EdDSAPrivateKey implements EdDSAKey, PrivateKey {
      * @return 48 bytes for Ed25519, null for other curves
      */
     @Override
-    public byte[] getEncoded() {
+    public final byte[] getEncoded() {
         if (edDsaSpec.equals(EdDSANamedCurveTable.getByName(EdDSANamedCurveTable.ED_25519)) && seed != null) {
             final int totlen = 16 + seed.length;
             final byte[] rv = new byte[totlen];
@@ -281,7 +281,7 @@ public class EdDSAPrivateKey implements EdDSAKey, PrivateKey {
     }
 
     @Override
-    public EdDSAParameterSpec getParams() {
+    public final EdDSAParameterSpec getParams() {
         return edDsaSpec;
     }
 
@@ -289,45 +289,45 @@ public class EdDSAPrivateKey implements EdDSAKey, PrivateKey {
      * @return will be null if constructed from a spec which was
      * directly constructed from H
      */
-    public byte[] getSeed() {
+    public final byte[] getSeed() {
         return seed;
     }
 
     /**
      * @return the hash of the seed
      */
-    public byte[] getH() {
+    public final byte[] getH() {
         return h;
     }
 
     /**
      * @return the private key
      */
-    public byte[] geta() {
+    public final byte[] geta() {
         return a;
     }
 
     /**
      * @return the public key
      */
-    public GroupElement getA() {
+    public final GroupElement getA() {
         return A;
     }
 
     /**
      * @return the public key
      */
-    public byte[] getAbyte() {
+    public final byte[] getAbyte() {
         return Abyte;
     }
 
     @Override
-    public int hashCode() {
+    public final int hashCode() {
         return Arrays.hashCode(seed);
     }
 
     @Override
-    public boolean equals(final Object o) {
+    public final boolean equals(final Object o) {
         if (o != this) {
             if (o instanceof EdDSAPrivateKey) {
                 final EdDSAPrivateKey pk = (EdDSAPrivateKey) o;

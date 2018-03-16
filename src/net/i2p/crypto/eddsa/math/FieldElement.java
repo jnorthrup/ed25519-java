@@ -21,7 +21,7 @@ public abstract class FieldElement   {
 
     protected final Field f;
 
-    public FieldElement(final Field f) {
+    protected FieldElement(final Field f) {
         if (null == f) {
             throw new IllegalArgumentException("field cannot be null");
         }
@@ -32,13 +32,13 @@ public abstract class FieldElement   {
      * Encode a FieldElement in its $(b-1)$-bit encoding.
      * @return the $(b-1)$-bit encoding of this FieldElement.
      */
-    public byte[] toByteArray() {
+    public final byte[] toByteArray() {
         return f.getEncoding().encode(this);
     }
 
     public abstract boolean isNonZero();
 
-    public boolean isNegative() {
+    public final boolean isNegative() {
         return f.getEncoding().isNegative(this);
     }
 

@@ -18,7 +18,7 @@ import net.i2p.crypto.eddsa.math.*;
  * <p>
  * Reviewed/commented by Bloody Rookie (nemproject@gmx.de)
  */
-public class Ed25519LittleEndianEncoding extends Encoding {
+public final class Ed25519LittleEndianEncoding extends Encoding {
     /**
      * Encodes a given field element in its 32 byte representation. This is done in two steps:
      * <ol>
@@ -75,7 +75,7 @@ public class Ed25519LittleEndianEncoding extends Encoding {
      * <p>
      * Inserting the expression for $x$ into $(1)$ we get the desired expression for $q$.
      */
-    public byte[] encode(final FieldElement x) {
+    public final byte[] encode(final FieldElement x) {
         final int[] h = ((Ed25519FieldElement)x).t;
         int h0 = h[0];
         int h1 = h[1];

@@ -19,7 +19,7 @@ import net.i2p.crypto.eddsa.math.Encoding;
 import net.i2p.crypto.eddsa.math.Field;
 import net.i2p.crypto.eddsa.math.FieldElement;
 
-public class BigIntegerLittleEndianEncoding extends Encoding   {
+public final class BigIntegerLittleEndianEncoding extends Encoding   {
     private static final long serialVersionUID = 3984579843759837L;
     /**
      * Mask where only the first b-1 bits are set.
@@ -27,7 +27,7 @@ public class BigIntegerLittleEndianEncoding extends Encoding   {
     private BigInteger mask;
 
     @Override
-    public synchronized void setField(final Field f) {
+    public final synchronized void setField(final Field f) {
         super.setField(f);
         mask = BigInteger.ONE.shiftLeft(f.getb()-1).subtract(BigInteger.ONE);
     }
@@ -44,7 +44,7 @@ public class BigIntegerLittleEndianEncoding extends Encoding   {
      *  @return array of length $b/8$
      *  @throws IllegalStateException if field not set
      */
-    public byte[] encode(final BigInteger x) {
+    public final byte[] encode(final BigInteger x) {
         if (f != null) {
             final byte[] in = x.toByteArray();
             final byte[] out = new byte[f.getb() / 8];
@@ -86,7 +86,7 @@ public class BigIntegerLittleEndianEncoding extends Encoding   {
      *  @param in the $(b-1)$-bit encoding of a FieldElement.
      *  @return the decoded value as a BigInteger
      */
-    public BigInteger toBigInteger(final byte[] in) {
+    public final BigInteger toBigInteger(final byte[] in) {
         final byte[] out = new byte[in.length];
         int bound = in.length;
         for (int i = 0; i < bound; i++) {

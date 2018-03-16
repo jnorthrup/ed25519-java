@@ -31,11 +31,11 @@ import org.junit.Test;
  *
  */
 public class ConstantsTest {
-    static final EdDSANamedCurveSpec ed25519 = EdDSANamedCurveTable.getByName(EdDSANamedCurveTable.ED_25519);
-    static final Curve curve = ed25519.getCurve();
+    private static final EdDSANamedCurveSpec ed25519 = EdDSANamedCurveTable.getByName(EdDSANamedCurveTable.ED_25519);
+    private static final Curve curve = ed25519.getCurve();
 
-    static final FieldElement ZERO = curve.getField().ZERO;
-    static final FieldElement ONE = curve.getField().ONE;
+    private static final FieldElement ZERO = curve.getField().ZERO;
+    private static final FieldElement ONE = curve.getField().ONE;
     static final FieldElement TWO = curve.getField().TWO;
 
     static final GroupElement P3_ZERO = GroupElement.p3(curve, ZERO, ONE, ONE, ZERO);

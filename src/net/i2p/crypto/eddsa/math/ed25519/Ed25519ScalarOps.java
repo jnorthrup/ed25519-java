@@ -23,7 +23,7 @@ import static net.i2p.crypto.eddsa.math.ed25519.Ed25519LittleEndianEncoding.load
  * <p>
  * Reviewed/commented by Bloody Rookie (nemproject@gmx.de)
  */
-public class Ed25519ScalarOps implements ScalarOps {
+public final class Ed25519ScalarOps implements ScalarOps {
 
     /**
      * Reduction modulo the group order $q$.
@@ -35,7 +35,7 @@ public class Ed25519ScalarOps implements ScalarOps {
      *   $s[0]+256*s[1]+\dots+256^{31}*s[31] = s \bmod q$
      *   where $q = 2^{252} + 27742317777372353535851937790883648493$.
      */
-    public byte[] reduce(final byte[] s) {
+    public final byte[] reduce(final byte[] s) {
         // s0,..., s22 have 21 bits, s23 has 29 bits
         long s0 = (long) (0x1FFFFF & load_3(s, 0));
         long s1 = 0x1FFFFFL & (load_4(s, 2) >> 5);
@@ -338,7 +338,7 @@ public class Ed25519ScalarOps implements ScalarOps {
      * <p>
      * See the comments in {@link #reduce(byte[])} for an explanation of the algorithm.
      */
-    public byte[] multiplyAndAdd(final byte[] a, final byte[] b, final byte[] c) {
+    public final byte[] multiplyAndAdd(final byte[] a, final byte[] b, final byte[] c) {
         final long a0 = (long) (0x1FFFFF & load_3(a, 0));
         final long a1 = 0x1FFFFFL & (load_4(a, 2) >> 5);
         final long a2 = (long) (0x1FFFFF & (load_3(a, 5) >> 2));

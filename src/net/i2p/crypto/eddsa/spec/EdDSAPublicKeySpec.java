@@ -19,7 +19,7 @@ import net.i2p.crypto.eddsa.math.GroupElement;
  * @author str4d
  *
  */
-public class EdDSAPublicKeySpec implements KeySpec {
+public final class EdDSAPublicKeySpec implements KeySpec {
     private final GroupElement A;
     private final GroupElement Aneg;
     private final EdDSAParameterSpec spec;
@@ -47,15 +47,15 @@ public class EdDSAPublicKeySpec implements KeySpec {
         this.spec = spec;
     }
 
-    public GroupElement getA() {
+    public final GroupElement getA() {
         return A;
     }
 
-    public GroupElement getNegativeA() {
+    public final GroupElement getNegativeA() {
         return Aneg;
     }
 
-    public EdDSAParameterSpec getParams() {
+    public final EdDSAParameterSpec getParams() {
         return spec;
     }
 }

@@ -20,7 +20,7 @@ import net.i2p.crypto.eddsa.math.ScalarOps;
  * @author str4d
  *
  */
-public class EdDSANamedCurveSpec extends EdDSAParameterSpec {
+public final class EdDSANamedCurveSpec extends EdDSAParameterSpec {
     private final String name;
 
     public EdDSANamedCurveSpec(final String name, final Curve curve,
@@ -29,7 +29,7 @@ public class EdDSANamedCurveSpec extends EdDSAParameterSpec {
         this.name = name;
     }
 
-    public String getName() {
+    public final String getName() {
         return name;
     }
 }

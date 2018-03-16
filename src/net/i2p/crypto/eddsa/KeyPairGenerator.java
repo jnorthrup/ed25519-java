@@ -87,7 +87,7 @@ public final class KeyPairGenerator extends KeyPairGeneratorSpi {
      * @return the specification for the named curve.
      * @throws InvalidAlgorithmParameterException if the named curve is unknown.
      */
-    protected EdDSANamedCurveSpec createNamedCurveSpec(final String curveName) throws InvalidAlgorithmParameterException {
+    private EdDSANamedCurveSpec createNamedCurveSpec(final String curveName) throws InvalidAlgorithmParameterException {
         final EdDSANamedCurveSpec spec = EdDSANamedCurveTable.getByName(curveName);
         if (spec == null) {
             throw new InvalidAlgorithmParameterException("unknown curve name: " + curveName);

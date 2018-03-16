@@ -49,7 +49,7 @@ public final class  EdDSANamedCurveTable {
 
     private static final Hashtable<String, EdDSANamedCurveSpec> curves = new Hashtable<String, EdDSANamedCurveSpec>();
 
-    public static void defineCurve(final EdDSANamedCurveSpec curve) {
+    private static void defineCurve(final EdDSANamedCurveSpec curve) {
         curves.put(curve.getName().toLowerCase(Locale.ENGLISH), curve);
     }
 

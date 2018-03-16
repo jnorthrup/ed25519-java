@@ -109,7 +109,7 @@ public class MathUtils {
      * @param b The BigInteger.
      * @return The field element.
      */
-    public static FieldElement toFieldElement(final BigInteger b) {
+    private static FieldElement toFieldElement(final BigInteger b) {
         return getField().getEncoding().decode(toByteArray(b));
     }
 

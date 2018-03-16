@@ -30,10 +30,10 @@ public class EdDSAPrivateKeyTest {
      * The example private key MC4CAQAwBQYDK2VwBCIEINTuctv5E1hK1bbY8fdp+K06/nwoy/HU++CXqI9EdVhC
      * from https://tools.ietf.org/html/draft-ietf-curdle-pkix-04#section-10.3
      */
-    static final byte[] TEST_PRIVKEY = Utils.hexToBytes("302e020100300506032b657004220420d4ee72dbf913584ad5b6d8f1f769f8ad3afe7c28cbf1d4fbe097a88f44755842");
+    private static final byte[] TEST_PRIVKEY = Utils.hexToBytes("302e020100300506032b657004220420d4ee72dbf913584ad5b6d8f1f769f8ad3afe7c28cbf1d4fbe097a88f44755842");
 
-    static final byte[] TEST_PRIVKEY_NULL_PARAMS = Utils.hexToBytes("3030020100300706032b6570050004220420d4ee72dbf913584ad5b6d8f1f769f8ad3afe7c28cbf1d4fbe097a88f44755842");
-    static final byte[] TEST_PRIVKEY_OLD = Utils.hexToBytes("302f020100300806032b65640a01010420d4ee72dbf913584ad5b6d8f1f769f8ad3afe7c28cbf1d4fbe097a88f44755842");
+    private static final byte[] TEST_PRIVKEY_NULL_PARAMS = Utils.hexToBytes("3030020100300706032b6570050004220420d4ee72dbf913584ad5b6d8f1f769f8ad3afe7c28cbf1d4fbe097a88f44755842");
+    private static final byte[] TEST_PRIVKEY_OLD = Utils.hexToBytes("302f020100300806032b65640a01010420d4ee72dbf913584ad5b6d8f1f769f8ad3afe7c28cbf1d4fbe097a88f44755842");
 
     @Test
     public void testDecodeAndEncode() throws Exception {

@@ -22,7 +22,7 @@ import net.i2p.crypto.eddsa.math.FieldElement;
  * @author str4d
  *
  */
-public class BigIntegerFieldElement extends FieldElement    {
+public final class BigIntegerFieldElement extends FieldElement    {
 
     /**
      * Variable is package private for encoding.
@@ -65,15 +65,15 @@ public class BigIntegerFieldElement extends FieldElement    {
         return divide(((BigIntegerFieldElement)val).bi);
     }
 
-    public FieldElement divide(final BigInteger val) {
+    private FieldElement divide(final BigInteger val) {
         return new BigIntegerFieldElement(f, bi.divide(val)).mod(f.getQ());
     }
 
-    public FieldElement multiply(final FieldElement val) {
+    public final FieldElement multiply(final FieldElement val) {
         return new BigIntegerFieldElement(f, bi.multiply(((BigIntegerFieldElement)val).bi)).mod(f.getQ());
     }
 
-    public FieldElement square() {
+    public final FieldElement square() {
         return multiply(this);
     }
 
@@ -88,15 +88,15 @@ public class BigIntegerFieldElement extends FieldElement    {
         return new BigIntegerFieldElement(f, bi.modInverse(((BigIntegerFieldElement)f.getQ()).bi));
     }
 
-    public FieldElement mod(final FieldElement m) {
+    private FieldElement mod(final FieldElement m) {
         return new BigIntegerFieldElement(f, bi.mod(((BigIntegerFieldElement)m).bi));
     }
 
-    public FieldElement modPow(final FieldElement e, final FieldElement m) {
+    private FieldElement modPow(final FieldElement e, final FieldElement m) {
         return new BigIntegerFieldElement(f, bi.modPow(((BigIntegerFieldElement)e).bi, ((BigIntegerFieldElement)m).bi));
     }
 
-    public FieldElement pow(final FieldElement e){
+    private FieldElement pow(final FieldElement e){
         return modPow(e, f.getQ());
     }
 
@@ -112,12 +112,12 @@ public class BigIntegerFieldElement extends FieldElement    {
     }
 
     @Override
-    public int hashCode() {
+    public final int hashCode() {
         return bi.hashCode();
     }
 
     @Override
-    public boolean equals(final Object obj) {
+    public final boolean equals(final Object obj) {
         if (!(obj instanceof BigIntegerFieldElement))
             return false;
         final BigIntegerFieldElement fe = (BigIntegerFieldElement) obj;
@@ -125,7 +125,7 @@ public class BigIntegerFieldElement extends FieldElement    {
     }
 
     @Override
-    public String toString() {
+    public final String toString() {
         return "[BigIntegerFieldElement val="+bi+"]";
     }
 }

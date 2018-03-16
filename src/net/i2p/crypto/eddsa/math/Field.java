@@ -18,15 +18,15 @@ import java.io.Serializable;
  * @author str4d
  *
  */
-public class Field   {
+public final class Field   {
     private static final long serialVersionUID = 8746587465875676L;
 
     public final FieldElement ZERO;
     public final FieldElement ONE;
     public final FieldElement TWO;
-    public final FieldElement FOUR;
-    public final FieldElement FIVE;
-    public final FieldElement EIGHT;
+    private final FieldElement FOUR;
+    private final FieldElement FIVE;
+    private final FieldElement EIGHT;
 
     private final int b;
     private final FieldElement q;
@@ -60,15 +60,15 @@ public class Field   {
         qm5d8 = this.q.subtract(FIVE).divide(EIGHT);
     }
 
-    public FieldElement fromByteArray(final byte[] x) {
+    public final FieldElement fromByteArray(final byte[] x) {
         return enc.decode(x);
     }
 
-    public int getb() {
+    public final int getb() {
         return b;
     }
 
-    public FieldElement getQ() {
+    public final FieldElement getQ() {
         return q;
     }
 
@@ -76,21 +76,21 @@ public class Field   {
         return qm2;
     }
 
-    public FieldElement getQm5d8() {
+    public final FieldElement getQm5d8() {
         return qm5d8;
     }
 
-    public Encoding getEncoding(){
+    public final Encoding getEncoding(){
         return enc;
     }
 
     @Override
-    public int hashCode() {
+    public final int hashCode() {
         return q.hashCode();
     }
 
     @Override
-    public boolean equals(final Object obj) {
+    public final boolean equals(final Object obj) {
         if (!(obj instanceof Field))
             return false;
         final Field f = (Field) obj;

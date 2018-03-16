@@ -25,7 +25,7 @@ import java.util.Arrays;
  * <p>
  * Reviewed/commented by Bloody Rookie (nemproject@gmx.de)
  */
-public class Ed25519FieldElement extends FieldElement {
+public final class Ed25519FieldElement extends FieldElement {
     /**
      * Variable is package private for encoding.
      */
@@ -195,7 +195,7 @@ public class Ed25519FieldElement extends FieldElement {
      * @param val The field element to multiply.
      * @return The (reasonably reduced) field element this * val.
      */
-    public FieldElement multiply(final FieldElement val) {
+    public final FieldElement multiply(final FieldElement val) {
         final int[] g = ((Ed25519FieldElement)val).t;
         final int g1_19 = 19 * g[1]; /* 1.959375*2^29 */
         final int g2_19 = 19 * g[2]; /* 1.959375*2^30; still ok */
@@ -426,7 +426,7 @@ public class Ed25519FieldElement extends FieldElement {
      *
      * @return The (reasonably reduced) square of this field element.
      */
-    public FieldElement square() {
+    public final FieldElement square() {
         final int f0 = t[0];
         final int f1 = t[1];
         final int f2 = t[2];
@@ -1219,12 +1219,12 @@ public class Ed25519FieldElement extends FieldElement {
     }
 
     @Override
-    public int hashCode() {
+    public final int hashCode() {
         return Arrays.hashCode(t);
     }
 
     @Override
-    public boolean equals(final Object obj) {
+    public final boolean equals(final Object obj) {
         if ((obj instanceof Ed25519FieldElement)) {
             final Ed25519FieldElement fe = (Ed25519FieldElement) obj;
             return 1 == Utils.equal(toByteArray(), fe.toByteArray());
@@ -1233,7 +1233,7 @@ public class Ed25519FieldElement extends FieldElement {
     }
 
     @Override
-    public String toString() {
+    public final String toString() {
         return "[Ed25519FieldElement val="+Utils.bytesToHex(toByteArray())+"]";
     }
 }

@@ -19,14 +19,14 @@ import java.security.spec.AlgorithmParameterSpec;
  * @author str4d
  *
  */
-public class EdDSAGenParameterSpec implements AlgorithmParameterSpec {
+public final class EdDSAGenParameterSpec implements AlgorithmParameterSpec {
     private final String name;
 
     public EdDSAGenParameterSpec(final String stdName) {
         name = stdName;
     }
 
-    public String getName() {
+    public final String getName() {
         return name;
     }
 }

@@ -18,40 +18,40 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
+
+import static net.i2p.crypto.eddsa.Utils.*;
 
 public interface  Ed25519TestVectors {
-    class TestTuple {
-        public static int numCases;
-        public int caseNum;
-        public byte[] seed;
-        public byte[] pk;
-        public byte[] message;
-        public byte[] sig;
+    final class TestTuple {
+        private static int numCases;
+        public final int caseNum;
+        public final byte[] seed;
+        public final byte[] pk;
+        public final byte[] message;
+        public final byte[] sig;
 
-        public TestTuple(String line) {
-            caseNum = ++TestTuple.numCases;
+        private TestTuple(String line) {
+            caseNum = ++numCases;
             String[] x = line.split(":");
-            seed = Utils.hexToBytes(x[0].substring(0, 64));
-            pk = Utils.hexToBytes(x[1]);
-            message = Utils.hexToBytes(x[2]);
-            sig = Utils.hexToBytes(x[3].substring(0, 128));
+            seed = hexToBytes(x[0].substring(0, 64));
+            pk = hexToBytes(x[1]);
+            message = hexToBytes(x[2]);
+            sig = hexToBytes(x[3].substring(0, 128));
         }
     }
 
-    Collection<TestTuple> testCases = Ed25519TestVectors.getTestData("test.data");
+    Collection<Ed25519TestVectors.TestTuple> testCases = getTestData("test.data");
 
-    static Collection<TestTuple> getTestData(String fileName) {
-        List<TestTuple> testCases = new ArrayList<TestTuple>();
+    static Collection<Ed25519TestVectors.TestTuple> getTestData(String fileName) {
+        List<Ed25519TestVectors.TestTuple> testCases = new ArrayList<Ed25519TestVectors.TestTuple>();
         BufferedReader file = null;
         try {
             InputStream is = Ed25519TestVectors.class.getResourceAsStream(fileName);
             if (is == null)
                 throw new IOException("Resource not found: " + fileName);
             file = new BufferedReader(new InputStreamReader(is));
-            String line;
-            while ((line = file.readLine()) != null) {
-                testCases.add(new TestTuple(line));
-            }
+            testCases = file.lines().map(Ed25519TestVectors.TestTuple::new).collect(Collectors.toList());
         } catch (IOException e) {
             e.printStackTrace();
         } finally {

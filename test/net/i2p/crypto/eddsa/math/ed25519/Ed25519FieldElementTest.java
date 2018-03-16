@@ -22,7 +22,7 @@ import java.math.BigInteger;
  */
 public class Ed25519FieldElementTest extends AbstractFieldElementTest {
 
-    public static final byte[] BYTES = {
+    private static final byte[] BYTES = {
             (byte) (0 + 1),
             (byte) (1 + 1),
             (byte) (2 + 1),

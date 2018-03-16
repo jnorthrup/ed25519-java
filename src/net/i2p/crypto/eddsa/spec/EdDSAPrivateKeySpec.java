@@ -22,7 +22,7 @@ import net.i2p.crypto.eddsa.math.GroupElement;
  * @author str4d
  *
  */
-public class EdDSAPrivateKeySpec implements KeySpec {
+public final class EdDSAPrivateKeySpec implements KeySpec {
     private final byte[] seed;
     private final byte[] h;
     private final byte[] a;
@@ -102,32 +102,32 @@ public class EdDSAPrivateKeySpec implements KeySpec {
     /**
      *  @return will be null if constructed directly from the private key
      */
-    public byte[] getSeed() {
+    public final byte[] getSeed() {
         return seed;
     }
 
     /**
      *  @return the hash
      */
-    public byte[] getH() {
+    public final byte[] getH() {
         return h;
     }
 
     /**
      *  @return the private key
      */
-    public byte[] geta() {
+    public final byte[] geta() {
         return a;
     }
 
     /**
      *  @return the public key
      */
-    public GroupElement getA() {
+    public final GroupElement getA() {
         return A;
     }
 
-    public EdDSAParameterSpec getParams() {
+    public final EdDSAParameterSpec getParams() {
         return spec;
     }
 }
