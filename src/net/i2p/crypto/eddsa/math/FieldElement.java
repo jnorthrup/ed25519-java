@@ -6,9 +6,9 @@ package net.i2p.crypto.eddsa.math;
 public abstract class FieldElement {
     private static final long serialVersionUID = 1239527465875676L;
 
-    protected final Field f;
+    protected final FiniteField f;
 
-    protected FieldElement(final Field f) {
+    protected FieldElement(final FiniteField f) {
         if (null == f) {
             throw new IllegalArgumentException("field cannot be null");
         }

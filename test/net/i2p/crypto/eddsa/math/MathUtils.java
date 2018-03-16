@@ -50,8 +50,8 @@ public class MathUtils {
      *
      * @return The finite field.
      */
-    public static Field getField() {
-        return new Field(
+    public static FiniteField getField() {
+        return new FiniteField(
                 256, // b
                 Utils.hexToBytes("edffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff7f"), // q
                 new Ed25519LittleEndianEncoding());

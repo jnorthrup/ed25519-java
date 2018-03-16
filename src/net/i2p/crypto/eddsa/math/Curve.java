@@ -19,7 +19,7 @@ package net.i2p.crypto.eddsa.math;
  */
 public final class Curve   {
     private static final long serialVersionUID = 4578920872509827L;
-    private final Field f;
+    private final FiniteField f;
     private final FieldElement d;
     private final FieldElement d2;
     private final FieldElement I;
@@ -28,7 +28,7 @@ public final class Curve   {
     private final GroupElement zeroP3;
     private final GroupElement zeroPrecomp;
 
-    public Curve(final Field f, final byte[] d, final FieldElement I) {
+    public Curve(final FiniteField f, final byte[] d, final FieldElement I) {
         this.f = f;
         this.d = f.fromByteArray(d);
         d2 = this.d.add(this.d);
@@ -41,7 +41,7 @@ public final class Curve   {
         zeroPrecomp = GroupElement.precomp(this, one, one, zero);
     }
 
-    public final Field getField() {
+    public final FiniteField getField() {
         return f;
     }
 

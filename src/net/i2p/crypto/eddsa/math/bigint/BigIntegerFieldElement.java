@@ -13,7 +13,7 @@ package net.i2p.crypto.eddsa.math.bigint;
 
 import java.math.BigInteger;
 
-import net.i2p.crypto.eddsa.math.Field;
+import net.i2p.crypto.eddsa.math.FiniteField;
 import net.i2p.crypto.eddsa.math.FieldElement;
 
 /**
@@ -28,7 +28,7 @@ public final class BigIntegerFieldElement extends FieldElement {
      */
     final BigInteger bi;
 
-    public BigIntegerFieldElement(final Field f, final BigInteger bi) {
+    public BigIntegerFieldElement(final FiniteField f, final BigInteger bi) {
         super(f);
         this.bi = bi;
     }
@@ -83,7 +83,7 @@ public final class BigIntegerFieldElement extends FieldElement {
 
     public FieldElement invert() {
         // Euler's theorem
-        //return modPow(f.getQm2(), f.getQ());
+        //return modPow(field.getQm2(), finiteField.getQ());
         return new BigIntegerFieldElement(f, bi.modInverse(((BigIntegerFieldElement)f.getQ()).bi));
     }
 

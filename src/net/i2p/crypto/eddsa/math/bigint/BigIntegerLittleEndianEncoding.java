@@ -14,7 +14,7 @@ package net.i2p.crypto.eddsa.math.bigint;
 import java.math.BigInteger;
 
 import net.i2p.crypto.eddsa.math.Encoding;
-import net.i2p.crypto.eddsa.math.Field;
+import net.i2p.crypto.eddsa.math.FiniteField;
 import net.i2p.crypto.eddsa.math.FieldElement;
 
 public final class BigIntegerLittleEndianEncoding extends Encoding   {
@@ -25,8 +25,8 @@ public final class BigIntegerLittleEndianEncoding extends Encoding   {
     private BigInteger mask;
 
     @Override
-    public final synchronized void setField(final Field f) {
-        super.setField(f);
+    public final synchronized void setFiniteField(final FiniteField f) {
+        super.setFiniteField(f);
         mask = BigInteger.ONE.shiftLeft(f.getb()-1).subtract(BigInteger.ONE);
     }
 
@@ -43,9 +43,9 @@ public final class BigIntegerLittleEndianEncoding extends Encoding   {
      *  @throws IllegalStateException if field not set
      */
     public final byte[] encode(final BigInteger x) {
-        if (null != f) {
+        if (null != finiteField) {
             final byte[] in = x.toByteArray();
-            final byte[] out = new byte[f.getb() / 8];
+            final byte[] out = new byte[finiteField.getb() / 8];
             final int bound = in.length;
             for (int i1 = 0; i1 < bound; i1++) {
                 out[i1] = in[in.length - 1 - i1];
@@ -70,9 +70,9 @@ public final class BigIntegerLittleEndianEncoding extends Encoding   {
      *  @throws IllegalArgumentException if encoding is invalid
      */
     public FieldElement decode(final byte[] in) {
-        if (null != f) {
-            if (in.length == f.getb() / 8)
-                return new BigIntegerFieldElement(f, toBigInteger(in).and(mask));
+        if (null != finiteField) {
+            if (in.length == finiteField.getb() / 8)
+                return new BigIntegerFieldElement(finiteField, toBigInteger(in).and(mask));
             throw new IllegalArgumentException("Not a valid encoding");
         }
         throw new IllegalStateException("field not set");

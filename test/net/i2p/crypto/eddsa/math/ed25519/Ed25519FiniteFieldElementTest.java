@@ -20,7 +20,7 @@ import java.math.BigInteger;
 /**
  * Tests rely on the BigInteger class.
  */
-public class Ed25519FieldElementTest extends AbstractFieldElementTest {
+public class Ed25519FiniteFieldElementTest extends AbstractFiniteFieldElementTest {
 
     private static final byte[] BYTES = {
             (byte) (0 + 1),
@@ -68,7 +68,7 @@ public class Ed25519FieldElementTest extends AbstractFieldElementTest {
         return MathUtils.getQ();
     }
 
-    protected Field getField() {
+    protected FiniteField getField() {
         return MathUtils.getField();
     }
 

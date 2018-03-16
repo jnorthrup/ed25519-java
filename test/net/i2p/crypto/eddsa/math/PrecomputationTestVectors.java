@@ -28,7 +28,7 @@ public interface PrecomputationTestVectors {
     static GroupElement[][] getPrecomputation(final String fileName) {
         final EdDSANamedCurveSpec ed25519 = EdDSANamedCurveTable.getByName(EdDSANamedCurveTable.ED_25519);
         final Curve curve = ed25519.getCurve();
-        final Field field = curve.getField();
+        final FiniteField finiteField = curve.getField();
         final GroupElement[][] precmp = new GroupElement[32][8];
         BufferedReader file = null;
         int row = 0, col = 0;
@@ -47,16 +47,16 @@ public interface PrecomputationTestVectors {
                         row += 1;
                     } else if (line.startsWith("  { ")) {
                         final String ypxStr = line.substring(4, line.lastIndexOf(' '));
-                        final FieldElement ypx = field.fromByteArray(
+                        final FieldElement ypx = finiteField.fromByteArray(
                                 Utils.hexToBytes(ypxStr));
                         String line2  = file.readLine();
                         final String ymxStr = line2.substring(4, line2.lastIndexOf(' '));
-                        final FieldElement ymx = field.fromByteArray(
+                        final FieldElement ymx = finiteField.fromByteArray(
                                 Utils.hexToBytes(ymxStr));
                         {
                          final String    line1 = file.readLine();
                             final String xy2dStr = line1.substring(4, line1.lastIndexOf(' '));
-                            final FieldElement xy2d = field.fromByteArray(
+                            final FieldElement xy2d = finiteField.fromByteArray(
                                     Utils.hexToBytes(xy2dStr));
                             precmp[row][col] = GroupElement.precomp(curve,
                                     ypx, ymx, xy2d);
@@ -80,7 +80,7 @@ public interface PrecomputationTestVectors {
     static GroupElement[] getDoublePrecomputation(final String fileName) {
         final EdDSANamedCurveSpec ed25519 = EdDSANamedCurveTable.getByName(EdDSANamedCurveTable.ED_25519);
         final Curve curve = ed25519.getCurve();
-        final Field field = curve.getField();
+        final FiniteField finiteField = curve.getField();
         final GroupElement[] dblPrecmp = new GroupElement[8];
         BufferedReader file = null;
         int row = 0;
@@ -97,15 +97,15 @@ public interface PrecomputationTestVectors {
                         row += 1;
                     } else if (line.startsWith("  { ")) {
                         final String ypxStr = line.substring(4, line.lastIndexOf(' '));
-                        final FieldElement ypx = field.fromByteArray(
+                        final FieldElement ypx = finiteField.fromByteArray(
                                 Utils.hexToBytes(ypxStr));
                         line = file.readLine();
                         final String ymxStr = line.substring(4, line.lastIndexOf(' '));
-                        final FieldElement ymx = field.fromByteArray(
+                        final FieldElement ymx = finiteField.fromByteArray(
                                 Utils.hexToBytes(ymxStr));
                         line = file.readLine();
                         final String xy2dStr = line.substring(4, line.lastIndexOf(' '));
-                        final FieldElement xy2d = field.fromByteArray(
+                        final FieldElement xy2d = finiteField.fromByteArray(
                                 Utils.hexToBytes(xy2dStr));
                         dblPrecmp[row] = GroupElement.precomp(curve,
                                 ypx, ymx, xy2d);

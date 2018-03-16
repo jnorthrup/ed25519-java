@@ -16,7 +16,7 @@ package net.i2p.crypto.eddsa.math;
  * @author str4d
  *
  */
-public final class Field   {
+public final class FiniteField {
     private static final long serialVersionUID = 8746587465875676L;
 
     public final FieldElement ZERO;
@@ -38,10 +38,10 @@ public final class Field   {
     private final FieldElement qm5d8;
     private final Encoding enc;
 
-    public Field(final int b, final byte[] q, final Encoding enc) {
+    public FiniteField(final int b, final byte[] q, final Encoding enc) {
         this.b = b;
         this.enc = enc;
-        this.enc.setField(this);
+        this.enc.setFiniteField(this);
 
         this.q = fromByteArray(q);
 
@@ -89,9 +89,9 @@ public final class Field   {
 
     @Override
     public final boolean equals(final Object obj) {
-        if (!(obj instanceof Field))
+        if (!(obj instanceof FiniteField))
             return false;
-        final Field f = (Field) obj;
+        final FiniteField f = (FiniteField) obj;
         return getB() == f.getB() && getQ().equals(f.getQ());
     }
 

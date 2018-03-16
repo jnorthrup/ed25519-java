@@ -19,29 +19,29 @@ import java.security.SecureRandom;
 import java.util.Random;
 
 import net.i2p.crypto.eddsa.Utils;
-import net.i2p.crypto.eddsa.math.Field;
+import net.i2p.crypto.eddsa.math.FiniteField;
 import net.i2p.crypto.eddsa.math.FieldElement;
 import net.i2p.crypto.eddsa.math.MathUtils;
-import net.i2p.crypto.eddsa.math.AbstractFieldElementTest;
+import net.i2p.crypto.eddsa.math.AbstractFiniteFieldElementTest;
 import org.junit.Test;
 
 /**
  * @author str4d
  *
  */
-public class BigIntegerFieldElementTest extends AbstractFieldElementTest {
+public class BigIntegerFiniteFieldElementTest extends AbstractFiniteFieldElementTest {
     private static final byte[] BYTES_ZERO = Utils.hexToBytes("0000000000000000000000000000000000000000000000000000000000000000");
     private static final byte[] BYTES_ONE = Utils.hexToBytes("0100000000000000000000000000000000000000000000000000000000000000");
     private static final byte[] BYTES_TEN = Utils.hexToBytes("0a00000000000000000000000000000000000000000000000000000000000000");
 
-    private static final Field ed25519Field = new Field(
+    private static final FiniteField ED_25519_FINITE_FIELD = new FiniteField(
             256, // b
             Utils.hexToBytes("edffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff7f"), // q
             new BigIntegerLittleEndianEncoding());
 
-    private static final FieldElement ZERO = new BigIntegerFieldElement(ed25519Field, BigInteger.ZERO);
-    private static final FieldElement ONE = new BigIntegerFieldElement(ed25519Field, BigInteger.ONE);
-    private static final FieldElement TWO = new BigIntegerFieldElement(ed25519Field, BigInteger.valueOf(2));
+    private static final FieldElement ZERO = new BigIntegerFieldElement(ED_25519_FINITE_FIELD, BigInteger.ZERO);
+    private static final FieldElement ONE = new BigIntegerFieldElement(ED_25519_FINITE_FIELD, BigInteger.ONE);
+    private static final FieldElement TWO = new BigIntegerFieldElement(ED_25519_FINITE_FIELD, BigInteger.valueOf(2));
 
     protected FieldElement getRandomFieldElement() {
         BigInteger r;
@@ -49,7 +49,7 @@ public class BigIntegerFieldElementTest extends AbstractFieldElementTest {
         do {
             r = new BigInteger(255, rnd);
         } while (0 <= r.compareTo(getQ()));
-        return new BigIntegerFieldElement(ed25519Field, r);
+        return new BigIntegerFieldElement(ED_25519_FINITE_FIELD, r);
     }
 
     protected BigInteger toBigInteger(final FieldElement f) {
@@ -60,18 +60,18 @@ public class BigIntegerFieldElementTest extends AbstractFieldElementTest {
         return MathUtils.getQ();
     }
 
-    protected Field getField() {
-        return ed25519Field;
+    protected FiniteField getField() {
+        return ED_25519_FINITE_FIELD;
     }
 
     /**
-     * Test method for {@link BigIntegerFieldElement#BigIntegerFieldElement(Field, BigInteger)}.
+     * Test method for {@link BigIntegerFieldElement#BigIntegerFieldElement(FiniteField, BigInteger)}.
      */
     @Test
     public void testFieldElementBigInteger() {
-        assertThat(new BigIntegerFieldElement(ed25519Field, BigInteger.ZERO).bi, is(BigInteger.ZERO));
-        assertThat(new BigIntegerFieldElement(ed25519Field, BigInteger.ONE).bi, is(BigInteger.ONE));
-        assertThat(new BigIntegerFieldElement(ed25519Field, BigInteger.valueOf(2)).bi, is(BigInteger.valueOf(2)));
+        assertThat(new BigIntegerFieldElement(ED_25519_FINITE_FIELD, BigInteger.ZERO).bi, is(BigInteger.ZERO));
+        assertThat(new BigIntegerFieldElement(ED_25519_FINITE_FIELD, BigInteger.ONE).bi, is(BigInteger.ONE));
+        assertThat(new BigIntegerFieldElement(ED_25519_FINITE_FIELD, BigInteger.valueOf(2)).bi, is(BigInteger.valueOf(2)));
     }
 
     /**
@@ -87,7 +87,7 @@ public class BigIntegerFieldElementTest extends AbstractFieldElementTest {
         assertThat(one.length, is(equalTo(BYTES_ONE.length)));
         assertThat(one, is(equalTo(BYTES_ONE)));
 
-        final byte[] ten = new BigIntegerFieldElement(ed25519Field, BigInteger.TEN).toByteArray();
+        final byte[] ten = new BigIntegerFieldElement(ED_25519_FINITE_FIELD, BigInteger.TEN).toByteArray();
         assertThat(ten.length, is(equalTo(BYTES_TEN.length)));
         assertThat(ten, is(equalTo(BYTES_TEN)));
     }
@@ -109,8 +109,8 @@ public class BigIntegerFieldElementTest extends AbstractFieldElementTest {
      */
     @Test
     public void testEqualsObject() {
-        assertThat(new BigIntegerFieldElement(ed25519Field, BigInteger.ZERO), is(equalTo(ZERO)));
-        assertThat(new BigIntegerFieldElement(ed25519Field, BigInteger.valueOf(1000)), is(equalTo(new BigIntegerFieldElement(ed25519Field, BigInteger.valueOf(1000)))));
+        assertThat(new BigIntegerFieldElement(ED_25519_FINITE_FIELD, BigInteger.ZERO), is(equalTo(ZERO)));
+        assertThat(new BigIntegerFieldElement(ED_25519_FINITE_FIELD, BigInteger.valueOf(1000)), is(equalTo(new BigIntegerFieldElement(ED_25519_FINITE_FIELD, BigInteger.valueOf(1000)))));
         assertThat(ONE, is(not(equalTo(TWO))));
     }
 

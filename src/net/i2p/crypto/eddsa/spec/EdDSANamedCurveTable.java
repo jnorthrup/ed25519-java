@@ -11,14 +11,13 @@
  */
 package net.i2p.crypto.eddsa.spec;
 
-import java.util.Hashtable;
 import java.util.LinkedHashMap;
 import java.util.Locale;
 import java.util.Map;
 
 import net.i2p.crypto.eddsa.Utils;
 import net.i2p.crypto.eddsa.math.Curve;
-import net.i2p.crypto.eddsa.math.Field;
+import net.i2p.crypto.eddsa.math.FiniteField;
 import net.i2p.crypto.eddsa.math.ed25519.Ed25519LittleEndianEncoding;
 import net.i2p.crypto.eddsa.math.ed25519.Ed25519ScalarOps;
 
@@ -31,14 +30,14 @@ import net.i2p.crypto.eddsa.math.ed25519.Ed25519ScalarOps;
 public final class  EdDSANamedCurveTable {
     public static final String ED_25519 = "Ed25519";
 
-    private static final Field ed25519field = new Field(
+    private static final FiniteField ED_25519_FINITE_FIELD = new FiniteField(
                     256, // b
                     Utils.hexToBytes("edffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff7f"), // q
                     new Ed25519LittleEndianEncoding());
 
-    private static final Curve ed25519curve = new Curve(ed25519field,
+    private static final Curve ed25519curve = new Curve(ED_25519_FINITE_FIELD,
             Utils.hexToBytes("a3785913ca4deb75abd841414d0a700098e879777940c78c73fe6f2bee6c0352"), // d
-            ed25519field.fromByteArray(Utils.hexToBytes("b0a00e4a271beec478e42fad0618432fa7d7fb3d99004d2b0bdfc14f8024832b"))); // I
+            ED_25519_FINITE_FIELD.fromByteArray(Utils.hexToBytes("b0a00e4a271beec478e42fad0618432fa7d7fb3d99004d2b0bdfc14f8024832b"))); // I
 
     private static final EdDSANamedCurveSpec ed25519 = new EdDSANamedCurveSpec(
             ED_25519,

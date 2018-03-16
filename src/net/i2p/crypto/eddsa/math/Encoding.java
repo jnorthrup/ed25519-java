@@ -18,12 +18,12 @@ package net.i2p.crypto.eddsa.math;
  *
  */
 public abstract class Encoding {
-    protected Field f;
+    protected FiniteField finiteField;
 
-    public synchronized void setField(final Field f) {
-        if (null != this.f)
+    public synchronized void setFiniteField(final FiniteField f) {
+        if (null != this.finiteField)
             throw new IllegalStateException("already set");
-        this.f = f;
+        this.finiteField = f;
     }
 
     /**

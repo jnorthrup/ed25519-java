@@ -234,7 +234,7 @@ public final class Ed25519LittleEndianEncoding extends Encoding {
         h[7] = (int) h7;
         h[8] = (int) h8;
         h[9] = (int) h9;
-        return new Ed25519FieldElement(f, h);
+        return new Ed25519FieldElement(finiteField, h);
     }
 
     /**

@@ -13,17 +13,17 @@ package net.i2p.crypto.eddsa.math.bigint;
 
 import java.math.BigInteger;
 
-import net.i2p.crypto.eddsa.math.Field;
+import net.i2p.crypto.eddsa.math.FiniteField;
 import net.i2p.crypto.eddsa.math.ScalarOps;
 
 public final class BigIntegerScalarOps implements ScalarOps {
     private final BigInteger l;
     private final BigIntegerLittleEndianEncoding enc;
 
-    public BigIntegerScalarOps(final Field f, final BigInteger l) {
+    public BigIntegerScalarOps(final FiniteField f, final BigInteger l) {
         this.l = l;
         enc = new BigIntegerLittleEndianEncoding();
-        enc.setField(f);
+        enc.setFiniteField(f);
     }
 
     public byte[] reduce(final byte[] s) {

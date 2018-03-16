@@ -17,7 +17,7 @@ import net.i2p.crypto.eddsa.math.*;
 import java.util.Arrays;
 
 /**
- * Class to represent a field element of the finite field $p = 2^{255} - 19$ elements.
+ * Class to represent a field element of the finite finiteField $p = 2^{255} - 19$ elements.
  * <p>
  * An element $t$, entries $t[0] \dots t[9]$, represents the integer
  * $t[0]+2^{26} t[1]+2^{51} t[2]+2^{77} t[3]+2^{102} t[4]+\dots+2^{230} t[9]$.
@@ -34,10 +34,10 @@ public final class Ed25519FieldElement extends FieldElement {
     /**
      * Creates a field element.
      *
-     * @param f The underlying field, must be the finite field with $p = 2^{255} - 19$ elements
+     * @param f The underlying field, must be the finite finiteField with $p = 2^{255} - 19$ elements
      * @param t The $2^{25.5}$ bit representation of the field element.
      */
-    public Ed25519FieldElement(final Field f, final int[] t) {
+    public Ed25519FieldElement(final FiniteField f, final int[] t) {
         super(f);
         if (10 == t.length) {
             this.t = t.clone();
@@ -59,13 +59,13 @@ public final class Ed25519FieldElement extends FieldElement {
     }
 
     /**
-     * $h = f + g$
+     * $h = field + g$
      * <p>
      * TODO-CR BR: $h$ is allocated via new, probably not a good idea. Do we need the copying into temp variables if we do that?
      * <p>
      * Preconditions:
      * </p><ul>
-     * <li>$|f|$ bounded by $1.1*2^{25},1.1*2^{24},1.1*2^{25},1.1*2^{24},$ etc.
+     * <li>$|field|$ bounded by $1.1*2^{25},1.1*2^{24},1.1*2^{25},1.1*2^{24},$ etc.
      * <li>$|g|$ bounded by $1.1*2^{25},1.1*2^{24},1.1*2^{25},1.1*2^{24},$ etc.
      * </ul><p>
      * Postconditions:
@@ -93,15 +93,15 @@ public final class Ed25519FieldElement extends FieldElement {
     }
 
     /**
-     * $h = f - g$
+     * $h = field - g$
      * <p>
-     * Can overlap $h$ with $f$ or $g$.
+     * Can overlap $h$ with $field$ or $g$.
      * <p>
      * TODO-CR BR: See above.
      * <p>
      * Preconditions:
      * </p><ul>
-     * <li>$|f|$ bounded by $1.1*2^{25},1.1*2^{24},1.1*2^{25},1.1*2^{24},$ etc.
+     * <li>$|field|$ bounded by $1.1*2^{25},1.1*2^{24},1.1*2^{25},1.1*2^{24},$ etc.
      * <li>$|g|$ bounded by $1.1*2^{25},1.1*2^{24},1.1*2^{25},1.1*2^{24},$ etc.
      * </ul><p>
      * Postconditions:
@@ -129,13 +129,13 @@ public final class Ed25519FieldElement extends FieldElement {
     }
 
     /**
-     * $h = -f$
+     * $h = -field$
      * <p>
      * TODO-CR BR: see above.
      * <p>
      * Preconditions:
      * </p><ul>
-     * <li>$|f|$ bounded by $1.1*2^{25},1.1*2^{24},1.1*2^{25},1.1*2^{24},$ etc.
+     * <li>$|field|$ bounded by $1.1*2^{25},1.1*2^{24},1.1*2^{25},1.1*2^{24},$ etc.
      * </ul><p>
      * Postconditions:
      * </p><ul>
@@ -160,13 +160,13 @@ public final class Ed25519FieldElement extends FieldElement {
     }
 
     /**
-     * $h = f * g$
+     * $h = field * g$
      * <p>
-     * Can overlap $h$ with $f$ or $g$.
+     * Can overlap $h$ with $field$ or $g$.
      * <p>
      * Preconditions:
      * </p><ul>
-     * <li>$|f|$ bounded by
+     * <li>$|field|$ bounded by
      * $1.65*2^{26},1.65*2^{25},1.65*2^{26},1.65*2^{25},$ etc.
      * <li>$|g|$ bounded by
      * $1.65*2^{26},1.65*2^{25},1.65*2^{26},1.65*2^{25},$ etc.
@@ -411,13 +411,13 @@ public final class Ed25519FieldElement extends FieldElement {
     }
 
     /**
-     * $h = f * f$
+     * $h = field * finiteField$
      * <p>
-     * Can overlap $h$ with $f$.
+     * Can overlap $h$ with $field$.
      * <p>
      * Preconditions:
      * </p><ul>
-     * <li>$|f|$ bounded by $1.65*2^{26},1.65*2^{25},1.65*2^{26},1.65*2^{25},$ etc.
+     * <li>$|field|$ bounded by $1.65*2^{26},1.65*2^{25},1.65*2^{26},1.65*2^{25},$ etc.
      * </ul><p>
      * Postconditions:
      * </p><ul>
@@ -567,13 +567,13 @@ public final class Ed25519FieldElement extends FieldElement {
     }
 
     /**
-     * $h = 2 * f * f$
+     * $h = 2 * field * finiteField$
      * <p>
-     * Can overlap $h$ with $f$.
+     * Can overlap $h$ with $field$.
      * <p>
      * Preconditions:
      * </p><ul>
-     * <li>$|f|$ bounded by $1.65*2^{26},1.65*2^{25},1.65*2^{26},1.65*2^{25},$ etc.
+     * <li>$|field|$ bounded by $1.65*2^{26},1.65*2^{25},1.65*2^{26},1.65*2^{25},$ etc.
      * </ul><p>
      * Postconditions:
      * </p><ul>
