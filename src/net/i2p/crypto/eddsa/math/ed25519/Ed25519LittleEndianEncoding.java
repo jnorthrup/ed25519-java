@@ -188,15 +188,15 @@ public class Ed25519LittleEndianEncoding extends Encoding {
      */
     public FieldElement decode(byte[] in) {
         long h0 = load_4(in, 0);
-        long h1 = load_3(in, 4) << 6;
-        long h2 = load_3(in, 7) << 5;
-        long h3 = load_3(in, 10) << 3;
-        long h4 = load_3(in, 13) << 2;
+        long h1 = (long) (load_3(in, 4) << 6);
+        long h2 = (long) (load_3(in, 7) << 5);
+        long h3 = (long) (load_3(in, 10) << 3);
+        long h4 = (long) (load_3(in, 13) << 2);
         long h5 = load_4(in, 16);
-        long h6 = load_3(in, 20) << 7;
-        long h7 = load_3(in, 23) << 5;
-        long h8 = load_3(in, 26) << 4;
-        long h9 = (load_3(in, 29) & 0x7FFFFF) << 2;
+        long h6 = (long) (load_3(in, 20) << 7);
+        long h7 = (long) (load_3(in, 23) << 5);
+        long h8 = (long) (load_3(in, 26) << 4);
+        long h9 = (long) ((load_3(in, 29) & 0x7FFFFF) << 2);
         long carry0;
         long carry1;
         long carry2;
@@ -209,7 +209,7 @@ public class Ed25519LittleEndianEncoding extends Encoding {
         long carry9;
 
         // Remember: 2^255 congruent 19 modulo p
-        carry9 = (h9 + (long) (1<<24)) >> 25; h0 += carry9 * 19; h9 -= carry9 << 25;
+        carry9 = (h9 + (long) (1<<24)) >> 25; h0 += carry9 * 19L; h9 -= carry9 << 25;
         carry1 = (h1 + (long) (1<<24)) >> 25; h2 += carry1; h1 -= carry1 << 25;
         carry3 = (h3 + (long) (1<<24)) >> 25; h4 += carry3; h3 -= carry3 << 25;
         carry5 = (h5 + (long) (1<<24)) >> 25; h6 += carry5; h5 -= carry5 << 25;

@@ -52,7 +52,7 @@ public class BigIntegerLittleEndianEncoding extends Encoding implements Serializ
             out[i] = in[in.length-1-i];
         }
         for (int i = in.length; i < out.length; i++) {
-            out[i] = 0;
+            out[i] = (byte) 0;
         }
         return out;
     }
