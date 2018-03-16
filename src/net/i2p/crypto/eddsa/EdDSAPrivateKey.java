@@ -245,31 +245,31 @@ public class EdDSAPrivateKey implements EdDSAKey, PrivateKey {
         if (edDsaSpec.equals(EdDSANamedCurveTable.getByName(EdDSANamedCurveTable.ED_25519)) && seed != null) {
             int totlen = 16 + seed.length;
             byte[] rv = new byte[totlen];
-            byte[] stub = stubs.computeIfAbsent(seed.length, integer -> new byte[]{0x30,
-                    (byte) ((byte) (totlen - 2) & 0xff),
+            byte[] stub = stubs.computeIfAbsent(seed.length, integer -> new byte[]{(byte) 0x30,
+                    (byte) ((int) (byte) (totlen - 2) & 0xff),
                     // version
-                    0x02,
-                    1,
+                    (byte) 0x02,
+                    (byte) 1,
                     // v1 - no public key included
-                    0,
+                    (byte) 0,
                     // Algorithm Identifier
                     // sequence
-                    0x30,
-                    5,
+                    (byte) 0x30,
+                    (byte) 5,
                     // OID
                     // https://msdn.microsoft.com/en-us/library/windows/desktop/bb540809%28v=vs.85%29.aspx
-                    0x06,
-                    3,
-                    (1 * 40) + 3,
-                    101,
+                    (byte) 0x06,
+                    (byte) 3,
+                    (byte) ((1 * 40) + 3),
+                    (byte) 101,
                     (byte) OID_ED25519,
                     // params - absent
                     // PrivateKey
-                    0x04,  // octet strin,
-                    (byte) ((byte) (2 + seed.length)&0xff),
+                    (byte) 0x04,  // octet strin,
+                    (byte) ((int) (byte) (2 + seed.length) &0xff),
                     // CurvePrivateKey
-                    0x04,  // octet strin,
-                    (byte) ((byte) seed.length&0xff)});
+                    (byte) 0x04,  // octet strin,
+                    (byte) ((int) (byte) seed.length &0xff)});
             // sequence
 
             // the key
