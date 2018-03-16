@@ -39,7 +39,7 @@ public class EdDSAPrivateKeySpecTest {
      */
     @Test
     public void testEdDSAPrivateKeySpecFromSeed() {
-        EdDSAPrivateKeySpec key = new EdDSAPrivateKeySpec(ZERO_SEED, ed25519);
+        final EdDSAPrivateKeySpec key = new EdDSAPrivateKeySpec(ZERO_SEED, ed25519);
         assertThat(key.getSeed(), is(equalTo(ZERO_SEED)));
         assertThat(key.getH(), is(equalTo(ZERO_H)));
         assertThat(key.getA().toByteArray(), is(equalTo(ZERO_PK)));
@@ -49,7 +49,7 @@ public class EdDSAPrivateKeySpecTest {
     public void incorrectSeedLengthThrows() {
         exception.expect(IllegalArgumentException.class);
         exception.expectMessage("seed length is wrong");
-        EdDSAPrivateKeySpec key = new EdDSAPrivateKeySpec(new byte[2], ed25519);
+        final EdDSAPrivateKeySpec key = new EdDSAPrivateKeySpec(new byte[2], ed25519);
     }
 
     /**
@@ -57,7 +57,7 @@ public class EdDSAPrivateKeySpecTest {
      */
     @Test
     public void testEdDSAPrivateKeySpecFromH() {
-        EdDSAPrivateKeySpec key = new EdDSAPrivateKeySpec(ed25519, ZERO_H);
+        final EdDSAPrivateKeySpec key = new EdDSAPrivateKeySpec(ed25519, ZERO_H);
         assertThat(key.getSeed(), is(nullValue()));
         assertThat(key.getH(), is(equalTo(ZERO_H)));
         assertThat(key.getA().toByteArray(), is(equalTo(ZERO_PK)));
@@ -67,6 +67,6 @@ public class EdDSAPrivateKeySpecTest {
     public void incorrectHashLengthThrows() {
         exception.expect(IllegalArgumentException.class);
         exception.expectMessage("hash length is wrong");
-        EdDSAPrivateKeySpec key = new EdDSAPrivateKeySpec(ed25519, new byte[2]);
+        final EdDSAPrivateKeySpec key = new EdDSAPrivateKeySpec(ed25519, new byte[2]);
     }
 }

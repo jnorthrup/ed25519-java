@@ -21,7 +21,7 @@ public abstract class Encoding {
     protected Field f;
 
     public synchronized void setField(final Field f) {
-        if (this.f != null)
+        if (null != this.f)
             throw new IllegalStateException("already set");
         this.f = f;
     }

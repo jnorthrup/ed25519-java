@@ -25,15 +25,12 @@ final class EdDSASecurityProvider extends Provider {
     private static final long serialVersionUID = 1210027906682292307L;
     private static final String PROVIDER_NAME = "EdDSA";
 
-    public EdDSASecurityProvider() {
+    EdDSASecurityProvider() {
         super(PROVIDER_NAME, 0.2 /* should match POM major.minor version */, "str4d " + PROVIDER_NAME + " security provider wrapper");
 
-        AccessController.doPrivileged(new PrivilegedAction<Object>() {
-            @Override
-            public Object run() {
-                setup();
-                return null;
-            }
+        AccessController.doPrivileged((PrivilegedAction<Object>) () -> {
+            setup();
+            return null;
         });
     }
 

@@ -60,7 +60,7 @@ public class Ed25519FieldElementTest extends AbstractFieldElementTest {
         return MathUtils.getRandomFieldElement();
     }
 
-    protected BigInteger toBigInteger(FieldElement f) {
+    protected BigInteger toBigInteger(final FieldElement f) {
         return MathUtils.toBigInteger(f);
     }
 
@@ -119,7 +119,7 @@ public class Ed25519FieldElementTest extends AbstractFieldElementTest {
         final String fAsString = f.toString();
         final StringBuilder builder = new StringBuilder();
         builder.append("[Ed25519FieldElement val=");
-        for (byte b : BYTES) {
+        for (final byte b : BYTES) {
             builder.append(String.format("%02x", b));
         }
         builder.append("]");

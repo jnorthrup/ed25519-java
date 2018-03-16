@@ -11,8 +11,6 @@
  */
 package net.i2p.crypto.eddsa.math;
 
-import java.io.Serializable;
-
 /**
  * A twisted Edwards curve.
  * Points on the curve satisfy $-x^2 + y^2 = 1 + d x^2y^2$
@@ -33,7 +31,7 @@ public final class Curve   {
     public Curve(final Field f, final byte[] d, final FieldElement I) {
         this.f = f;
         this.d = f.fromByteArray(d);
-        this.d2 = this.d.add(this.d);
+        d2 = this.d.add(this.d);
         this.I = I;
 
         final FieldElement zero = f.ZERO;

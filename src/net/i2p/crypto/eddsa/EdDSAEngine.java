@@ -195,7 +195,7 @@ public final class EdDSAEngine extends Signature {
         if (oneShotMode) {
             if (null != oneShotBytes)
                 throw new SignatureException("update() already called");
-            oneShotBytes = b;
+            oneShotBytes = b.clone();
             oneShotOffset = off;
             oneShotLength = len;
         } else {
@@ -233,7 +233,7 @@ public final class EdDSAEngine extends Signature {
             offset = oneShotOffset;
             length = oneShotLength;
         } else {
-            message = baos == null ? BYTES : baos.toByteArray();
+            message = null == baos ? BYTES : baos.toByteArray();
             offset = 0;
             length = message.length;
         }
@@ -293,7 +293,7 @@ public final class EdDSAEngine extends Signature {
             offset = oneShotOffset;
             length = oneShotLength;
         } else {
-            message = baos == null ? BYTES : baos.toByteArray();
+            message = null == baos ? BYTES : baos.toByteArray();
             offset = 0;
             length = message.length;
         }
@@ -353,6 +353,7 @@ public final class EdDSAEngine extends Signature {
      * @throws SignatureException if update() already called
      * @see #ONE_SHOT_MODE
      */
+    @SuppressWarnings("WeakerAccess")
     public byte[] signOneShot(final byte[] data, final int off, final int len) throws SignatureException {
         oneShotMode = true;
         update(data, off, len);

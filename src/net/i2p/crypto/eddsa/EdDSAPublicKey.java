@@ -51,10 +51,10 @@ public final class EdDSAPublicKey implements EdDSAKey, PublicKey {
     private static final int IDLEN_BYTE = 3;
 
     public EdDSAPublicKey(final EdDSAPublicKeySpec spec) {
-        this.A = spec.getA();
-        this.Aneg = spec.getNegativeA();
-        this.Abyte = this.A.toByteArray();
-        this.edDsaSpec = spec.getParams();
+        A = spec.getA();
+        Aneg = spec.getNegativeA();
+        Abyte = A.toByteArray();
+        edDsaSpec = spec.getParams();
     }
 
     public EdDSAPublicKey(final X509EncodedKeySpec spec) throws InvalidKeySpecException {
@@ -168,12 +168,12 @@ public final class EdDSAPublicKey implements EdDSAKey, PublicKey {
             int totlen = 44;
             int idlen = 5;
             final int doid = d[OID_BYTE];
-            if (doid == OID_OLD) {
+            if (OID_OLD == doid) {
                 totlen = 47;
                 idlen = 8;
-            } else if (doid == OID_ED25519) {
+            } else if (OID_ED25519 == doid) {
                 // Detect parameter value of NULL
-                if (d[IDLEN_BYTE] == 7) {
+                if (7 == d[IDLEN_BYTE]) {
                     totlen = 46;
                     idlen = 7;
                 }
@@ -192,22 +192,22 @@ public final class EdDSAPublicKey implements EdDSAKey, PublicKey {
             // Decoding
             //
             int idx = 0;
-            if (d[idx++] != 0x30 ||
+            if (0x30 != d[idx++] ||
                 d[idx++] != (totlen - 2) ||
-                d[idx++] != 0x30 ||
+                    0x30 != d[idx++] ||
                 d[idx++] != idlen ||
-                d[idx++] != 0x06 ||
-                d[idx++] != 3 ||
-                d[idx++] != (1 * 40) + 3 ||
-                d[idx++] != 101) {
+                    0x06 != d[idx++] ||
+                    3 != d[idx++] ||
+                    (1 * 40) + 3 != d[idx++] ||
+                    101 != d[idx++]) {
                 throw new InvalidKeySpecException("unsupported key spec");
             }
             idx++; // OID, checked above
             // parameters only with old OID
-            if (doid == OID_OLD) {
-                if (d[idx++] != 0x0a ||
-                    d[idx++] != 1 ||
-                    d[idx++] != 1) {
+            if (OID_OLD == doid) {
+                if (0x0a != d[idx++] ||
+                        1 != d[idx++] ||
+                        1 != d[idx++]) {
                     throw new InvalidKeySpecException("unsupported key spec");
                 }
             } else {
@@ -220,16 +220,16 @@ public final class EdDSAPublicKey implements EdDSAKey, PublicKey {
                 //
                 // But Java's default keystore puts it in (when decoding as
                 // PKCS8 and then re-encoding to pass on), so we must accept it.
-                if (idlen == 7) {
-                    if (d[idx++] != 0x05 ||
-                        d[idx++] != 0) {
+                if (7 == idlen) {
+                    if (0x05 != d[idx++] ||
+                            0 != d[idx++]) {
                         throw new InvalidKeySpecException("unsupported key spec");
                     }
                 }
             }
-            if (d[idx++] != 0x03 ||
-                d[idx++] != 33 ||
-                d[idx++] != 0) {
+            if (0x03 != d[idx++] ||
+                    33 != d[idx++] ||
+                    0 != d[idx++]) {
                 throw new InvalidKeySpecException("unsupported key spec");
             }
             final byte[] rv = new byte[32];
@@ -254,7 +254,7 @@ public final class EdDSAPublicKey implements EdDSAKey, PublicKey {
     }
 
     public final byte[] getAbyte() {
-        return Abyte;
+        return Abyte.clone().clone();
     }
 
     @Override

@@ -238,14 +238,16 @@ public final class Ed25519ScalarOps implements ScalarOps {
         carry7 = (s7 + (long) (1 << 20)) >> 21; s8 += carry7; s7 -= carry7 << 21;
         carry9 = (s9 + (long) (1 << 20)) >> 21; s10 += carry9; s9 -= carry9 << 21;
         //carry11 = (s11 + (1<<20)) >> 21; s12 += carry11; s11 -= carry11 << 21;
-        carry11 = (s11 + (long) (1 << 20)) >> 21; s12 = carry11; s11 -= carry11 << 21;
+        carry11 = (s11 + (long) (1 << 20)) >> 21;
+        long s12a    = carry11;
+        s11 -= carry11 << 21;
 
-        s0 += s12 * 666643L;
-        s1 += s12 * 470296L;
-        s2 += s12 * 654183L;
-        s3 -= s12 * 997805L;
-        s4 += s12 * 136657L;
-        s5 -= s12 * 683901L;
+        s0 += s12a * 666643L;
+        s1 += s12a * 470296L;
+        s2 += s12a * 654183L;
+        s3 -= s12a * 997805L;
+        s4 += s12a * 136657L;
+        s5 -= s12a * 683901L;
         // set below
         //s12 = 0;
 
@@ -261,15 +263,17 @@ public final class Ed25519ScalarOps implements ScalarOps {
         carry9 = s9 >> 21; s10 += carry9; s9 -= carry9 << 21;
         carry10 = s10 >> 21; s11 += carry10; s10 -= carry10 << 21;
         //carry11 = s11 >> 21; s12 += carry11; s11 -= carry11 << 21;
-        carry11 = s11 >> 21; s12 = carry11; s11 -= carry11 << 21;
+        carry11 = s11 >> 21;
+        long l = carry11;
+        s11 -= carry11 << 21;
 
         // TODO-CR BR: Is it really needed to do it TWO times? (it doesn't hurt, just a question).
-        s0 += s12 * 666643L;
-        s1 += s12 * 470296L;
-        s2 += s12 * 654183L;
-        s3 -= s12 * 997805L;
-        s4 += s12 * 136657L;
-        s5 -= s12 * 683901L;
+        s0 += l * 666643L;
+        s1 += l * 470296L;
+        s2 += l * 654183L;
+        s3 -= l * 997805L;
+        s4 += l * 136657L;
+        s5 -= l * 683901L;
         // not used again
         //s12 = 0;
 

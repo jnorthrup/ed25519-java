@@ -252,7 +252,7 @@ public final class Ed25519LittleEndianEncoding extends Encoding {
      */
     public boolean isNegative(final FieldElement x) {
         final byte[] s = encode(x);
-        return (s[0] & 1) != 0;
+        return 0 != (s[0] & 1);
     }
 
 }

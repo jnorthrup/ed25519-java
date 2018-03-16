@@ -11,7 +11,6 @@
  */
 package net.i2p.crypto.eddsa.math;
 
-import net.i2p.crypto.eddsa.math.*;
 import org.hamcrest.core.*;
 import org.junit.*;
 
@@ -56,7 +55,7 @@ public abstract class AbstractFieldElementTest {
 
     @Test
     public void addReturnsCorrectResult() {
-        for (int i=0; i<1000; i++) {
+        for (int i = 0; 1000 > i; i++) {
             // Arrange:
             final FieldElement f1 = getRandomFieldElement();
             final FieldElement f2 = getRandomFieldElement();
@@ -74,7 +73,7 @@ public abstract class AbstractFieldElementTest {
 
     @Test
     public void subtractReturnsCorrectResult() {
-        for (int i=0; i<1000; i++) {
+        for (int i = 0; 1000 > i; i++) {
             // Arrange:
             final FieldElement f1 = getRandomFieldElement();
             final FieldElement f2 = getRandomFieldElement();
@@ -92,7 +91,7 @@ public abstract class AbstractFieldElementTest {
 
     @Test
     public void negateReturnsCorrectResult() {
-        for (int i=0; i<1000; i++) {
+        for (int i = 0; 1000 > i; i++) {
             // Arrange:
             final FieldElement f1 = getRandomFieldElement();
             final BigInteger b1 = toBigInteger(f1);
@@ -108,7 +107,7 @@ public abstract class AbstractFieldElementTest {
 
     @Test
     public void multiplyReturnsCorrectResult() {
-        for (int i=0; i<1000; i++) {
+        for (int i = 0; 1000 > i; i++) {
             // Arrange:
             final FieldElement f1 = getRandomFieldElement();
             final FieldElement f2 = getRandomFieldElement();
@@ -126,7 +125,7 @@ public abstract class AbstractFieldElementTest {
 
     @Test
     public void squareReturnsCorrectResult() {
-        for (int i=0; i<1000; i++) {
+        for (int i = 0; 1000 > i; i++) {
             // Arrange:
             final FieldElement f1 = getRandomFieldElement();
             final BigInteger b1 = toBigInteger(f1);
@@ -142,7 +141,7 @@ public abstract class AbstractFieldElementTest {
 
     @Test
     public void squareAndDoubleReturnsCorrectResult() {
-        for (int i=0; i<1000; i++) {
+        for (int i = 0; 1000 > i; i++) {
             // Arrange:
             final FieldElement f1 = getRandomFieldElement();
             final BigInteger b1 = toBigInteger(f1);
@@ -158,7 +157,7 @@ public abstract class AbstractFieldElementTest {
 
     @Test
     public void invertReturnsCorrectResult() {
-        for (int i=0; i<1000; i++) {
+        for (int i = 0; 1000 > i; i++) {
             // Arrange:
             final FieldElement f1 = getRandomFieldElement();
             final BigInteger b1 = toBigInteger(f1);
@@ -174,7 +173,7 @@ public abstract class AbstractFieldElementTest {
 
     @Test
     public void pow22523ReturnsCorrectResult() {
-        for (int i=0; i<1000; i++) {
+        for (int i = 0; 1000 > i; i++) {
             // Arrange:
             final FieldElement f1 = getRandomFieldElement();
             final BigInteger b1 = toBigInteger(f1);

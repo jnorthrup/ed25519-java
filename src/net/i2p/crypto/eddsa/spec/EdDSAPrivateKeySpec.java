@@ -39,7 +39,7 @@ public final class EdDSAPrivateKeySpec implements KeySpec {
             throw new IllegalArgumentException("seed length is wrong");
 
         this.spec = spec;
-        this.seed = seed;
+        this.seed = seed.clone();
 
         try {
             final MessageDigest hash = MessageDigest.getInstance(spec.getHashAlgorithm());
@@ -78,8 +78,9 @@ public final class EdDSAPrivateKeySpec implements KeySpec {
         if (h.length != spec.getCurve().getField().getb()/4)
             throw new IllegalArgumentException("hash length is wrong");
 
-	this.seed = null;
-	this.h = h;
+        seed = null;
+        //noinspection AssignmentOrReturnOfFieldWithMutableType
+        this.h = h;
 	this.spec = spec;
 	final int b = spec.getCurve().getField().getb();
 
@@ -92,9 +93,9 @@ public final class EdDSAPrivateKeySpec implements KeySpec {
     }
 
     public EdDSAPrivateKeySpec(final byte[] seed, final byte[] h, final byte[] a, final GroupElement A, final EdDSAParameterSpec spec) {
-        this.seed = seed;
-        this.h = h;
-        this.a = a;
+        this.seed = seed.clone();
+        this.h = h.clone();
+        this.a = a.clone();
         this.A = A;
         this.spec = spec;
     }
@@ -103,6 +104,7 @@ public final class EdDSAPrivateKeySpec implements KeySpec {
      *  @return will be null if constructed directly from the private key
      */
     public final byte[] getSeed() {
+        //noinspection AssignmentOrReturnOfFieldWithMutableType
         return seed;
     }
 
@@ -110,6 +112,7 @@ public final class EdDSAPrivateKeySpec implements KeySpec {
      *  @return the hash
      */
     public final byte[] getH() {
+        //noinspection AssignmentOrReturnOfFieldWithMutableType
         return h;
     }
 
@@ -117,6 +120,7 @@ public final class EdDSAPrivateKeySpec implements KeySpec {
      *  @return the private key
      */
     public final byte[] geta() {
+        //noinspection AssignmentOrReturnOfFieldWithMutableType
         return a;
     }
 

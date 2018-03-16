@@ -11,41 +11,34 @@
  */
 package net.i2p.crypto.eddsa;
 
-import java.security.InvalidAlgorithmParameterException;
-import java.security.InvalidParameterException;
-import java.security.KeyPair;
-import java.security.KeyPairGeneratorSpi;
-import java.security.SecureRandom;
-import java.security.spec.AlgorithmParameterSpec;
-import java.util.Hashtable;
+import net.i2p.crypto.eddsa.spec.*;
 
-import net.i2p.crypto.eddsa.spec.EdDSAGenParameterSpec;
-import net.i2p.crypto.eddsa.spec.EdDSANamedCurveSpec;
-import net.i2p.crypto.eddsa.spec.EdDSANamedCurveTable;
-import net.i2p.crypto.eddsa.spec.EdDSAParameterSpec;
-import net.i2p.crypto.eddsa.spec.EdDSAPrivateKeySpec;
-import net.i2p.crypto.eddsa.spec.EdDSAPublicKeySpec;
+import java.security.*;
+import java.security.spec.AlgorithmParameterSpec;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  *  Default keysize is 256 (Ed25519)
  */
+@SuppressWarnings("WeakerAccess")
 public final class KeyPairGenerator extends KeyPairGeneratorSpi {
     private static final int DEFAULT_KEYSIZE = 256;
     private EdDSAParameterSpec edParams;
     private SecureRandom random;
     private boolean initialized;
 
-    private static final Hashtable<Integer, AlgorithmParameterSpec> edParameters;
+    private static final Map<Integer, AlgorithmParameterSpec> edParameters;
 
     static {
-        edParameters = new Hashtable<Integer, AlgorithmParameterSpec>();
+        edParameters = new LinkedHashMap<>();
 
         edParameters.put(Integer.valueOf(256), new EdDSAGenParameterSpec(EdDSANamedCurveTable.ED_25519));
     }
 
     public void initialize(final int keysize, final SecureRandom random) {
         final AlgorithmParameterSpec edParams = edParameters.get(Integer.valueOf(keysize));
-        if (edParams == null)
+        if (null == edParams)
             throw new InvalidParameterException("unknown key type.");
         try {
             initialize(edParams, random);
@@ -87,9 +80,9 @@ public final class KeyPairGenerator extends KeyPairGeneratorSpi {
      * @return the specification for the named curve.
      * @throws InvalidAlgorithmParameterException if the named curve is unknown.
      */
-    private EdDSANamedCurveSpec createNamedCurveSpec(final String curveName) throws InvalidAlgorithmParameterException {
+    private static EdDSANamedCurveSpec createNamedCurveSpec(final String curveName) throws InvalidAlgorithmParameterException {
         final EdDSANamedCurveSpec spec = EdDSANamedCurveTable.getByName(curveName);
-        if (spec == null) {
+        if (null == spec) {
             throw new InvalidAlgorithmParameterException("unknown curve name: " + curveName);
         }
         return spec;

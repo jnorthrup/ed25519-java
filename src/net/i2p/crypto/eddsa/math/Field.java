@@ -11,8 +11,6 @@
  */
 package net.i2p.crypto.eddsa.math;
 
-import java.io.Serializable;
-
 /**
  * An EdDSA finite field. Includes several pre-computed values.
  * @author str4d
@@ -56,8 +54,8 @@ public final class Field   {
         EIGHT = fromByteArray(Constants.EIGHT);
 
         // Precompute values
-        qm2 = this.q.subtract(TWO);
-        qm5d8 = this.q.subtract(FIVE).divide(EIGHT);
+        qm2 = this.getQ().subtract(TWO);
+        qm5d8 = this.getQ().subtract(FIVE).divide(EIGHT);
     }
 
     public final FieldElement fromByteArray(final byte[] x) {
@@ -65,7 +63,7 @@ public final class Field   {
     }
 
     public final int getb() {
-        return b;
+        return getB();
     }
 
     public final FieldElement getQ() {
@@ -86,7 +84,7 @@ public final class Field   {
 
     @Override
     public final int hashCode() {
-        return q.hashCode();
+        return getQ().hashCode();
     }
 
     @Override
@@ -94,6 +92,11 @@ public final class Field   {
         if (!(obj instanceof Field))
             return false;
         final Field f = (Field) obj;
-        return b == f.b && q.equals(f.q);
+        return getB() == f.getB() && getQ().equals(f.getQ());
     }
+
+    public int getB() {
+        return b;
+    }
+
 }

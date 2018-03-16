@@ -39,7 +39,7 @@ import java.util.Map;
  * @author str4d
  */
 public final class EdDSAPrivateKey implements EdDSAKey, PrivateKey {
-    private final static Map<Integer, byte[]> stubs = new LinkedHashMap<>();
+    private static final Map<Integer, byte[]> stubs = new LinkedHashMap<>();
     private static final long serialVersionUID = 23495873459878957L;
     // OID 1.3.101.xxx
     private static final int OID_OLD = 100;
@@ -54,12 +54,12 @@ public final class EdDSAPrivateKey implements EdDSAKey, PrivateKey {
     private final EdDSAParameterSpec edDsaSpec;
 
     public EdDSAPrivateKey(final EdDSAPrivateKeySpec spec) {
-        this.seed = spec.getSeed();
-        this.h = spec.getH();
-        this.a = spec.geta();
-        this.A = spec.getA();
-        this.Abyte = this.A.toByteArray();
-        this.edDsaSpec = spec.getParams();
+        seed = spec.getSeed();
+        h = spec.getH();
+        a = spec.geta();
+        A = spec.getA();
+        Abyte = A.toByteArray();
+        edDsaSpec = spec.getParams();
     }
 
     public EdDSAPrivateKey(final PKCS8EncodedKeySpec spec) throws InvalidKeySpecException {
@@ -93,12 +93,12 @@ public final class EdDSAPrivateKey implements EdDSAKey, PrivateKey {
             int totlen = 48;
             int idlen = 5;
             final int doid = d[OID_BYTE];
-            if (doid == OID_OLD) {
+            if (OID_OLD == doid) {
                 totlen = 49;
                 idlen = 8;
-            } else if (doid == OID_ED25519) {
+            } else if (OID_ED25519 == doid) {
                 // Detect parameter value of NULL
-                if (d[IDLEN_BYTE] == 7) {
+                if (7 == d[IDLEN_BYTE]) {
                     totlen = 50;
                     idlen = 7;
                 }
@@ -117,25 +117,27 @@ public final class EdDSAPrivateKey implements EdDSAKey, PrivateKey {
             // Decoding
             //
             int idx = 0;
-            if (d[idx++] != 0x30 ||
+            //noinspection DuplicateBooleanBranch
+            if (0x30 != d[idx++] ||
                     d[idx++] != (totlen - 2) ||
-                    d[idx++] != 0x02 ||
-                    d[idx++] != 1 ||
-                    d[idx++] != 0 ||
-                    d[idx++] != 0x30 ||
+                    0x02 != d[idx++] ||
+                    1 != d[idx++] ||
+                    0 != d[idx++] ||
+                    0x30 != d[idx++] ||
                     d[idx++] != idlen ||
-                    d[idx++] != 0x06 ||
-                    d[idx++] != 3 ||
-                    d[idx++] != (1 * 40) + 3 ||
-                    d[idx++] != 101) {
+                    0x06 != d[idx++] ||
+                    3 != d[idx++] ||
+                    (1 * 40) + 3 != d[idx++] ||
+                    101 != d[idx++]) {
                 throw new InvalidKeySpecException("unsupported key spec");
             }
             idx++; // OID, checked above
             // parameters only with old OID
-            if (doid == OID_OLD) {
-                if (d[idx++] != 0x0a ||
-                        d[idx++] != 1 ||
-                        d[idx++] != 1) {
+            if (OID_OLD == doid) {
+                //noinspection DuplicateBooleanBranch
+                if (0x0a != d[idx++] ||
+                        1 != d[idx++] ||
+                        1 != d[idx++]) {
                     throw new InvalidKeySpecException("unsupported key spec");
                 }
             } else {
@@ -148,20 +150,20 @@ public final class EdDSAPrivateKey implements EdDSAKey, PrivateKey {
                 //
                 // But Java's default keystore puts it in (when decoding as
                 // PKCS8 and then re-encoding to pass on), so we must accept it.
-                if (idlen == 7) {
-                    if (d[idx++] != 0x05 ||
-                            d[idx++] != 0) {
+                if (7 == idlen) {
+                    if (0x05 != d[idx++] ||
+                            0 != d[idx++]) {
                         throw new InvalidKeySpecException("unsupported key spec");
                     }
                 }
                 // PrivateKey wrapping the CurvePrivateKey
-                if (d[idx++] != 0x04 ||
-                        d[idx++] != 34) {
+                if (0x04 != d[idx++] ||
+                        34 != d[idx++]) {
                     throw new InvalidKeySpecException("unsupported key spec");
                 }
             }
-            if (d[idx++] != 0x04 ||
-                    d[idx++] != 32) {
+            if (0x04 != d[idx++] ||
+                    32 != d[idx++]) {
                 throw new InvalidKeySpecException("unsupported key spec");
             }
             final byte[] rv = new byte[32];
@@ -242,7 +244,7 @@ public final class EdDSAPrivateKey implements EdDSAKey, PrivateKey {
      */
     @Override
     public final byte[] getEncoded() {
-        if (edDsaSpec.equals(EdDSANamedCurveTable.getByName(EdDSANamedCurveTable.ED_25519)) && seed != null) {
+        if (edDsaSpec.equals(EdDSANamedCurveTable.getByName(EdDSANamedCurveTable.ED_25519)) && null != seed) {
             final int totlen = 16 + seed.length;
             final byte[] rv = new byte[totlen];
             final byte[] stub = stubs.computeIfAbsent(seed.length, integer -> new byte[]{(byte) 0x30,
@@ -290,21 +292,21 @@ public final class EdDSAPrivateKey implements EdDSAKey, PrivateKey {
      * directly constructed from H
      */
     public final byte[] getSeed() {
-        return seed;
+        return seed.clone();
     }
 
     /**
      * @return the hash of the seed
      */
     public final byte[] getH() {
-        return h;
+        return h.clone();
     }
 
     /**
      * @return the private key
      */
     public final byte[] geta() {
-        return a;
+        return a.clone();
     }
 
     /**
@@ -318,7 +320,7 @@ public final class EdDSAPrivateKey implements EdDSAKey, PrivateKey {
      * @return the public key
      */
     public final byte[] getAbyte() {
-        return Abyte;
+        return Abyte.clone();
     }
 
     @Override

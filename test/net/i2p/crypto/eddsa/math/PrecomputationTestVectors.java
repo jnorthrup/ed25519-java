@@ -25,85 +25,87 @@ public interface PrecomputationTestVectors {
     GroupElement[][] testPrecmp = getPrecomputation("basePrecmp");
     GroupElement[] testDblPrecmp = getDoublePrecomputation("baseDblPrecmp");
 
-    static GroupElement[][] getPrecomputation(String fileName) {
-        EdDSANamedCurveSpec ed25519 = EdDSANamedCurveTable.getByName(EdDSANamedCurveTable.ED_25519);
-        Curve curve = ed25519.getCurve();
-        Field field = curve.getField();
-        GroupElement[][] precmp = new GroupElement[32][8];
+    static GroupElement[][] getPrecomputation(final String fileName) {
+        final EdDSANamedCurveSpec ed25519 = EdDSANamedCurveTable.getByName(EdDSANamedCurveTable.ED_25519);
+        final Curve curve = ed25519.getCurve();
+        final Field field = curve.getField();
+        final GroupElement[][] precmp = new GroupElement[32][8];
         BufferedReader file = null;
         int row = 0, col = 0;
         try {
-            InputStream is = PrecomputationTestVectors.class.getResourceAsStream(fileName);
-            if (is == null)
+            final InputStream is = PrecomputationTestVectors.class.getResourceAsStream(fileName);
+            if (null == is)
                 throw new IOException("Resource not found: " + fileName);
             file = new BufferedReader(new InputStreamReader(is));
             while (true) {
                 String line = file.readLine();
                 if (null != (line)) {
-                    if (line.equals(" },"))
+                    if (" },".equals(line))
                         col += 1;
-                    else if (line.equals("},")) {
+                    else if ("},".equals(line)) {
                         col = 0;
                         row += 1;
                     } else if (line.startsWith("  { ")) {
-                        String ypxStr = line.substring(4, line.lastIndexOf(' '));
-                        FieldElement ypx = field.fromByteArray(
+                        final String ypxStr = line.substring(4, line.lastIndexOf(' '));
+                        final FieldElement ypx = field.fromByteArray(
                                 Utils.hexToBytes(ypxStr));
-                        line = file.readLine();
-                        String ymxStr = line.substring(4, line.lastIndexOf(' '));
-                        FieldElement ymx = field.fromByteArray(
+                        String line2  = file.readLine();
+                        final String ymxStr = line2.substring(4, line2.lastIndexOf(' '));
+                        final FieldElement ymx = field.fromByteArray(
                                 Utils.hexToBytes(ymxStr));
-                        line = file.readLine();
-                        String xy2dStr = line.substring(4, line.lastIndexOf(' '));
-                        FieldElement xy2d = field.fromByteArray(
-                                Utils.hexToBytes(xy2dStr));
-                        precmp[row][col] = GroupElement.precomp(curve,
-                                ypx, ymx, xy2d);
+                        {
+                         final String    line1 = file.readLine();
+                            final String xy2dStr = line1.substring(4, line1.lastIndexOf(' '));
+                            final FieldElement xy2d = field.fromByteArray(
+                                    Utils.hexToBytes(xy2dStr));
+                            precmp[row][col] = GroupElement.precomp(curve,
+                                    ypx, ymx, xy2d);
+                        }
                     }
                 } else {
                     break;
                 }
             }
-        } catch (IOException e) {
+        } catch (final IOException e) {
             e.printStackTrace();
         } finally {
             if (null != file) try {
                 file.close();
-            } catch (IOException e) {
+            } catch (final IOException e) {
             }
         }
         return precmp;
     }
 
-    static GroupElement[] getDoublePrecomputation(String fileName) {
-        EdDSANamedCurveSpec ed25519 = EdDSANamedCurveTable.getByName(EdDSANamedCurveTable.ED_25519);
-        Curve curve = ed25519.getCurve();
-        Field field = curve.getField();
-        GroupElement[] dblPrecmp = new GroupElement[8];
+    static GroupElement[] getDoublePrecomputation(final String fileName) {
+        final EdDSANamedCurveSpec ed25519 = EdDSANamedCurveTable.getByName(EdDSANamedCurveTable.ED_25519);
+        final Curve curve = ed25519.getCurve();
+        final Field field = curve.getField();
+        final GroupElement[] dblPrecmp = new GroupElement[8];
         BufferedReader file = null;
         int row = 0;
         try {
-            InputStream is = PrecomputationTestVectors.class.getResourceAsStream(fileName);
-            if (is == null)
+            final InputStream is = PrecomputationTestVectors.class.getResourceAsStream(fileName);
+            if (null == is)
                 throw new IOException("Resource not found: " + fileName);
             file = new BufferedReader(new InputStreamReader(is));
             String line;
             do {
                 line = file.readLine();
                 if (null != line) {
-                    if (line.equals(" },")) {
+                    if (" },".equals(line)) {
                         row += 1;
                     } else if (line.startsWith("  { ")) {
-                        String ypxStr = line.substring(4, line.lastIndexOf(' '));
-                        FieldElement ypx = field.fromByteArray(
+                        final String ypxStr = line.substring(4, line.lastIndexOf(' '));
+                        final FieldElement ypx = field.fromByteArray(
                                 Utils.hexToBytes(ypxStr));
                         line = file.readLine();
-                        String ymxStr = line.substring(4, line.lastIndexOf(' '));
-                        FieldElement ymx = field.fromByteArray(
+                        final String ymxStr = line.substring(4, line.lastIndexOf(' '));
+                        final FieldElement ymx = field.fromByteArray(
                                 Utils.hexToBytes(ymxStr));
                         line = file.readLine();
-                        String xy2dStr = line.substring(4, line.lastIndexOf(' '));
-                        FieldElement xy2d = field.fromByteArray(
+                        final String xy2dStr = line.substring(4, line.lastIndexOf(' '));
+                        final FieldElement xy2d = field.fromByteArray(
                                 Utils.hexToBytes(xy2dStr));
                         dblPrecmp[row] = GroupElement.precomp(curve,
                                 ypx, ymx, xy2d);
@@ -112,12 +114,12 @@ public interface PrecomputationTestVectors {
                     break;
                 }
             } while (true);
-        } catch (IOException e) {
+        } catch (final IOException e) {
             e.printStackTrace();
         } finally {
-            if (file != null) try {
+            if (null != file) try {
                 file.close();
-            } catch (IOException e) {
+            } catch (final IOException e) {
             }
         }
         return dblPrecmp;

@@ -11,7 +11,6 @@
  */
 package net.i2p.crypto.eddsa.math.bigint;
 
-import java.io.Serializable;
 import java.math.BigInteger;
 
 import net.i2p.crypto.eddsa.math.Field;
@@ -22,7 +21,7 @@ import net.i2p.crypto.eddsa.math.FieldElement;
  * @author str4d
  *
  */
-public final class BigIntegerFieldElement extends FieldElement    {
+public final class BigIntegerFieldElement extends FieldElement {
 
     /**
      * Variable is package private for encoding.
@@ -108,7 +107,7 @@ public final class BigIntegerFieldElement extends FieldElement    {
     public FieldElement cmov(final FieldElement val, final int b) {
         // Not constant-time, but it doesn't really matter because none of the underlying BigInteger operations
         // are either, so there's not much point in trying hard here ...
-        return b == 0 ? this : val;
+        return 0 == b ? this : val;
     }
 
     @Override

@@ -27,11 +27,11 @@ public final class BigIntegerScalarOps implements ScalarOps {
     }
 
     public byte[] reduce(final byte[] s) {
-        return enc.encode(enc.toBigInteger(s).mod(l));
+        return enc.encode(BigIntegerLittleEndianEncoding.toBigInteger(s).mod(l));
     }
 
     public byte[] multiplyAndAdd(final byte[] a, final byte[] b, final byte[] c) {
-        return enc.encode(enc.toBigInteger(a).multiply(enc.toBigInteger(b)).add(enc.toBigInteger(c)).mod(l));
+        return enc.encode(BigIntegerLittleEndianEncoding.toBigInteger(a).multiply(BigIntegerLittleEndianEncoding.toBigInteger(b)).add(BigIntegerLittleEndianEncoding.toBigInteger(c)).mod(l));
     }
 
 }

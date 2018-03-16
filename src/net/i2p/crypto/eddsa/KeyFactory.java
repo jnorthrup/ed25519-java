@@ -28,6 +28,7 @@ import net.i2p.crypto.eddsa.spec.EdDSAPublicKeySpec;
  * @author str4d
  *
  */
+@SuppressWarnings("WeakerAccess")
 public final class KeyFactory extends KeyFactorySpi {
 
     protected PrivateKey engineGeneratePrivate(final KeySpec keySpec)
@@ -57,12 +58,12 @@ public final class KeyFactory extends KeyFactorySpi {
             throws InvalidKeySpecException {
         if (keySpec.isAssignableFrom(EdDSAPublicKeySpec.class) && key instanceof EdDSAPublicKey) {
             final EdDSAPublicKey k = (EdDSAPublicKey) key;
-            if (k.getParams() != null) {
+            if (null != k.getParams()) {
                 return (T) new EdDSAPublicKeySpec(k.getA(), k.getParams());
             }
         } else if (keySpec.isAssignableFrom(EdDSAPrivateKeySpec.class) && key instanceof EdDSAPrivateKey) {
             final EdDSAPrivateKey k = (EdDSAPrivateKey) key;
-            if (k.getParams() != null) {
+            if (null != k.getParams()) {
                 return (T) new EdDSAPrivateKeySpec(k.getSeed(), k.getH(), k.geta(), k.getA(), k.getParams());
             }
         }

@@ -39,9 +39,11 @@ public final class Ed25519FieldElement extends FieldElement {
      */
     public Ed25519FieldElement(final Field f, final int[] t) {
         super(f);
-        if (t.length != 10)
+        if (10 == t.length) {
+            this.t = t.clone();
+        } else {
             throw new IllegalArgumentException("Invalid radix-2^51 representation");
-        this.t = t;
+        }
     }
 
     private static final byte[] ZERO = new byte[32];
@@ -53,7 +55,7 @@ public final class Ed25519FieldElement extends FieldElement {
      */
     public boolean isNonZero() {
         final byte[] s = toByteArray();
-        return Utils.equal(s, ZERO) == 0;
+        return 0 == Utils.equal(s, ZERO);
     }
 
     /**
@@ -762,7 +764,7 @@ public final class Ed25519FieldElement extends FieldElement {
         t2 = t1.square();
 
         // 2^10 - 2^5
-        for (int i = 1; i < 5; ++i) {
+        for (int i = 1; 5 > i; ++i) {
             t2 = t2.square();
         }
 
@@ -790,7 +792,7 @@ public final class Ed25519FieldElement extends FieldElement {
         t3 = t2.square();
 
         // 2^40 - 2^20
-        for (int i = 1; i < 20; ++i) {
+        for (int i = 1; 20 > i; ++i) {
             t3 = t3.square();
         }
 
@@ -875,7 +877,7 @@ public final class Ed25519FieldElement extends FieldElement {
         t3 = t2.square();
 
         // 2^200 - 2^100
-        for (int i = 1; i < 100; ++i) {
+        for (int i = 1; 100 > i; ++i) {
             t3 = t3.square();
         }
 
@@ -1118,7 +1120,7 @@ public final class Ed25519FieldElement extends FieldElement {
         t2 = t1.square();
 
         // 2^200 - 2^100
-        for (int i = 1; i < 100; ++i) {
+        for (int i = 1; 100 > i; ++i) {
             t2 = t2.square();
         }
 

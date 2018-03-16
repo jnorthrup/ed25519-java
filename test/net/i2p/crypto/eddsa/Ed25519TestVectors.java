@@ -31,9 +31,9 @@ public interface  Ed25519TestVectors {
         public final byte[] message;
         public final byte[] sig;
 
-        private TestTuple(String line) {
+        private TestTuple(final String line) {
             caseNum = ++numCases;
-            String[] x = line.split(":");
+            final String[] x = line.split(":");
             seed = hexToBytes(x[0].substring(0, 64));
             pk = hexToBytes(x[1]);
             message = hexToBytes(x[2]);
@@ -43,19 +43,19 @@ public interface  Ed25519TestVectors {
 
     Collection<Ed25519TestVectors.TestTuple> testCases = getTestData("test.data");
 
-    static Collection<Ed25519TestVectors.TestTuple> getTestData(String fileName) {
+    static Collection<Ed25519TestVectors.TestTuple> getTestData(final String fileName) {
         List<Ed25519TestVectors.TestTuple> testCases = new ArrayList<Ed25519TestVectors.TestTuple>();
         BufferedReader file = null;
         try {
-            InputStream is = Ed25519TestVectors.class.getResourceAsStream(fileName);
-            if (is == null)
+            final InputStream is = Ed25519TestVectors.class.getResourceAsStream(fileName);
+            if (null == is)
                 throw new IOException("Resource not found: " + fileName);
             file = new BufferedReader(new InputStreamReader(is));
             testCases = file.lines().map(Ed25519TestVectors.TestTuple::new).collect(Collectors.toList());
-        } catch (IOException e) {
+        } catch (final IOException e) {
             e.printStackTrace();
         } finally {
-            if (file != null) try { file.close(); } catch (IOException e) {}
+            if (null != file) try { file.close(); } catch (final IOException e) {}
         }
         return testCases;
     }

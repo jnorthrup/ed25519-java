@@ -45,14 +45,14 @@ public class BigIntegerFieldElementTest extends AbstractFieldElementTest {
 
     protected FieldElement getRandomFieldElement() {
         BigInteger r;
-        Random rnd = new SecureRandom();
+        final Random rnd = new SecureRandom();
         do {
             r = new BigInteger(255, rnd);
-        } while (r.compareTo(getQ()) >= 0);
+        } while (0 <= r.compareTo(getQ()));
         return new BigIntegerFieldElement(ed25519Field, r);
     }
 
-    protected BigInteger toBigInteger(FieldElement f) {
+    protected BigInteger toBigInteger(final FieldElement f) {
         return ((BigIntegerFieldElement)f).bi;
     }
 
@@ -79,15 +79,15 @@ public class BigIntegerFieldElementTest extends AbstractFieldElementTest {
      */
     @Test
     public void testToByteArray() {
-        byte[] zero = ZERO.toByteArray();
+        final byte[] zero = ZERO.toByteArray();
         assertThat(zero.length, is(equalTo(BYTES_ZERO.length)));
         assertThat(zero, is(equalTo(BYTES_ZERO)));
 
-        byte[] one = ONE.toByteArray();
+        final byte[] one = ONE.toByteArray();
         assertThat(one.length, is(equalTo(BYTES_ONE.length)));
         assertThat(one, is(equalTo(BYTES_ONE)));
 
-        byte[] ten = new BigIntegerFieldElement(ed25519Field, BigInteger.TEN).toByteArray();
+        final byte[] ten = new BigIntegerFieldElement(ed25519Field, BigInteger.TEN).toByteArray();
         assertThat(ten.length, is(equalTo(BYTES_TEN.length)));
         assertThat(ten, is(equalTo(BYTES_TEN)));
     }

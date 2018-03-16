@@ -123,7 +123,7 @@ public interface Utils {
      * @return the hex representation as a string.
      */
     static String bytesToHex(final byte[] raw) {
-        if ( raw == null ) {
+        if (null == raw) {
             return null;
         }
         final StringBuilder hex = new StringBuilder(2 * raw.length);
