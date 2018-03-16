@@ -773,9 +773,15 @@ public class Ed25519FieldElement extends FieldElement {
         t2 = t1.square();
 
         // 2^20 - 2^10
-        for (int i = 1; i < 10; ++i) {
-            t2 = t2.square();
-        }
+        t2 = t2.square();
+        t2 = t2.square();
+        t2 = t2.square();
+        t2 = t2.square();
+        t2 = t2.square();
+        t2 = t2.square();
+        t2 = t2.square();
+        t2 = t2.square();
+        t2 = t2.square();
 
         // 2^20 - 2^0
         t2 = t2.multiply(t1);
@@ -795,9 +801,15 @@ public class Ed25519FieldElement extends FieldElement {
         t2 = t2.square();
 
         // 2^50 - 2^10
-        for (int i = 1; i < 10; ++i) {
-            t2 = t2.square();
-        }
+        t2 = t2.square();
+        t2 = t2.square();
+        t2 = t2.square();
+        t2 = t2.square();
+        t2 = t2.square();
+        t2 = t2.square();
+        t2 = t2.square();
+        t2 = t2.square();
+        t2 = t2.square();
 
         // 2^50 - 2^0
         t1 = t2.multiply(t1);
@@ -806,9 +818,55 @@ public class Ed25519FieldElement extends FieldElement {
         t2 = t1.square();
 
         // 2^100 - 2^50
-        for (int i = 1; i < 50; ++i) {
-            t2 = t2.square();
-        }
+        t2 = t2.square();
+        t2 = t2.square();
+        t2 = t2.square();
+        t2 = t2.square();
+        t2 = t2.square();
+        t2 = t2.square();
+        t2 = t2.square();
+        t2 = t2.square();
+        t2 = t2.square();
+        t2 = t2.square();
+        t2 = t2.square();
+        t2 = t2.square();
+        t2 = t2.square();
+        t2 = t2.square();
+        t2 = t2.square();
+        t2 = t2.square();
+        t2 = t2.square();
+        t2 = t2.square();
+        t2 = t2.square();
+        t2 = t2.square();
+        t2 = t2.square();
+        t2 = t2.square();
+        t2 = t2.square();
+        t2 = t2.square();
+        t2 = t2.square();
+        t2 = t2.square();
+        t2 = t2.square();
+        t2 = t2.square();
+        t2 = t2.square();
+        t2 = t2.square();
+        t2 = t2.square();
+        t2 = t2.square();
+        t2 = t2.square();
+        t2 = t2.square();
+        t2 = t2.square();
+        t2 = t2.square();
+        t2 = t2.square();
+        t2 = t2.square();
+        t2 = t2.square();
+        t2 = t2.square();
+        t2 = t2.square();
+        t2 = t2.square();
+        t2 = t2.square();
+        t2 = t2.square();
+        t2 = t2.square();
+        t2 = t2.square();
+        t2 = t2.square();
+        t2 = t2.square();
+        t2 = t2.square();
 
         // 2^100 - 2^0
         t2 = t2.multiply(t1);
@@ -828,9 +886,55 @@ public class Ed25519FieldElement extends FieldElement {
         t2 = t2.square();
 
         // 2^250 - 2^50
-        for (int i = 1; i < 50; ++i) {
-            t2 = t2.square();
-        }
+        t2 = t2.square();
+        t2 = t2.square();
+        t2 = t2.square();
+        t2 = t2.square();
+        t2 = t2.square();
+        t2 = t2.square();
+        t2 = t2.square();
+        t2 = t2.square();
+        t2 = t2.square();
+        t2 = t2.square();
+        t2 = t2.square();
+        t2 = t2.square();
+        t2 = t2.square();
+        t2 = t2.square();
+        t2 = t2.square();
+        t2 = t2.square();
+        t2 = t2.square();
+        t2 = t2.square();
+        t2 = t2.square();
+        t2 = t2.square();
+        t2 = t2.square();
+        t2 = t2.square();
+        t2 = t2.square();
+        t2 = t2.square();
+        t2 = t2.square();
+        t2 = t2.square();
+        t2 = t2.square();
+        t2 = t2.square();
+        t2 = t2.square();
+        t2 = t2.square();
+        t2 = t2.square();
+        t2 = t2.square();
+        t2 = t2.square();
+        t2 = t2.square();
+        t2 = t2.square();
+        t2 = t2.square();
+        t2 = t2.square();
+        t2 = t2.square();
+        t2 = t2.square();
+        t2 = t2.square();
+        t2 = t2.square();
+        t2 = t2.square();
+        t2 = t2.square();
+        t2 = t2.square();
+        t2 = t2.square();
+        t2 = t2.square();
+        t2 = t2.square();
+        t2 = t2.square();
+        t2 = t2.square();
 
         // 2^250 - 2^0
         t1 = t2.multiply(t1);
@@ -839,9 +943,10 @@ public class Ed25519FieldElement extends FieldElement {
         t1 = t1.square();
 
         // 2^255 - 2^5
-        for (int i = 1; i < 5; ++i) {
-            t1 = t1.square();
-        }
+        t1 = t1.square();
+        t1 = t1.square();
+        t1 = t1.square();
+        t1 = t1.square();
 
         // 2^255 - 21
         return t1.multiply(t0);
@@ -883,9 +988,10 @@ public class Ed25519FieldElement extends FieldElement {
         t1 = t0.square();
 
         // 2^10 - 2^5
-        for (int i = 1; i < 5; ++i) {
-            t1 = t1.square();
-        }
+        t1 = t1.square();
+        t1 = t1.square();
+        t1 = t1.square();
+        t1 = t1.square();
 
         // 2^10 - 2^0
         t0 = t1.multiply(t0);
@@ -894,9 +1000,15 @@ public class Ed25519FieldElement extends FieldElement {
         t1 = t0.square();
 
         // 2^20 - 2^10
-        for (int i = 1; i < 10; ++i) {
-            t1 = t1.square();
-        }
+        t1 = t1.square();
+        t1 = t1.square();
+        t1 = t1.square();
+        t1 = t1.square();
+        t1 = t1.square();
+        t1 = t1.square();
+        t1 = t1.square();
+        t1 = t1.square();
+        t1 = t1.square();
 
         // 2^20 - 2^0
         t1 = t1.multiply(t0);
@@ -905,9 +1017,25 @@ public class Ed25519FieldElement extends FieldElement {
         t2 = t1.square();
 
         // 2^40 - 2^20
-        for (int i = 1; i < 20; ++i) {
-            t2 = t2.square();
-        }
+        t2 = t2.square();
+        t2 = t2.square();
+        t2 = t2.square();
+        t2 = t2.square();
+        t2 = t2.square();
+        t2 = t2.square();
+        t2 = t2.square();
+        t2 = t2.square();
+        t2 = t2.square();
+        t2 = t2.square();
+        t2 = t2.square();
+        t2 = t2.square();
+        t2 = t2.square();
+        t2 = t2.square();
+        t2 = t2.square();
+        t2 = t2.square();
+        t2 = t2.square();
+        t2 = t2.square();
+        t2 = t2.square();
 
         // 2^40 - 2^0
         t1 = t2.multiply(t1);
@@ -916,9 +1044,15 @@ public class Ed25519FieldElement extends FieldElement {
         t1 = t1.square();
 
         // 2^50 - 2^10
-        for (int i = 1; i < 10; ++i) {
-            t1 = t1.square();
-        }
+        t1 = t1.square();
+        t1 = t1.square();
+        t1 = t1.square();
+        t1 = t1.square();
+        t1 = t1.square();
+        t1 = t1.square();
+        t1 = t1.square();
+        t1 = t1.square();
+        t1 = t1.square();
 
         // 2^50 - 2^0
         t0 = t1.multiply(t0);
@@ -927,9 +1061,55 @@ public class Ed25519FieldElement extends FieldElement {
         t1 = t0.square();
 
         // 2^100 - 2^50
-        for (int i = 1; i < 50; ++i) {
-            t1 = t1.square();
-        }
+        t1 = t1.square();
+        t1 = t1.square();
+        t1 = t1.square();
+        t1 = t1.square();
+        t1 = t1.square();
+        t1 = t1.square();
+        t1 = t1.square();
+        t1 = t1.square();
+        t1 = t1.square();
+        t1 = t1.square();
+        t1 = t1.square();
+        t1 = t1.square();
+        t1 = t1.square();
+        t1 = t1.square();
+        t1 = t1.square();
+        t1 = t1.square();
+        t1 = t1.square();
+        t1 = t1.square();
+        t1 = t1.square();
+        t1 = t1.square();
+        t1 = t1.square();
+        t1 = t1.square();
+        t1 = t1.square();
+        t1 = t1.square();
+        t1 = t1.square();
+        t1 = t1.square();
+        t1 = t1.square();
+        t1 = t1.square();
+        t1 = t1.square();
+        t1 = t1.square();
+        t1 = t1.square();
+        t1 = t1.square();
+        t1 = t1.square();
+        t1 = t1.square();
+        t1 = t1.square();
+        t1 = t1.square();
+        t1 = t1.square();
+        t1 = t1.square();
+        t1 = t1.square();
+        t1 = t1.square();
+        t1 = t1.square();
+        t1 = t1.square();
+        t1 = t1.square();
+        t1 = t1.square();
+        t1 = t1.square();
+        t1 = t1.square();
+        t1 = t1.square();
+        t1 = t1.square();
+        t1 = t1.square();
 
         // 2^100 - 2^0
         t1 = t1.multiply(t0);
@@ -949,9 +1129,55 @@ public class Ed25519FieldElement extends FieldElement {
         t1 = t1.square();
 
         // 2^250 - 2^50
-        for (int i = 1; i < 50; ++i) {
-            t1 = t1.square();
-        }
+        t1 = t1.square();
+        t1 = t1.square();
+        t1 = t1.square();
+        t1 = t1.square();
+        t1 = t1.square();
+        t1 = t1.square();
+        t1 = t1.square();
+        t1 = t1.square();
+        t1 = t1.square();
+        t1 = t1.square();
+        t1 = t1.square();
+        t1 = t1.square();
+        t1 = t1.square();
+        t1 = t1.square();
+        t1 = t1.square();
+        t1 = t1.square();
+        t1 = t1.square();
+        t1 = t1.square();
+        t1 = t1.square();
+        t1 = t1.square();
+        t1 = t1.square();
+        t1 = t1.square();
+        t1 = t1.square();
+        t1 = t1.square();
+        t1 = t1.square();
+        t1 = t1.square();
+        t1 = t1.square();
+        t1 = t1.square();
+        t1 = t1.square();
+        t1 = t1.square();
+        t1 = t1.square();
+        t1 = t1.square();
+        t1 = t1.square();
+        t1 = t1.square();
+        t1 = t1.square();
+        t1 = t1.square();
+        t1 = t1.square();
+        t1 = t1.square();
+        t1 = t1.square();
+        t1 = t1.square();
+        t1 = t1.square();
+        t1 = t1.square();
+        t1 = t1.square();
+        t1 = t1.square();
+        t1 = t1.square();
+        t1 = t1.square();
+        t1 = t1.square();
+        t1 = t1.square();
+        t1 = t1.square();
 
         // 2^250 - 2^0
         t0 = t1.multiply(t0);
@@ -976,17 +1202,20 @@ public class Ed25519FieldElement extends FieldElement {
      * @return a copy of this if $b == 0$, or a copy of val if $b == 1$.
      */
     @Override
-    public FieldElement cmov(final FieldElement val, int b) {
+    public FieldElement cmov(final FieldElement val, final  int b) {
         final Ed25519FieldElement that = (Ed25519FieldElement) val;
-        b = -b;
         final int[] result = new int[10];
-        for (int i = 0; i < 10; i++) {
-            result[i] = this.t[i];
-            int x = this.t[i] ^ that.t[i];
-            x &= b;
-            result[i] ^= x;
-        }
-        return new Ed25519FieldElement(this.f, result);
+        result[0] = t[0] ^ (t[0] ^ that.t[0]) & -b;
+        result[1] = t[1] ^ (t[1] ^ that.t[1]) & -b;
+        result[2] = t[2] ^ (t[2] ^ that.t[2]) & -b;
+        result[3] = t[3] ^ (t[3] ^ that.t[3]) & -b;
+        result[4] = t[4] ^ (t[4] ^ that.t[4]) & -b;
+        result[5] = t[5] ^ (t[5] ^ that.t[5]) & -b;
+        result[6] = t[6] ^ (t[6] ^ that.t[6]) & -b;
+        result[7] = t[7] ^ (t[7] ^ that.t[7]) & -b;
+        result[8] = t[8] ^ (t[8] ^ that.t[8]) & -b;
+        result[9] = t[9] ^ (t[9] ^ that.t[9]) & -b;
+        return new Ed25519FieldElement(f, result);
     }
 
     @Override
@@ -996,10 +1225,11 @@ public class Ed25519FieldElement extends FieldElement {
 
     @Override
     public boolean equals(final Object obj) {
-        if (!(obj instanceof Ed25519FieldElement))
-            return false;
-        final Ed25519FieldElement fe = (Ed25519FieldElement) obj;
-        return 1==Utils.equal(toByteArray(), fe.toByteArray());
+        if ((obj instanceof Ed25519FieldElement)) {
+            final Ed25519FieldElement fe = (Ed25519FieldElement) obj;
+            return 1 == Utils.equal(toByteArray(), fe.toByteArray());
+        }
+        return false;
     }
 
     @Override

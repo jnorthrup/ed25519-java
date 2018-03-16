@@ -165,18 +165,20 @@ public class Ed25519LittleEndianEncoding extends Encoding {
         return s;
     }
 
-    static int load_3(final byte[] in, int offset) {
-        int result = in[offset++] & 0xff;
-        result |= (in[offset++] & 0xff) << 8;
-        result |= (in[offset] & 0xff) << 16;
+    static int load_3(final byte[] in, final int offset) {
+        int i = offset;
+        int result = in[i++] & 0xff;
+        result |= (in[i++] & 0xff) << 8;
+        result |= (in[i] & 0xff) << 16;
         return result;
     }
 
-    static long load_4(final byte[] in, int offset) {
-        int result = in[offset++] & 0xff;
-        result |= (in[offset++] & 0xff) << 8;
-        result |= (in[offset++] & 0xff) << 16;
-        result |= in[offset] << 24;
+    static long load_4(final byte[] in, final int offset) {
+        int i = offset;
+        int result = in[i++] & 0xff;
+        result |= (in[i++] & 0xff) << 8;
+        result |= (in[i++] & 0xff) << 16;
+        result |= in[i] << 24;
         return ((long)result) & 0xffffffffL;
     }
 
