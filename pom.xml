@@ -197,6 +197,6 @@
     <artifactId>eddsa</artifactId>
     <version>0.2.1</version>
     <name>EdDSA-Java</name>
-    <packaging>bundle</packaging>
+    <!--<packaging>bundle</packaging>-->
     <description>Implementation of EdDSA in Java</description>
 </project>
