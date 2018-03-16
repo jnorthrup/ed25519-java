@@ -181,7 +181,7 @@ public final class EdDSAEngine extends Signature {
             throw new SignatureException("unsupported in one-shot mode");
         if (baos == null)
             baos = new ByteArrayOutputStream(256);
-        baos.write(b);
+        baos.write((int) b);
     }
 
     /**

@@ -54,9 +54,9 @@ public class EdDSAPrivateKeySpec implements KeySpec {
             }*/
             // Saves ~0.4ms per key when running signing tests.
             // TODO: are these bitflips the same for any hash function?
-            h[0] &= 248;
-            h[(b/8)-1] &= 63;
-            h[(b/8)-1] |= 64;
+            h[0] = (byte) (h[0] & 248);
+            h[(b / 8) - 1] = (byte) (h[(b / 8) - 1] & 63);
+            h[(b / 8) - 1] = (byte) (h[(b / 8) - 1] | 64);
             a = Arrays.copyOfRange(h, 0, b/8);
 
             A = spec.getB().scalarMultiply(a);
@@ -83,9 +83,9 @@ public class EdDSAPrivateKeySpec implements KeySpec {
 	this.spec = spec;
 	int b = spec.getCurve().getField().getb();
 
-        h[0] &= 248;
-        h[(b/8)-1] &= 63;
-        h[(b/8)-1] |= 64;
+        h[0] = (byte) (h[0] & 248);
+        h[(b / 8) - 1] = (byte) (h[(b / 8) - 1] & 63);
+        h[(b / 8) - 1] = (byte) (h[(b / 8) - 1] | 64);
         a = Arrays.copyOfRange(h, 0, b/8);
 
         A = spec.getB().scalarMultiply(a);
