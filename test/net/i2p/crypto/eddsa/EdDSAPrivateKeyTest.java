@@ -16,7 +16,6 @@ import static org.junit.Assert.*;
 
 import java.security.spec.PKCS8EncodedKeySpec;
 
-import net.i2p.crypto.eddsa.Utils;
 import net.i2p.crypto.eddsa.spec.EdDSAPrivateKeySpec;
 
 import org.junit.Test;
@@ -45,8 +44,8 @@ public class EdDSAPrivateKeyTest {
         final EdDSAPrivateKeySpec decoded = new EdDSAPrivateKeySpec(
                 keyIn.getSeed(),
                 keyIn.getH(),
-                keyIn.geta(),
-                keyIn.getA(),
+                keyIn.getByteArr(),
+                keyIn.getAPrime(),
                 keyIn.getParams());
         final EdDSAPrivateKey keyOut = new EdDSAPrivateKey(decoded);
 
@@ -64,8 +63,8 @@ public class EdDSAPrivateKeyTest {
         final EdDSAPrivateKeySpec decoded = new EdDSAPrivateKeySpec(
                 keyIn.getSeed(),
                 keyIn.getH(),
-                keyIn.geta(),
-                keyIn.getA(),
+                keyIn.getByteArr(),
+                keyIn.getAPrime(),
                 keyIn.getParams());
         final EdDSAPrivateKey keyOut = new EdDSAPrivateKey(decoded);
 
@@ -83,8 +82,8 @@ public class EdDSAPrivateKeyTest {
         final EdDSAPrivateKeySpec decoded = new EdDSAPrivateKeySpec(
                 keyIn.getSeed(),
                 keyIn.getH(),
-                keyIn.geta(),
-                keyIn.getA(),
+                keyIn.getByteArr(),
+                keyIn.getAPrime(),
                 keyIn.getParams());
         final EdDSAPrivateKey keyOut = new EdDSAPrivateKey(decoded);
 

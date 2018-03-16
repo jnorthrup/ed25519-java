@@ -221,7 +221,7 @@ public final class EdDSAEngine extends Signature {
     private byte[] x_engineSign() throws SignatureException {
         final Curve curve = key.getParams().getCurve();
         final ScalarOps sc = key.getParams().getScalarOps();
-        final byte[] a = ((EdDSAPrivateKey) key).geta();
+        final byte[] a = ((EdDSAPrivateKey) key).getByteArr();
 
         final byte[] message;
         final int offset;

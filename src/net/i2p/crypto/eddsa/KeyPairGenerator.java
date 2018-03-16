@@ -68,7 +68,7 @@ public final class KeyPairGenerator extends KeyPairGeneratorSpi {
         random.nextBytes(seed);
 
         final EdDSAPrivateKeySpec privKey = new EdDSAPrivateKeySpec(seed, edParams);
-        final EdDSAPublicKeySpec pubKey = new EdDSAPublicKeySpec(privKey.getA(), edParams);
+        final EdDSAPublicKeySpec pubKey = new EdDSAPublicKeySpec(privKey.getAPrime(), edParams);
 
         return new KeyPair(new EdDSAPublicKey(pubKey), new EdDSAPrivateKey(privKey));
     }

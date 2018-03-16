@@ -48,17 +48,17 @@ public final class EdDSAPrivateKey implements EdDSAKey, PrivateKey {
     private static final int IDLEN_BYTE = 6;
     private final byte[] seed;
     private final byte[] h;
-    private final byte[] a;
-    private final GroupElement A;
+    private final byte[] byteArr;
+    private final GroupElement aPrime;
     private final byte[] Abyte;
     private final EdDSAParameterSpec edDsaSpec;
 
     public EdDSAPrivateKey(final EdDSAPrivateKeySpec spec) {
         seed = spec.getSeed();
         h = spec.getH();
-        a = spec.geta();
-        A = spec.getA();
-        Abyte = A.toByteArray();
+        byteArr = spec.getByteArr();
+        aPrime = spec.getAPrime();
+        Abyte = aPrime.toByteArray();
         edDsaSpec = spec.getParams();
     }
 
@@ -305,15 +305,15 @@ public final class EdDSAPrivateKey implements EdDSAKey, PrivateKey {
     /**
      * @return the private key
      */
-    public final byte[] geta() {
-        return a.clone();
+    public final byte[] getByteArr() {
+        return byteArr.clone();
     }
 
     /**
      * @return the public key
      */
-    public final GroupElement getA() {
-        return A;
+    public final GroupElement getAPrime() {
+        return aPrime;
     }
 
     /**

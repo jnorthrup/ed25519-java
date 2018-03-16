@@ -14,7 +14,6 @@ package net.i2p.crypto.eddsa.spec;
 import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.*;
 import net.i2p.crypto.eddsa.Utils;
-import net.i2p.crypto.eddsa.spec.EdDSANamedCurveTable;
 
 import org.junit.Rule;
 import org.junit.Test;
@@ -42,7 +41,7 @@ public class EdDSAPrivateKeySpecTest {
         final EdDSAPrivateKeySpec key = new EdDSAPrivateKeySpec(ZERO_SEED, ed25519);
         assertThat(key.getSeed(), is(equalTo(ZERO_SEED)));
         assertThat(key.getH(), is(equalTo(ZERO_H)));
-        assertThat(key.getA().toByteArray(), is(equalTo(ZERO_PK)));
+        assertThat(key.getAPrime().toByteArray(), is(equalTo(ZERO_PK)));
     }
 
     @Test
@@ -60,7 +59,7 @@ public class EdDSAPrivateKeySpecTest {
         final EdDSAPrivateKeySpec key = new EdDSAPrivateKeySpec(ed25519, ZERO_H);
         assertThat(key.getSeed(), is(nullValue()));
         assertThat(key.getH(), is(equalTo(ZERO_H)));
-        assertThat(key.getA().toByteArray(), is(equalTo(ZERO_PK)));
+        assertThat(key.getAPrime().toByteArray(), is(equalTo(ZERO_PK)));
     }
 
     @Test

@@ -64,7 +64,7 @@ public final class KeyFactory extends KeyFactorySpi {
         } else if (keySpec.isAssignableFrom(EdDSAPrivateKeySpec.class) && key instanceof EdDSAPrivateKey) {
             final EdDSAPrivateKey k = (EdDSAPrivateKey) key;
             if (null != k.getParams()) {
-                return (T) new EdDSAPrivateKeySpec(k.getSeed(), k.getH(), k.geta(), k.getA(), k.getParams());
+                return (T) new EdDSAPrivateKeySpec(k.getSeed(), k.getH(), k.getByteArr(), k.getAPrime(), k.getParams());
             }
         }
         throw new InvalidKeySpecException("not implemented yet " + key + " " + keySpec);

@@ -25,8 +25,8 @@ import net.i2p.crypto.eddsa.math.GroupElement;
 public final class EdDSAPrivateKeySpec implements KeySpec {
     private final byte[] seed;
     private final byte[] h;
-    private final byte[] a;
-    private final GroupElement A;
+    private final byte[] byteArr;
+    private final GroupElement aPrime;
     private final EdDSAParameterSpec spec;
 
     /**
@@ -57,9 +57,9 @@ public final class EdDSAPrivateKeySpec implements KeySpec {
             h[0] = (byte) (h[0] & 248);
             h[(b / 8) - 1] = (byte) (h[(b / 8) - 1] & 63);
             h[(b / 8) - 1] = (byte) (h[(b / 8) - 1] | 64);
-            a = Arrays.copyOfRange(h, 0, b/8);
+            byteArr = Arrays.copyOfRange(h, 0, b/8);
 
-            A = spec.getB().scalarMultiply(a);
+            aPrime = spec.getB().scalarMultiply(byteArr);
         } catch (final NoSuchAlgorithmException e) {
             throw new IllegalArgumentException("Unsupported hash algorithm");
         }
@@ -87,16 +87,16 @@ public final class EdDSAPrivateKeySpec implements KeySpec {
         h[0] = (byte) (h[0] & 248);
         h[(b / 8) - 1] = (byte) (h[(b / 8) - 1] & 63);
         h[(b / 8) - 1] = (byte) (h[(b / 8) - 1] | 64);
-        a = Arrays.copyOfRange(h, 0, b/8);
+        byteArr = Arrays.copyOfRange(h, 0, b/8);
 
-        A = spec.getB().scalarMultiply(a);
+        aPrime = spec.getB().scalarMultiply(byteArr);
     }
 
-    public EdDSAPrivateKeySpec(final byte[] seed, final byte[] h, final byte[] a, final GroupElement A, final EdDSAParameterSpec spec) {
+    public EdDSAPrivateKeySpec(final byte[] seed, final byte[] h, final byte[] byteArr, final GroupElement A, final EdDSAParameterSpec spec) {
         this.seed = seed.clone();
         this.h = h.clone();
-        this.a = a.clone();
-        this.A = A;
+        this.byteArr = byteArr.clone();
+        this.aPrime = A;
         this.spec = spec;
     }
 
@@ -119,16 +119,16 @@ public final class EdDSAPrivateKeySpec implements KeySpec {
     /**
      *  @return the private key
      */
-    public final byte[] geta() {
+    public final byte[] getByteArr() {
         //noinspection AssignmentOrReturnOfFieldWithMutableType
-        return a;
+        return byteArr;
     }
 
     /**
      *  @return the public key
      */
-    public final GroupElement getA() {
-        return A;
+    public final GroupElement getAPrime() {
+        return aPrime;
     }
 
     public final EdDSAParameterSpec getParams() {
