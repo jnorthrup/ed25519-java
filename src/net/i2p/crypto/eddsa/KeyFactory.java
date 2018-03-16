@@ -30,7 +30,7 @@ import net.i2p.crypto.eddsa.spec.EdDSAPublicKeySpec;
  */
 public final class KeyFactory extends KeyFactorySpi {
 
-    protected PrivateKey engineGeneratePrivate(KeySpec keySpec)
+    protected PrivateKey engineGeneratePrivate(final KeySpec keySpec)
             throws InvalidKeySpecException {
         if (keySpec instanceof EdDSAPrivateKeySpec) {
             return new EdDSAPrivateKey((EdDSAPrivateKeySpec) keySpec);
@@ -41,7 +41,7 @@ public final class KeyFactory extends KeyFactorySpi {
         throw new InvalidKeySpecException("key spec not recognised: " + keySpec.getClass());
     }
 
-    protected PublicKey engineGeneratePublic(KeySpec keySpec)
+    protected PublicKey engineGeneratePublic(final KeySpec keySpec)
             throws InvalidKeySpecException {
         if (keySpec instanceof EdDSAPublicKeySpec) {
             return new EdDSAPublicKey((EdDSAPublicKeySpec) keySpec);
@@ -53,15 +53,15 @@ public final class KeyFactory extends KeyFactorySpi {
     }
 
     @SuppressWarnings("unchecked")
-    protected <T extends KeySpec> T engineGetKeySpec(Key key, Class<T> keySpec)
+    protected <T extends KeySpec> T engineGetKeySpec(final Key key, final Class<T> keySpec)
             throws InvalidKeySpecException {
         if (keySpec.isAssignableFrom(EdDSAPublicKeySpec.class) && key instanceof EdDSAPublicKey) {
-            EdDSAPublicKey k = (EdDSAPublicKey) key;
+            final EdDSAPublicKey k = (EdDSAPublicKey) key;
             if (k.getParams() != null) {
                 return (T) new EdDSAPublicKeySpec(k.getA(), k.getParams());
             }
         } else if (keySpec.isAssignableFrom(EdDSAPrivateKeySpec.class) && key instanceof EdDSAPrivateKey) {
-            EdDSAPrivateKey k = (EdDSAPrivateKey) key;
+            final EdDSAPrivateKey k = (EdDSAPrivateKey) key;
             if (k.getParams() != null) {
                 return (T) new EdDSAPrivateKeySpec(k.getSeed(), k.getH(), k.geta(), k.getA(), k.getParams());
             }
@@ -69,7 +69,7 @@ public final class KeyFactory extends KeyFactorySpi {
         throw new InvalidKeySpecException("not implemented yet " + key + " " + keySpec);
     }
 
-    protected Key engineTranslateKey(Key key) throws InvalidKeyException {
+    protected Key engineTranslateKey(final Key key) throws InvalidKeyException {
         throw new InvalidKeyException("No other EdDSA key providers known");
     }
 }

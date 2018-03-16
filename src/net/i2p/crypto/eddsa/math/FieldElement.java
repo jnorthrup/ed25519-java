@@ -21,7 +21,7 @@ public abstract class FieldElement implements Serializable {
 
     protected final Field f;
 
-    public FieldElement(Field f) {
+    public FieldElement(final Field f) {
         if (null == f) {
             throw new IllegalArgumentException("field cannot be null");
         }
@@ -56,7 +56,7 @@ public abstract class FieldElement implements Serializable {
 
     public abstract FieldElement negate();
 
-    public FieldElement divide(FieldElement val) {
+    public FieldElement divide(final FieldElement val) {
         return multiply(val.invert());
     }
 

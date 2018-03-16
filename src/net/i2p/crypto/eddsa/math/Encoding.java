@@ -20,7 +20,7 @@ package net.i2p.crypto.eddsa.math;
 public abstract class Encoding {
     protected Field f;
 
-    public synchronized void setField(Field f) {
+    public synchronized void setField(final Field f) {
         if (this.f != null)
             throw new IllegalStateException("already set");
         this.f = f;

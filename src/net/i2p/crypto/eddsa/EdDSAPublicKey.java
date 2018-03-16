@@ -50,14 +50,14 @@ public class EdDSAPublicKey implements EdDSAKey, PublicKey {
     private static final int OID_BYTE = 8;
     private static final int IDLEN_BYTE = 3;
 
-    public EdDSAPublicKey(EdDSAPublicKeySpec spec) {
+    public EdDSAPublicKey(final EdDSAPublicKeySpec spec) {
         this.A = spec.getA();
         this.Aneg = spec.getNegativeA();
         this.Abyte = this.A.toByteArray();
         this.edDsaSpec = spec.getParams();
     }
 
-    public EdDSAPublicKey(X509EncodedKeySpec spec) throws InvalidKeySpecException {
+    public EdDSAPublicKey(final X509EncodedKeySpec spec) throws InvalidKeySpecException {
         this(new EdDSAPublicKeySpec(decode(spec.getEncoded()),
                                     EdDSANamedCurveTable.getByName(EdDSANamedCurveTable.ED_25519)));
     }
@@ -114,8 +114,8 @@ public class EdDSAPublicKey implements EdDSAKey, PublicKey {
     @Override
     public byte[] getEncoded() {
         if (edDsaSpec.equals(EdDSANamedCurveTable.getByName(EdDSANamedCurveTable.ED_25519))) {
-            int totlen = 12 + Abyte.length;
-            byte[] rv = new byte[totlen];
+            final int totlen = 12 + Abyte.length;
+            final byte[] rv = new byte[totlen];
             // sequence
             rv[0] = (byte) 0x30;
             rv[1] = (byte) ((int) (byte) (totlen - 2) & 0xff);
@@ -160,14 +160,14 @@ public class EdDSAPublicKey implements EdDSAKey, PublicKey {
      *
      * @return 32 bytes for Ed25519, throws for other curves
      */
-    private static byte[] decode(byte[] d) throws InvalidKeySpecException {
+    private static byte[] decode(final byte[] d) throws InvalidKeySpecException {
         try {
             //
             // Setup and OID check
             //
             int totlen = 44;
             int idlen = 5;
-            int doid = d[OID_BYTE];
+            final int doid = d[OID_BYTE];
             if (doid == OID_OLD) {
                 totlen = 47;
                 idlen = 8;
@@ -232,10 +232,10 @@ public class EdDSAPublicKey implements EdDSAKey, PublicKey {
                 d[idx++] != 0) {
                 throw new InvalidKeySpecException("unsupported key spec");
             }
-            byte[] rv = new byte[32];
+            final byte[] rv = new byte[32];
             System.arraycopy(d, idx, rv, 0, 32);
             return rv;
-        } catch (IndexOutOfBoundsException ioobe) {
+        } catch (final IndexOutOfBoundsException ioobe) {
             throw new InvalidKeySpecException(ioobe);
         }
     }
@@ -263,12 +263,12 @@ public class EdDSAPublicKey implements EdDSAKey, PublicKey {
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(final Object o) {
         if (o == this)
             return true;
         if (!(o instanceof EdDSAPublicKey))
             return false;
-        EdDSAPublicKey pk = (EdDSAPublicKey) o;
+        final EdDSAPublicKey pk = (EdDSAPublicKey) o;
         return Arrays.equals(Abyte, pk.getAbyte()) &&
                edDsaSpec.equals(pk.getParams());
     }

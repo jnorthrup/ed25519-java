@@ -30,14 +30,14 @@ public class Curve implements Serializable {
     private final GroupElement zeroP3;
     private final GroupElement zeroPrecomp;
 
-    public Curve(Field f, byte[] d, FieldElement I) {
+    public Curve(final Field f, final byte[] d, final FieldElement I) {
         this.f = f;
         this.d = f.fromByteArray(d);
         this.d2 = this.d.add(this.d);
         this.I = I;
 
-        FieldElement zero = f.ZERO;
-        FieldElement one = f.ONE;
+        final FieldElement zero = f.ZERO;
+        final FieldElement one = f.ONE;
         zeroP2 = GroupElement.p2(this, zero, one, one);
         zeroP3 = GroupElement.p3(this, zero, one, one, zero);
         zeroPrecomp = GroupElement.precomp(this, one, one, zero);
@@ -59,7 +59,7 @@ public class Curve implements Serializable {
         return I;
     }
 
-    public GroupElement getZero(GroupElement.Representation repr) {
+    public GroupElement getZero(final GroupElement.Representation repr) {
         switch (repr) {
         case P2:
             return zeroP2;
@@ -72,8 +72,8 @@ public class Curve implements Serializable {
         }
     }
 
-    public GroupElement createPoint(byte[] P, boolean precompute) {
-        GroupElement ge = new GroupElement(this, P);
+    public GroupElement createPoint(final byte[] P, final boolean precompute) {
+        final GroupElement ge = new GroupElement(this, P);
         if (precompute)
             ge.precompute(true);
         return ge;
@@ -87,12 +87,12 @@ public class Curve implements Serializable {
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(final Object o) {
         if (o == this)
             return true;
         if (!(o instanceof Curve))
             return false;
-        Curve c = (Curve) o;
+        final Curve c = (Curve) o;
         return f.equals(c.getField()) &&
                d.equals(c.getD()) &&
                I.equals(c.getI());

@@ -49,12 +49,12 @@ public final class  EdDSANamedCurveTable {
 
     private static final Hashtable<String, EdDSANamedCurveSpec> curves = new Hashtable<String, EdDSANamedCurveSpec>();
 
-    public static void defineCurve(EdDSANamedCurveSpec curve) {
+    public static void defineCurve(final EdDSANamedCurveSpec curve) {
         curves.put(curve.getName().toLowerCase(Locale.ENGLISH), curve);
     }
 
-    static void defineCurveAlias(String name, String alias) {
-        EdDSANamedCurveSpec curve = curves.get(name.toLowerCase(Locale.ENGLISH));
+    static void defineCurveAlias(final String name, final String alias) {
+        final EdDSANamedCurveSpec curve = curves.get(name.toLowerCase(Locale.ENGLISH));
         if (curve == null) {
             throw new IllegalStateException();
         }
@@ -66,7 +66,7 @@ public final class  EdDSANamedCurveTable {
         defineCurve(ed25519);
     }
 
-    public static EdDSANamedCurveSpec getByName(String name) {
+    public static EdDSANamedCurveSpec getByName(final String name) {
         return curves.get(name.toLowerCase(Locale.ENGLISH));
     }
 }

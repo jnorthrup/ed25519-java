@@ -53,7 +53,7 @@ public class EdDSAPrivateKey implements EdDSAKey, PrivateKey {
     private final byte[] Abyte;
     private final EdDSAParameterSpec edDsaSpec;
 
-    public EdDSAPrivateKey(EdDSAPrivateKeySpec spec) {
+    public EdDSAPrivateKey(final EdDSAPrivateKeySpec spec) {
         this.seed = spec.getSeed();
         this.h = spec.getH();
         this.a = spec.geta();
@@ -62,7 +62,7 @@ public class EdDSAPrivateKey implements EdDSAKey, PrivateKey {
         this.edDsaSpec = spec.getParams();
     }
 
-    public EdDSAPrivateKey(PKCS8EncodedKeySpec spec) throws InvalidKeySpecException {
+    public EdDSAPrivateKey(final PKCS8EncodedKeySpec spec) throws InvalidKeySpecException {
         this(new EdDSAPrivateKeySpec(decode(spec.getEncoded()),
                 EdDSANamedCurveTable.getByName(EdDSANamedCurveTable.ED_25519)));
     }
@@ -85,14 +85,14 @@ public class EdDSAPrivateKey implements EdDSAKey, PrivateKey {
      *
      * @return 32 bytes for Ed25519, throws for other curves
      */
-    private static byte[] decode(byte[] d) throws InvalidKeySpecException {
+    private static byte[] decode(final byte[] d) throws InvalidKeySpecException {
         try {
             //
             // Setup and OID check
             //
             int totlen = 48;
             int idlen = 5;
-            int doid = d[OID_BYTE];
+            final int doid = d[OID_BYTE];
             if (doid == OID_OLD) {
                 totlen = 49;
                 idlen = 8;
@@ -164,10 +164,10 @@ public class EdDSAPrivateKey implements EdDSAKey, PrivateKey {
                     d[idx++] != 32) {
                 throw new InvalidKeySpecException("unsupported key spec");
             }
-            byte[] rv = new byte[32];
+            final byte[] rv = new byte[32];
             System.arraycopy(d, idx, rv, 0, 32);
             return rv;
-        } catch (IndexOutOfBoundsException ioobe) {
+        } catch (final IndexOutOfBoundsException ioobe) {
             throw new InvalidKeySpecException(ioobe);
         }
     }
@@ -243,9 +243,9 @@ public class EdDSAPrivateKey implements EdDSAKey, PrivateKey {
     @Override
     public byte[] getEncoded() {
         if (edDsaSpec.equals(EdDSANamedCurveTable.getByName(EdDSANamedCurveTable.ED_25519)) && seed != null) {
-            int totlen = 16 + seed.length;
-            byte[] rv = new byte[totlen];
-            byte[] stub = stubs.computeIfAbsent(seed.length, integer -> new byte[]{(byte) 0x30,
+            final int totlen = 16 + seed.length;
+            final byte[] rv = new byte[totlen];
+            final byte[] stub = stubs.computeIfAbsent(seed.length, integer -> new byte[]{(byte) 0x30,
                     (byte) ((int) (byte) (totlen - 2) & 0xff),
                     // version
                     (byte) 0x02,
@@ -327,10 +327,10 @@ public class EdDSAPrivateKey implements EdDSAKey, PrivateKey {
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(final Object o) {
         if (o != this) {
             if (o instanceof EdDSAPrivateKey) {
-                EdDSAPrivateKey pk = (EdDSAPrivateKey) o;
+                final EdDSAPrivateKey pk = (EdDSAPrivateKey) o;
                 return Arrays.equals(seed, pk.getSeed()) && edDsaSpec.equals(pk.getParams());
             }
             return false;

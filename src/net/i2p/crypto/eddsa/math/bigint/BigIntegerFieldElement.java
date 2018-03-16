@@ -29,7 +29,7 @@ public class BigIntegerFieldElement extends FieldElement implements Serializable
      */
     final BigInteger bi;
 
-    public BigIntegerFieldElement(Field f, BigInteger bi) {
+    public BigIntegerFieldElement(final Field f, final BigInteger bi) {
         super(f);
         this.bi = bi;
     }
@@ -38,7 +38,7 @@ public class BigIntegerFieldElement extends FieldElement implements Serializable
         return !bi.equals(BigInteger.ZERO);
     }
 
-    public FieldElement add(FieldElement val) {
+    public FieldElement add(final FieldElement val) {
         return new BigIntegerFieldElement(f, bi.add(((BigIntegerFieldElement)val).bi)).mod(f.getQ());
     }
 
@@ -47,7 +47,7 @@ public class BigIntegerFieldElement extends FieldElement implements Serializable
         return new BigIntegerFieldElement(f, bi.add(BigInteger.ONE)).mod(f.getQ());
     }
 
-    public FieldElement subtract(FieldElement val) {
+    public FieldElement subtract(final FieldElement val) {
         return new BigIntegerFieldElement(f, bi.subtract(((BigIntegerFieldElement)val).bi)).mod(f.getQ());
     }
 
@@ -61,15 +61,15 @@ public class BigIntegerFieldElement extends FieldElement implements Serializable
     }
 
     @Override
-    public FieldElement divide(FieldElement val) {
+    public FieldElement divide(final FieldElement val) {
         return divide(((BigIntegerFieldElement)val).bi);
     }
 
-    public FieldElement divide(BigInteger val) {
+    public FieldElement divide(final BigInteger val) {
         return new BigIntegerFieldElement(f, bi.divide(val)).mod(f.getQ());
     }
 
-    public FieldElement multiply(FieldElement val) {
+    public FieldElement multiply(final FieldElement val) {
         return new BigIntegerFieldElement(f, bi.multiply(((BigIntegerFieldElement)val).bi)).mod(f.getQ());
     }
 
@@ -78,7 +78,7 @@ public class BigIntegerFieldElement extends FieldElement implements Serializable
     }
 
     public FieldElement squareAndDouble() {
-        FieldElement sq = square();
+        final FieldElement sq = square();
         return sq.add(sq);
     }
 
@@ -88,15 +88,15 @@ public class BigIntegerFieldElement extends FieldElement implements Serializable
         return new BigIntegerFieldElement(f, bi.modInverse(((BigIntegerFieldElement)f.getQ()).bi));
     }
 
-    public FieldElement mod(FieldElement m) {
+    public FieldElement mod(final FieldElement m) {
         return new BigIntegerFieldElement(f, bi.mod(((BigIntegerFieldElement)m).bi));
     }
 
-    public FieldElement modPow(FieldElement e, FieldElement m) {
+    public FieldElement modPow(final FieldElement e, final FieldElement m) {
         return new BigIntegerFieldElement(f, bi.modPow(((BigIntegerFieldElement)e).bi, ((BigIntegerFieldElement)m).bi));
     }
 
-    public FieldElement pow(FieldElement e){
+    public FieldElement pow(final FieldElement e){
         return modPow(e, f.getQ());
     }
 
@@ -105,7 +105,7 @@ public class BigIntegerFieldElement extends FieldElement implements Serializable
     }
 
     @Override
-    public FieldElement cmov(FieldElement val, int b) {
+    public FieldElement cmov(final FieldElement val, final int b) {
         // Not constant-time, but it doesn't really matter because none of the underlying BigInteger operations
         // are either, so there's not much point in trying hard here ...
         return b == 0 ? this : val;
@@ -117,10 +117,10 @@ public class BigIntegerFieldElement extends FieldElement implements Serializable
     }
 
     @Override
-    public boolean equals(Object obj) {
+    public boolean equals(final Object obj) {
         if (!(obj instanceof BigIntegerFieldElement))
             return false;
-        BigIntegerFieldElement fe = (BigIntegerFieldElement) obj;
+        final BigIntegerFieldElement fe = (BigIntegerFieldElement) obj;
         return bi.equals(fe.bi);
     }
 

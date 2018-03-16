@@ -43,19 +43,19 @@ public final class KeyPairGenerator extends KeyPairGeneratorSpi {
         edParameters.put(Integer.valueOf(256), new EdDSAGenParameterSpec(EdDSANamedCurveTable.ED_25519));
     }
 
-    public void initialize(int keysize, SecureRandom random) {
-        AlgorithmParameterSpec edParams = edParameters.get(Integer.valueOf(keysize));
+    public void initialize(final int keysize, final SecureRandom random) {
+        final AlgorithmParameterSpec edParams = edParameters.get(Integer.valueOf(keysize));
         if (edParams == null)
             throw new InvalidParameterException("unknown key type.");
         try {
             initialize(edParams, random);
-        } catch (InvalidAlgorithmParameterException e) {
+        } catch (final InvalidAlgorithmParameterException e) {
             throw new InvalidParameterException("key type not configurable.");
         }
     }
 
     @Override
-    public void initialize(AlgorithmParameterSpec params, SecureRandom random) throws InvalidAlgorithmParameterException {
+    public void initialize(final AlgorithmParameterSpec params, final SecureRandom random) throws InvalidAlgorithmParameterException {
         if (params instanceof EdDSAParameterSpec) {
             edParams = (EdDSAParameterSpec) params;
         } else if (params instanceof EdDSAGenParameterSpec) {
@@ -71,11 +71,11 @@ public final class KeyPairGenerator extends KeyPairGeneratorSpi {
         if (!initialized)
             initialize(DEFAULT_KEYSIZE, new SecureRandom());
 
-        byte[] seed = new byte[edParams.getCurve().getField().getb()/8];
+        final byte[] seed = new byte[edParams.getCurve().getField().getb()/8];
         random.nextBytes(seed);
 
-        EdDSAPrivateKeySpec privKey = new EdDSAPrivateKeySpec(seed, edParams);
-        EdDSAPublicKeySpec pubKey = new EdDSAPublicKeySpec(privKey.getA(), edParams);
+        final EdDSAPrivateKeySpec privKey = new EdDSAPrivateKeySpec(seed, edParams);
+        final EdDSAPublicKeySpec pubKey = new EdDSAPublicKeySpec(privKey.getA(), edParams);
 
         return new KeyPair(new EdDSAPublicKey(pubKey), new EdDSAPrivateKey(privKey));
     }
@@ -87,8 +87,8 @@ public final class KeyPairGenerator extends KeyPairGeneratorSpi {
      * @return the specification for the named curve.
      * @throws InvalidAlgorithmParameterException if the named curve is unknown.
      */
-    protected EdDSANamedCurveSpec createNamedCurveSpec(String curveName) throws InvalidAlgorithmParameterException {
-        EdDSANamedCurveSpec spec = EdDSANamedCurveTable.getByName(curveName);
+    protected EdDSANamedCurveSpec createNamedCurveSpec(final String curveName) throws InvalidAlgorithmParameterException {
+        final EdDSANamedCurveSpec spec = EdDSANamedCurveTable.getByName(curveName);
         if (spec == null) {
             throw new InvalidAlgorithmParameterException("unknown curve name: " + curveName);
         }

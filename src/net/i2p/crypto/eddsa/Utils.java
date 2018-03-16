@@ -25,9 +25,9 @@ public interface Utils {
      * @param c a byte
      * @return 1 if b and c are equal, 0 otherwise.
      */
-    static int equal(int b, int c) {
+    static int equal(final int b, final int c) {
         int result = 0;
-        int xor = b ^ c;
+        final int xor = b ^ c;
         result = result | xor >> 0;
         result = result | xor >> 1;
         result = result | xor >> 2;
@@ -45,7 +45,7 @@ public interface Utils {
      * @param c a byte[]
      * @return 1 if b and c are equal, 0 otherwise.
      */
-    static int equal(byte[] b, byte[] c) {
+    static int equal(final byte[] b, final byte[] c) {
         int result = 0;
         result = result | b[0] ^ c[0];
         result = result | b[1] ^ c[1];
@@ -88,7 +88,7 @@ public interface Utils {
      * @param b the byte to check.
      * @return 1 if the byte is negative, 0 otherwise.
      */
-    static int negative(int b) {
+    static int negative(final int b) {
         return (b >> 8) & 1;
     }
 
@@ -98,7 +98,7 @@ public interface Utils {
      * @param i the bit index.
      * @return 0 or 1, the value of the i'th bit in h
      */
-    static int bit(byte[] h, int i) {
+    static int bit(final byte[] h, final int i) {
         return (h[i >> 3] >> (i & 7)) & 1;
     }
 
@@ -107,9 +107,9 @@ public interface Utils {
      * @param s the hex string to be converted.
      * @return the byte[]
      */
-    static byte[] hexToBytes(String s) {
-        int len = s.length();
-        byte[] data = new byte[len / 2];
+    static byte[] hexToBytes(final String s) {
+        final int len = s.length();
+        final byte[] data = new byte[len / 2];
         for (int i = 0; i < len; i += 2) {
             data[i / 2] = (byte) ((Character.digit(s.charAt(i), 16) << 4)
                     + Character.digit(s.charAt(i+1), 16));
@@ -122,7 +122,7 @@ public interface Utils {
      * @param raw the byte[] to be converted.
      * @return the hex representation as a string.
      */
-    static String bytesToHex(byte[] raw) {
+    static String bytesToHex(final byte[] raw) {
         if ( raw == null ) {
             return null;
         }

@@ -75,8 +75,8 @@ public class Ed25519LittleEndianEncoding extends Encoding {
      * <p>
      * Inserting the expression for $x$ into $(1)$ we get the desired expression for $q$.
      */
-    public byte[] encode(FieldElement x) {
-        int[] h = ((Ed25519FieldElement)x).t;
+    public byte[] encode(final FieldElement x) {
+        final int[] h = ((Ed25519FieldElement)x).t;
         int h0 = h[0];
         int h1 = h[1];
         int h2 = h[2];
@@ -88,16 +88,16 @@ public class Ed25519LittleEndianEncoding extends Encoding {
         int h8 = h[8];
         int h9 = h[9];
         int q;
-        int carry0;
-        int carry1;
-        int carry2;
-        int carry3;
-        int carry4;
-        int carry5;
-        int carry6;
-        int carry7;
-        int carry8;
-        int carry9;
+        final int carry0;
+        final int carry1;
+        final int carry2;
+        final int carry3;
+        final int carry4;
+        final int carry5;
+        final int carry6;
+        final int carry7;
+        final int carry8;
+        final int carry9;
 
         // Step 1:
         // Calculate q
@@ -129,7 +129,7 @@ public class Ed25519LittleEndianEncoding extends Encoding {
         carry9 = h9 >> 25;               h9 -= carry9 << 25;
 
         // Step 2 (straight forward conversion):
-        byte[] s = new byte[32];
+        final byte[] s = new byte[32];
         s[0] = (byte) h0;
         s[1] = (byte) (h0 >> 8);
         s[2] = (byte) (h0 >> 16);
@@ -165,14 +165,14 @@ public class Ed25519LittleEndianEncoding extends Encoding {
         return s;
     }
 
-    static int load_3(byte[] in, int offset) {
+    static int load_3(final byte[] in, int offset) {
         int result = in[offset++] & 0xff;
         result |= (in[offset++] & 0xff) << 8;
         result |= (in[offset] & 0xff) << 16;
         return result;
     }
 
-    static long load_4(byte[] in, int offset) {
+    static long load_4(final byte[] in, int offset) {
         int result = in[offset++] & 0xff;
         result |= (in[offset++] & 0xff) << 8;
         result |= (in[offset++] & 0xff) << 16;
@@ -186,7 +186,7 @@ public class Ed25519LittleEndianEncoding extends Encoding {
      * @param in The 32 byte representation.
      * @return The field element in its $2^{25.5}$ bit representation.
      */
-    public FieldElement decode(byte[] in) {
+    public FieldElement decode(final byte[] in) {
         long h0 = load_4(in, 0);
         long h1 = (long) (load_3(in, 4) << 6);
         long h2 = (long) (load_3(in, 7) << 5);
@@ -197,16 +197,16 @@ public class Ed25519LittleEndianEncoding extends Encoding {
         long h7 = (long) (load_3(in, 23) << 5);
         long h8 = (long) (load_3(in, 26) << 4);
         long h9 = (long) ((load_3(in, 29) & 0x7FFFFF) << 2);
-        long carry0;
-        long carry1;
-        long carry2;
-        long carry3;
-        long carry4;
-        long carry5;
-        long carry6;
-        long carry7;
-        long carry8;
-        long carry9;
+        final long carry0;
+        final long carry1;
+        final long carry2;
+        final long carry3;
+        final long carry4;
+        final long carry5;
+        final long carry6;
+        final long carry7;
+        final long carry8;
+        final long carry9;
 
         // Remember: 2^255 congruent 19 modulo p
         carry9 = (h9 + (long) (1<<24)) >> 25; h0 += carry9 * 19L; h9 -= carry9 << 25;
@@ -221,7 +221,7 @@ public class Ed25519LittleEndianEncoding extends Encoding {
         carry6 = (h6 + (long) (1<<25)) >> 26; h7 += carry6; h6 -= carry6 << 26;
         carry8 = (h8 + (long) (1<<25)) >> 26; h9 += carry8; h8 -= carry8 << 26;
 
-        int[] h = new int[10];
+        final int[] h = new int[10];
         h[0] = (int) h0;
         h[1] = (int) h1;
         h[2] = (int) h2;
@@ -248,8 +248,8 @@ public class Ed25519LittleEndianEncoding extends Encoding {
      *
      * @return true if $x$ is in $\{1,3,5,\dots,q-2\}$, false otherwise.
      */
-    public boolean isNegative(FieldElement x) {
-        byte[] s = encode(x);
+    public boolean isNegative(final FieldElement x) {
+        final byte[] s = encode(x);
         return (s[0] & 1) != 0;
     }
 

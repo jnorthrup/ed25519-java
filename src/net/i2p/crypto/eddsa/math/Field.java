@@ -40,7 +40,7 @@ public class Field implements Serializable {
     private final FieldElement qm5d8;
     private final Encoding enc;
 
-    public Field(int b, byte[] q, Encoding enc) {
+    public Field(final int b, final byte[] q, final Encoding enc) {
         this.b = b;
         this.enc = enc;
         this.enc.setField(this);
@@ -60,7 +60,7 @@ public class Field implements Serializable {
         qm5d8 = this.q.subtract(FIVE).divide(EIGHT);
     }
 
-    public FieldElement fromByteArray(byte[] x) {
+    public FieldElement fromByteArray(final byte[] x) {
         return enc.decode(x);
     }
 
@@ -90,10 +90,10 @@ public class Field implements Serializable {
     }
 
     @Override
-    public boolean equals(Object obj) {
+    public boolean equals(final Object obj) {
         if (!(obj instanceof Field))
             return false;
-        Field f = (Field) obj;
+        final Field f = (Field) obj;
         return b == f.b && q.equals(f.q);
     }
 }

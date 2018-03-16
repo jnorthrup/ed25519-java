@@ -29,7 +29,7 @@ public class EdDSAPublicKeySpec implements KeySpec {
      * @param spec the parameter specification for this key
      * @throws IllegalArgumentException if key length is wrong
      */
-    public EdDSAPublicKeySpec(byte[] pk, EdDSAParameterSpec spec) {
+    public EdDSAPublicKeySpec(final byte[] pk, final EdDSAParameterSpec spec) {
         if (pk.length != spec.getCurve().getField().getb()/8)
             throw new IllegalArgumentException("public-key length is wrong");
 
@@ -40,7 +40,7 @@ public class EdDSAPublicKeySpec implements KeySpec {
         this.spec = spec;
     }
 
-    public EdDSAPublicKeySpec(GroupElement A, EdDSAParameterSpec spec) {
+    public EdDSAPublicKeySpec(final GroupElement A, final EdDSAParameterSpec spec) {
         this.A = A;
         Aneg = A.negate();
         Aneg.precompute(false);

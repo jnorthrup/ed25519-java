@@ -34,7 +34,7 @@ public class EdDSAPrivateKeySpec implements KeySpec {
      *  @param spec the parameter specification for this key
      *  @throws IllegalArgumentException if seed length is wrong or hash algorithm is unsupported
      */
-    public EdDSAPrivateKeySpec(byte[] seed, EdDSAParameterSpec spec) {
+    public EdDSAPrivateKeySpec(final byte[] seed, final EdDSAParameterSpec spec) {
         if (seed.length != spec.getCurve().getField().getb()/8)
             throw new IllegalArgumentException("seed length is wrong");
 
@@ -42,8 +42,8 @@ public class EdDSAPrivateKeySpec implements KeySpec {
         this.seed = seed;
 
         try {
-            MessageDigest hash = MessageDigest.getInstance(spec.getHashAlgorithm());
-            int b = spec.getCurve().getField().getb();
+            final MessageDigest hash = MessageDigest.getInstance(spec.getHashAlgorithm());
+            final int b = spec.getCurve().getField().getb();
 
             // H(k)
             h = hash.digest(seed);
@@ -60,7 +60,7 @@ public class EdDSAPrivateKeySpec implements KeySpec {
             a = Arrays.copyOfRange(h, 0, b/8);
 
             A = spec.getB().scalarMultiply(a);
-        } catch (NoSuchAlgorithmException e) {
+        } catch (final NoSuchAlgorithmException e) {
             throw new IllegalArgumentException("Unsupported hash algorithm");
         }
     }
@@ -74,14 +74,14 @@ public class EdDSAPrivateKeySpec implements KeySpec {
      *  @throws IllegalArgumentException if hash length is wrong
      *  @since 0.1.1
      */
-    public EdDSAPrivateKeySpec(EdDSAParameterSpec spec, byte[] h) {
+    public EdDSAPrivateKeySpec(final EdDSAParameterSpec spec, final byte[] h) {
         if (h.length != spec.getCurve().getField().getb()/4)
             throw new IllegalArgumentException("hash length is wrong");
 
 	this.seed = null;
 	this.h = h;
 	this.spec = spec;
-	int b = spec.getCurve().getField().getb();
+	final int b = spec.getCurve().getField().getb();
 
         h[0] = (byte) (h[0] & 248);
         h[(b / 8) - 1] = (byte) (h[(b / 8) - 1] & 63);
@@ -91,7 +91,7 @@ public class EdDSAPrivateKeySpec implements KeySpec {
         A = spec.getB().scalarMultiply(a);
     }
 
-    public EdDSAPrivateKeySpec(byte[] seed, byte[] h, byte[] a, GroupElement A, EdDSAParameterSpec spec) {
+    public EdDSAPrivateKeySpec(final byte[] seed, final byte[] h, final byte[] a, final GroupElement A, final EdDSAParameterSpec spec) {
         this.seed = seed;
         this.h = h;
         this.a = a;

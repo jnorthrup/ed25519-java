@@ -26,12 +26,12 @@ public class BigIntegerLittleEndianEncoding extends Encoding implements Serializ
     private BigInteger mask;
 
     @Override
-    public synchronized void setField(Field f) {
+    public synchronized void setField(final Field f) {
         super.setField(f);
         mask = BigInteger.ONE.shiftLeft(f.getb()-1).subtract(BigInteger.ONE);
     }
 
-    public byte[] encode(FieldElement x) {
+    public byte[] encode(final FieldElement x) {
         return encode(((BigIntegerFieldElement)x).bi.and(mask));
     }
 
@@ -43,11 +43,11 @@ public class BigIntegerLittleEndianEncoding extends Encoding implements Serializ
      *  @return array of length $b/8$
      *  @throws IllegalStateException if field not set
      */
-    public byte[] encode(BigInteger x) {
+    public byte[] encode(final BigInteger x) {
         if (f == null)
             throw new IllegalStateException("field not set");
-        byte[] in = x.toByteArray();
-        byte[] out = new byte[f.getb()/8];
+        final byte[] in = x.toByteArray();
+        final byte[] out = new byte[f.getb()/8];
         for (int i = 0; i < in.length; i++) {
             out[i] = in[in.length-1-i];
         }
@@ -66,7 +66,7 @@ public class BigIntegerLittleEndianEncoding extends Encoding implements Serializ
      *  @throws IllegalStateException if field not set
      *  @throws IllegalArgumentException if encoding is invalid
      */
-    public FieldElement decode(byte[] in) {
+    public FieldElement decode(final byte[] in) {
         if (f == null)
             throw new IllegalStateException("field not set");
         if (in.length != f.getb()/8)
@@ -80,8 +80,8 @@ public class BigIntegerLittleEndianEncoding extends Encoding implements Serializ
      *  @param in the $(b-1)$-bit encoding of a FieldElement.
      *  @return the decoded value as a BigInteger
      */
-    public BigInteger toBigInteger(byte[] in) {
-        byte[] out = new byte[in.length];
+    public BigInteger toBigInteger(final byte[] in) {
+        final byte[] out = new byte[in.length];
         for (int i = 0; i < in.length; i++) {
             out[i] = in[in.length-1-i];
         }
@@ -96,7 +96,7 @@ public class BigIntegerLittleEndianEncoding extends Encoding implements Serializ
      * elements of $F_q$ are $\{1, 3, 5,\dots, q-2\}$.
      * @return true if negative
      */
-    public boolean isNegative(FieldElement x) {
+    public boolean isNegative(final FieldElement x) {
         return ((BigIntegerFieldElement)x).bi.testBit(0);
     }
 }
