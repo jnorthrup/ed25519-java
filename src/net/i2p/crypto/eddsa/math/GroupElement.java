@@ -351,7 +351,10 @@ public class GroupElement implements Serializable {
                 FieldElement x = X.multiply(recip);
                 FieldElement y = Y.multiply(recip);
                 byte[] s = y.toByteArray();
-                s[s.length - 1] = (byte) (s[s.length - 1] | (x.isNegative() ? (byte) 0x80 : 0));
+                int i = s.length - 1;
+                boolean negative = x.isNegative();
+                byte b = negative ? (byte) 0x80  : (byte) 0 ;
+                s[i] = (byte) (s[i] | (int) b);
                 return s;
             default:
                 return toP2().toByteArray();
@@ -798,12 +801,12 @@ public class GroupElement implements Serializable {
         /* e[63] is between 0 and 7 */
         int carry = 0;
         for (i = 0; i < 63; i++) {
-            e[i] += carry;
+            e[i] = (byte) (e[i] + carry);
             carry = e[i] + 8;
-            carry >>= 4;
-            e[i] -= carry << 4;
+            carry = carry >> 4;
+            e[i] = (byte) (e[i] - (carry << 4));
         }
-        e[63] += carry;
+        e[63] = (byte) (e[63] + carry);
         /* each e[i] is between -8 and 7 */
         return e;
     }
@@ -926,16 +929,16 @@ public class GroupElement implements Serializable {
                     // Accumulate bits if possible
                     if (r[i + b] != 0) {
                         if (r[i] + (r[i + b] << b) <= 15) {
-                            r[i] += r[i + b] << b;
-                            r[i + b] = 0;
+                            r[i] = (byte) (r[i] + (r[i + b] << b));
+                            r[i + b] = (byte) 0;
                         } else if (r[i] - (r[i + b] << b) >= -15) {
-                            r[i] -= r[i + b] << b;
+                            r[i] = (byte) (r[i] - (r[i + b] << b));
                             for (int k = i + b; k < 256; ++k) {
                                 if (r[k] == 0) {
-                                    r[k] = 1;
+                                    r[k] = (byte) 1;
                                     break;
                                 }
-                                r[k] = 0;
+                                r[k] = (byte) 0;
                             }
                         } else
                             break;
