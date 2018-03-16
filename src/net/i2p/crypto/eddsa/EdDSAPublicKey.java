@@ -113,32 +113,32 @@ public class EdDSAPublicKey implements EdDSAKey, PublicKey {
      */
     @Override
     public byte[] getEncoded() {
-        if (!edDsaSpec.equals(EdDSANamedCurveTable.getByName(EdDSANamedCurveTable.ED_25519)))
-            return null;
-        int totlen = 12 + Abyte.length;
-        byte[] rv = new byte[totlen];
-        int idx = 0;
-        // sequence
-        rv[idx++] = 0x30;
-        rv[idx++] = (byte) (totlen - 2);
-        // Algorithm Identifier
-        // sequence
-        rv[idx++] = 0x30;
-        rv[idx++] = 5;
-        // OID
-        // https://msdn.microsoft.com/en-us/library/windows/desktop/bb540809%28v=vs.85%29.aspx
-        rv[idx++] = 0x06;
-        rv[idx++] = 3;
-        rv[idx++] = (1 * 40) + 3;
-        rv[idx++] = 101;
-        rv[idx++] = (byte) OID_ED25519;
-        // params - absent
-        // the key
-        rv[idx++] = 0x03; // bit string
-        rv[idx++] = (byte) (1 + Abyte.length);
-        rv[idx++] = 0; // number of trailing unused bits
-        System.arraycopy(Abyte, 0, rv, idx, Abyte.length);
-        return rv;
+        if (edDsaSpec.equals(EdDSANamedCurveTable.getByName(EdDSANamedCurveTable.ED_25519))) {
+            int totlen = 12 + Abyte.length;
+            byte[] rv = new byte[totlen];
+            // sequence
+            rv[0] = 0x30;
+            rv[1] = (byte) ((byte) (totlen - 2) & 0xff);
+            // Algorithm Identifier
+            // sequence
+            rv[2] = 0x30;
+            rv[3] = 5;
+            // OID
+            // https://msdn.microsoft.com/en-us/library/windows/desktop/bb540809%28v=vs.85%29.aspx
+            rv[4] = 0x06;
+            rv[5] = 3;
+            rv[6] = (1 * 40) + 3;
+            rv[7] = 101;
+            rv[8] = (byte) OID_ED25519;
+            // params - absent
+            // the key
+            rv[9] = 0x03; // bit string
+            rv[10] = (byte) ((byte) (1 + Abyte.length) & 0xff);
+            rv[11] = 0; // number of trailing unused bits
+            System.arraycopy(Abyte, 0, rv, 12, Abyte.length);
+            return rv;
+        }
+        return null;
     }
 
     /**

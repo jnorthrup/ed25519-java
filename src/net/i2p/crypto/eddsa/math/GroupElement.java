@@ -351,7 +351,7 @@ public class GroupElement implements Serializable {
                 FieldElement x = X.multiply(recip);
                 FieldElement y = Y.multiply(recip);
                 byte[] s = y.toByteArray();
-                s[s.length-1] |= (x.isNegative() ? (byte) 0x80 : 0);
+                s[s.length - 1] = (byte) (s[s.length - 1] | (x.isNegative() ? (byte) 0x80 : 0));
                 return s;
             default:
                 return toP2().toByteArray();

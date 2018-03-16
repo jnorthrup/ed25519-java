@@ -33,16 +33,16 @@ public class EdDSAPublicKeySpec implements KeySpec {
         if (pk.length != spec.getCurve().getField().getb()/8)
             throw new IllegalArgumentException("public-key length is wrong");
 
-        this.A = new GroupElement(spec.getCurve(), pk);
+        A = new GroupElement(spec.getCurve(), pk);
         // Precompute -A for use in verification.
-        this.Aneg = A.negate();
+        Aneg = A.negate();
         Aneg.precompute(false);
         this.spec = spec;
     }
 
     public EdDSAPublicKeySpec(GroupElement A, EdDSAParameterSpec spec) {
         this.A = A;
-        this.Aneg = A.negate();
+        Aneg = A.negate();
         Aneg.precompute(false);
         this.spec = spec;
     }

@@ -22,6 +22,40 @@ import java.math.BigInteger;
  */
 public class Ed25519FieldElementTest extends AbstractFieldElementTest {
 
+    public static final byte[] BYTES = {
+            (byte) (0 + 1),
+            (byte) (1 + 1),
+            (byte) (2 + 1),
+            (byte) (3 + 1),
+            (byte) (4 + 1),
+            (byte) (5 + 1),
+            (byte) (6 + 1),
+            (byte) (7 + 1),
+            (byte) (8 + 1),
+            (byte) (9 + 1),
+            (byte) (10 + 1),
+            (byte) (11 + 1),
+            (byte) (12 + 1),
+            (byte) (13 + 1),
+            (byte) (14 + 1),
+            (byte) (15 + 1),
+            (byte) (16 + 1),
+            (byte) (17 + 1),
+            (byte) (18 + 1),
+            (byte) (19 + 1),
+            (byte) (20 + 1),
+            (byte) (21 + 1),
+            (byte) (22 + 1),
+            (byte) (23 + 1),
+            (byte) (24 + 1),
+            (byte) (25 + 1),
+            (byte) (26 + 1),
+            (byte) (27 + 1),
+            (byte) (28 + 1),
+            (byte) (29 + 1),
+            (byte) (30 + 1),
+            (byte) (31 + 1)};
+
     protected FieldElement getRandomFieldElement() {
         return MathUtils.getRandomFieldElement();
     }
@@ -79,17 +113,13 @@ public class Ed25519FieldElementTest extends AbstractFieldElementTest {
     @Test
     public void toStringReturnsCorrectRepresentation() {
         // Arrange:
-        final byte[] bytes = new byte[32];
-        for (int i=0; i<32; i++) {
-            bytes[i] = (byte)(i+1);
-        }
-        final FieldElement f = MathUtils.getField().getEncoding().decode(bytes);
+        final FieldElement f = MathUtils.getField().getEncoding().decode(BYTES);
 
         // Act:
         final String fAsString = f.toString();
         final StringBuilder builder = new StringBuilder();
         builder.append("[Ed25519FieldElement val=");
-        for (byte b : bytes) {
+        for (byte b : BYTES) {
             builder.append(String.format("%02x", b));
         }
         builder.append("]");
