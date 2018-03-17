@@ -37,14 +37,7 @@ public class EdDSANamedCurveTable {
             Utils.hexToBytes("a3785913ca4deb75abd841414d0a700098e879777940c78c73fe6f2bee6c0352"), // d
             ed25519field.fromByteArray(Utils.hexToBytes("b0a00e4a271beec478e42fad0618432fa7d7fb3d99004d2b0bdfc14f8024832b"))); // I
 
-    public static final EdDSANamedCurveSpec ED_25519 = new EdDSANamedCurveSpec(
-            ED_25519,
-            ed25519curve,
-            "SHA-512", // H
-            new Ed25519ScalarOps(), // l
-            ed25519curve.createPoint( // B
-                    Utils.hexToBytes("5866666666666666666666666666666666666666666666666666666666666666"),
-                    true)); // Precompute tables for B
+//    public static final EdDSANamedCurveSpec ED_25519 = ; // Precompute tables for B
 
     private static volatile HashMap<String, EdDSANamedCurveSpec> curves = new HashMap<String, EdDSANamedCurveSpec>();
 
@@ -68,7 +61,14 @@ public class EdDSANamedCurveTable {
 
     static {
         // RFC 8032
-        defineCurve(ED_25519);
+        defineCurve(new EdDSANamedCurveSpec(
+                ED_25519,
+                ed25519curve,
+                "SHA-512", // H
+                new Ed25519ScalarOps(), // l
+                ed25519curve.createPoint( // B
+                        Utils.hexToBytes("5866666666666666666666666666666666666666666666666666666666666666"),
+                        true)));
     }
 
     public static EdDSANamedCurveSpec getByName(String name) {

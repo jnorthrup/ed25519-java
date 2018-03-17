@@ -224,7 +224,9 @@ public class EdDSAEngineTest {
         for (Ed25519TestVectors.TestTuple testCase : Ed25519TestVectors.testCases) {
             EdDSAPublicKeySpec pubKey = new EdDSAPublicKeySpec(testCase.pk, spec);
             PublicKey vKey = new EdDSAPublicKey(pubKey);
-            PublicKey x509Key = X509Key.parse(new DerValue(vKey.getEncoded()));
+            byte[] encoded = vKey.getEncoded();
+            DerValue derValue = new DerValue(encoded);
+            PublicKey x509Key = X509Key.parse(derValue);
             sgr.initVerify(x509Key);
 
             sgr.update(testCase.message);
