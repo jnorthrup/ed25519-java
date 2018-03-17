@@ -38,7 +38,7 @@ import java.util.Arrays;
  *
  */
 public class EdDSAPublicKey implements EdDSAKey, PublicKey {
-    private static final long serialVersionUID = 9837459837498475L;
+
     // OID 1.3.101.xxx
     private static final int OID_OLD = 100;
     private static final int OID_ED25519 = 112;

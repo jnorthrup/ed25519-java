@@ -17,7 +17,7 @@ import static org.junit.Assert.*;
 import java.math.BigInteger;
 
 import net.i2p.crypto.eddsa.Utils;
-import net.i2p.crypto.eddsa.math.Field;
+import net.i2p.crypto.eddsa.math.EdDSAFiniteField;
 import net.i2p.crypto.eddsa.math.ScalarOps;
 import net.i2p.crypto.eddsa.spec.EdDSANamedCurveSpec;
 import net.i2p.crypto.eddsa.spec.EdDSANamedCurveTable;
@@ -31,19 +31,19 @@ import org.junit.Test;
 public class BigIntegerScalarOpsTest {
 
     static final EdDSANamedCurveSpec ed25519 = EdDSANamedCurveTable.getByName(EdDSANamedCurveTable.ED_25519);
-    static final Field ed25519Field = ed25519.getCurve().getField();
+    static final EdDSAFiniteField ED_25519_ED_DSA_FINITE_FIELD = ed25519.getCurve().getField();
 
     /**
      * Test method for {@link net.i2p.crypto.eddsa.math.bigint.BigIntegerScalarOps#reduce(byte[])}.
      */
     @Test
     public void testReduce() {
-        ScalarOps sc = new BigIntegerScalarOps(ed25519Field,
+        ScalarOps sc = new BigIntegerScalarOps(ED_25519_ED_DSA_FINITE_FIELD,
                 new BigInteger("5"));
         assertThat(sc.reduce(new byte[] {7}),
                 is(equalTo(Utils.hexToBytes("0200000000000000000000000000000000000000000000000000000000000000"))));
 
-        ScalarOps sc2 = new BigIntegerScalarOps(ed25519Field,
+        ScalarOps sc2 = new BigIntegerScalarOps(ED_25519_ED_DSA_FINITE_FIELD,
                 new BigInteger("7237005577332262213973186563042994240857116359379907606001950938285454250989"));
         // Example from test case 1
         byte[] r = Utils.hexToBytes("b6b19cd8e0426f5983fa112d89a143aa97dab8bc5deb8d5b6253c928b65272f4044098c2a990039cde5b6a4818df0bfb6e40dc5dee54248032962323e701352d");
@@ -55,12 +55,12 @@ public class BigIntegerScalarOpsTest {
      */
     @Test
     public void testMultiplyAndAdd() {
-        ScalarOps sc = new BigIntegerScalarOps(ed25519Field,
+        ScalarOps sc = new BigIntegerScalarOps(ED_25519_ED_DSA_FINITE_FIELD,
                 new BigInteger("5"));
         assertThat(sc.multiplyAndAdd(new byte[] {7}, new byte[] {2}, new byte[] {5}),
                 is(equalTo(Utils.hexToBytes("0400000000000000000000000000000000000000000000000000000000000000"))));
 
-        ScalarOps sc2 = new BigIntegerScalarOps(ed25519Field,
+        ScalarOps sc2 = new BigIntegerScalarOps(ED_25519_ED_DSA_FINITE_FIELD,
                 new BigInteger("7237005577332262213973186563042994240857116359379907606001950938285454250989"));
         // Example from test case 1
         byte[] h = Utils.hexToBytes("86eabc8e4c96193d290504e7c600df6cf8d8256131ec2c138a3e7e162e525404");

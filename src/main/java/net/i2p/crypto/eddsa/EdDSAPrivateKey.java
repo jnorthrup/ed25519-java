@@ -38,7 +38,7 @@ import net.i2p.crypto.eddsa.spec.EdDSAPrivateKeySpec;
  *
  */
 public class EdDSAPrivateKey implements EdDSAKey, PrivateKey {
-    private static final long serialVersionUID = 23495873459878957L;
+
     private final byte[] seed;
     private final byte[] h;
     private final byte[] a;

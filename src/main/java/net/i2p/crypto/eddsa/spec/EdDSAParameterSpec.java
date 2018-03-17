@@ -27,7 +27,7 @@ import java.io.Serializable;
  *
  */
 public class EdDSAParameterSpec implements AlgorithmParameterSpec, Serializable {
-    private static final long serialVersionUID = 8274987108472012L;
+
     private final Curve curve;
     private final String hashAlgo;
     private final ScalarOps sc;

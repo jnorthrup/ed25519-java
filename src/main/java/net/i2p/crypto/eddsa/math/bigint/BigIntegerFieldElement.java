@@ -14,7 +14,7 @@ package net.i2p.crypto.eddsa.math.bigint;
 import java.io.Serializable;
 import java.math.BigInteger;
 
-import net.i2p.crypto.eddsa.math.Field;
+import net.i2p.crypto.eddsa.math.EdDSAFiniteField;
 import net.i2p.crypto.eddsa.math.FieldElement;
 
 /**
@@ -22,14 +22,14 @@ import net.i2p.crypto.eddsa.math.FieldElement;
  * @author str4d
  *
  */
-public class BigIntegerFieldElement extends FieldElement implements Serializable {
-    private static final long serialVersionUID = 4890398908392808L;
+public class BigIntegerFieldElement extends FieldElement  {
+
     /**
      * Variable is package private for encoding.
      */
     final BigInteger bi;
 
-    public BigIntegerFieldElement(Field f, BigInteger bi) {
+    public BigIntegerFieldElement(EdDSAFiniteField f, BigInteger bi) {
         super(f);
         this.bi = bi;
     }

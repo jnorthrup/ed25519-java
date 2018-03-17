@@ -20,7 +20,7 @@ import java.math.BigInteger;
 /**
  * Tests rely on the BigInteger class.
  */
-public class Ed25519FieldElementTest extends AbstractFieldElementTest {
+public class Ed25519EdDSAFiniteFieldElementTest extends AbstractEdDSAFiniteFieldElementTest {
 
     protected FieldElement getRandomFieldElement() {
         return MathUtils.getRandomFieldElement();
@@ -34,7 +34,7 @@ public class Ed25519FieldElementTest extends AbstractFieldElementTest {
         return MathUtils.getQ();
     }
 
-    protected Field getField() {
+    protected EdDSAFiniteField getField() {
         return MathUtils.getField();
     }
 

@@ -11,7 +11,6 @@
  */
 package net.i2p.crypto.eddsa.math;
 
-import net.i2p.crypto.eddsa.math.*;
 import org.hamcrest.core.*;
 import org.junit.*;
 
@@ -20,12 +19,12 @@ import java.math.BigInteger;
 /**
  * Tests rely on the BigInteger class.
  */
-public abstract class AbstractFieldElementTest {
+public abstract class AbstractEdDSAFiniteFieldElementTest {
 
     protected abstract FieldElement getRandomFieldElement();
     protected abstract BigInteger toBigInteger(FieldElement f);
     protected abstract BigInteger getQ();
-    protected abstract Field getField();
+    protected abstract EdDSAFiniteField getField();
 
     // region isNonZero
 

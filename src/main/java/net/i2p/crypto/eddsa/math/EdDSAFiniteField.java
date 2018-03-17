@@ -18,8 +18,7 @@ import java.io.Serializable;
  * @author str4d
  *
  */
-public class Field implements Serializable {
-    private static final long serialVersionUID = 8746587465875676L;
+public class EdDSAFiniteField  {
 
     public final FieldElement ZERO;
     public final FieldElement ONE;
@@ -40,7 +39,7 @@ public class Field implements Serializable {
     private final FieldElement qm5d8;
     private final Encoding enc;
 
-    public Field(int b, byte[] q, Encoding enc) {
+    public EdDSAFiniteField(int b, byte[] q, Encoding enc) {
         this.b = b;
         this.enc = enc;
         this.enc.setField(this);
@@ -91,9 +90,9 @@ public class Field implements Serializable {
 
     @Override
     public boolean equals(Object obj) {
-        if (!(obj instanceof Field))
+        if (!(obj instanceof EdDSAFiniteField))
             return false;
-        Field f = (Field) obj;
+        EdDSAFiniteField f = (EdDSAFiniteField) obj;
         return b == f.b && q.equals(f.q);
     }
 }

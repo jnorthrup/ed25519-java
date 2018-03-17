@@ -22,7 +22,7 @@ import java.security.Security;
  * @author str4d
  */
 public class EdDSASecurityProvider extends Provider {
-    private static final long serialVersionUID = 1210027906682292307L;
+
     public static final String PROVIDER_NAME = "EdDSA";
 
     public EdDSASecurityProvider() {

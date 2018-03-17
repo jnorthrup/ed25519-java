@@ -16,12 +16,11 @@ import java.io.Serializable;
 /**
  * Note: concrete subclasses must implement hashCode() and equals()
  */
-public abstract class FieldElement implements Serializable {
-    private static final long serialVersionUID = 1239527465875676L;
+public abstract class FieldElement  {
 
-    protected final Field f;
+    protected final EdDSAFiniteField f;
 
-    public FieldElement(Field f) {
+    public FieldElement(EdDSAFiniteField f) {
         if (null == f) {
             throw new IllegalArgumentException("field cannot be null");
         }

@@ -19,9 +19,9 @@ import java.io.Serializable;
  * @author str4d
  *
  */
-public class Curve implements Serializable {
-    private static final long serialVersionUID = 4578920872509827L;
-    private final Field f;
+public class Curve  {
+
+    private final EdDSAFiniteField f;
     private final FieldElement d;
     private final FieldElement d2;
     private final FieldElement I;
@@ -31,7 +31,7 @@ public class Curve implements Serializable {
     private final GroupElement zeroP3PrecomputedDouble;
     private final GroupElement zeroPrecomp;
 
-    public Curve(Field f, byte[] d, FieldElement I) {
+    public Curve(EdDSAFiniteField f, byte[] d, FieldElement I) {
         this.f = f;
         this.d = f.fromByteArray(d);
         this.d2 = this.d.add(this.d);
@@ -45,7 +45,7 @@ public class Curve implements Serializable {
         zeroPrecomp = GroupElement.precomp(this, one, one, zero);
     }
 
-    public Field getField() {
+    public EdDSAFiniteField getField() {
         return f;
     }
 

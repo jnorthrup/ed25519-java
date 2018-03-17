@@ -15,18 +15,18 @@ import java.io.Serializable;
 import java.math.BigInteger;
 
 import net.i2p.crypto.eddsa.math.Encoding;
-import net.i2p.crypto.eddsa.math.Field;
+import net.i2p.crypto.eddsa.math.EdDSAFiniteField;
 import net.i2p.crypto.eddsa.math.FieldElement;
 
-public class BigIntegerLittleEndianEncoding extends Encoding implements Serializable {
-    private static final long serialVersionUID = 3984579843759837L;
+public class BigIntegerLittleEndianEncoding extends Encoding  {
+
     /**
      * Mask where only the first b-1 bits are set.
      */
     private BigInteger mask;
 
     @Override
-    public synchronized void setField(Field f) {
+    public synchronized void setField(EdDSAFiniteField f) {
         super.setField(f);
         mask = BigInteger.ONE.shiftLeft(f.getb()-1).subtract(BigInteger.ONE);
     }

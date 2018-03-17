@@ -31,8 +31,8 @@ import java.util.Arrays;
  *
  * @author str4d
  */
-public class GroupElement implements Serializable {
-    private static final long serialVersionUID = 2395879087349587L;
+public class GroupElement  {
+
 
     /**
      * Available representations for a group element.

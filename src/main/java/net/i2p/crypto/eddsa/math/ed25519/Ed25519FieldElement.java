@@ -37,7 +37,7 @@ public class Ed25519FieldElement extends FieldElement {
      * @param f The underlying field, must be the finite field with $p = 2^{255} - 19$ elements
      * @param t The $2^{25.5}$ bit representation of the field element.
      */
-    public Ed25519FieldElement(Field f, int[] t) {
+    public Ed25519FieldElement(EdDSAFiniteField f, int[] t) {
         super(f);
         if (t.length != 10)
             throw new IllegalArgumentException("Invalid radix-2^51 representation");
