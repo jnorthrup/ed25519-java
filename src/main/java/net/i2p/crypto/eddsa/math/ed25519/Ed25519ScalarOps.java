@@ -35,7 +35,7 @@ public class Ed25519ScalarOps implements ScalarOps {
      *   $s[0]+256*s[1]+\dots+256^{31}*s[31] = s \bmod q$
      *   where $q = 2^{252} + 27742317777372353535851937790883648493$.
      */
-    public byte[] reduce(byte[] s) {
+    public byte[] reduce(final byte[] s) {
         // s0,..., s22 have 21 bits, s23 has 29 bits
         long s0 = 0x1FFFFF & load_3(s, 0);
         long s1 = 0x1FFFFF & (load_4(s, 2) >> 5);
@@ -55,12 +55,12 @@ public class Ed25519ScalarOps implements ScalarOps {
         long s15 = 0x1FFFFF & (load_3(s, 39) >> 3);
         long s16 = 0x1FFFFF & load_3(s, 42);
         long s17 = 0x1FFFFF & (load_4(s, 44) >> 5);
-        long s18 = 0x1FFFFF & (load_3(s, 47) >> 2);
-        long s19 = 0x1FFFFF & (load_4(s, 49) >> 7);
-        long s20 = 0x1FFFFF & (load_4(s, 52) >> 4);
-        long s21 = 0x1FFFFF & (load_3(s, 55) >> 1);
-        long s22 = 0x1FFFFF & (load_4(s, 57) >> 6);
-        long s23 = (load_4(s, 60) >> 3);
+        final long s18 = 0x1FFFFF & (load_3(s, 47) >> 2);
+        final long s19 = 0x1FFFFF & (load_4(s, 49) >> 7);
+        final long s20 = 0x1FFFFF & (load_4(s, 52) >> 4);
+        final long s21 = 0x1FFFFF & (load_3(s, 55) >> 1);
+        final long s22 = 0x1FFFFF & (load_4(s, 57) >> 6);
+        final long s23 = (load_4(s, 60) >> 3);
         long carry0;
         long carry1;
         long carry2;
@@ -73,11 +73,11 @@ public class Ed25519ScalarOps implements ScalarOps {
         long carry9;
         long carry10;
         long carry11;
-        long carry12;
-        long carry13;
-        long carry14;
-        long carry15;
-        long carry16;
+        final long carry12;
+        final long carry13;
+        final long carry14;
+        final long carry15;
+        final long carry16;
 
         /**
          * Lots of magic numbers :)
@@ -286,7 +286,7 @@ public class Ed25519ScalarOps implements ScalarOps {
         carry10 = s10 >> 21; s11 += carry10; s10 -= carry10 << 21;
 
         // s0, ..., s11 got 21 bits each.
-        byte[] result = new byte[32];
+        final byte[] result = new byte[32];
         result[0] = (byte) s0;
         result[1] = (byte) (s0 >> 8);
         result[2] = (byte) ((s0 >> 16) | (s1 << 5));
@@ -338,43 +338,43 @@ public class Ed25519ScalarOps implements ScalarOps {
      * <p>
      * See the comments in {@link #reduce(byte[])} for an explanation of the algorithm.
      */
-    public byte[] multiplyAndAdd(byte[] a, byte[] b, byte[] c) {
-        long a0 = 0x1FFFFF & load_3(a, 0);
-        long a1 = 0x1FFFFF & (load_4(a, 2) >> 5);
-        long a2 = 0x1FFFFF & (load_3(a, 5) >> 2);
-        long a3 = 0x1FFFFF & (load_4(a, 7) >> 7);
-        long a4 = 0x1FFFFF & (load_4(a, 10) >> 4);
-        long a5 = 0x1FFFFF & (load_3(a, 13) >> 1);
-        long a6 = 0x1FFFFF & (load_4(a, 15) >> 6);
-        long a7 = 0x1FFFFF & (load_3(a, 18) >> 3);
-        long a8 = 0x1FFFFF & load_3(a, 21);
-        long a9 = 0x1FFFFF & (load_4(a, 23) >> 5);
-        long a10 = 0x1FFFFF & (load_3(a, 26) >> 2);
-        long a11 = (load_4(a, 28) >> 7);
-        long b0 = 0x1FFFFF & load_3(b, 0);
-        long b1 = 0x1FFFFF & (load_4(b, 2) >> 5);
-        long b2 = 0x1FFFFF & (load_3(b, 5) >> 2);
-        long b3 = 0x1FFFFF & (load_4(b, 7) >> 7);
-        long b4 = 0x1FFFFF & (load_4(b, 10) >> 4);
-        long b5 = 0x1FFFFF & (load_3(b, 13) >> 1);
-        long b6 = 0x1FFFFF & (load_4(b, 15) >> 6);
-        long b7 = 0x1FFFFF & (load_3(b, 18) >> 3);
-        long b8 = 0x1FFFFF & load_3(b, 21);
-        long b9 = 0x1FFFFF & (load_4(b, 23) >> 5);
-        long b10 = 0x1FFFFF & (load_3(b, 26) >> 2);
-        long b11 = (load_4(b, 28) >> 7);
-        long c0 = 0x1FFFFF & load_3(c, 0);
-        long c1 = 0x1FFFFF & (load_4(c, 2) >> 5);
-        long c2 = 0x1FFFFF & (load_3(c, 5) >> 2);
-        long c3 = 0x1FFFFF & (load_4(c, 7) >> 7);
-        long c4 = 0x1FFFFF & (load_4(c, 10) >> 4);
-        long c5 = 0x1FFFFF & (load_3(c, 13) >> 1);
-        long c6 = 0x1FFFFF & (load_4(c, 15) >> 6);
-        long c7 = 0x1FFFFF & (load_3(c, 18) >> 3);
-        long c8 = 0x1FFFFF & load_3(c, 21);
-        long c9 = 0x1FFFFF & (load_4(c, 23) >> 5);
-        long c10 = 0x1FFFFF & (load_3(c, 26) >> 2);
-        long c11 = (load_4(c, 28) >> 7);
+    public byte[] multiplyAndAdd(final byte[] a, final byte[] b, final byte[] c) {
+        final long a0 = 0x1FFFFF & load_3(a, 0);
+        final long a1 = 0x1FFFFF & (load_4(a, 2) >> 5);
+        final long a2 = 0x1FFFFF & (load_3(a, 5) >> 2);
+        final long a3 = 0x1FFFFF & (load_4(a, 7) >> 7);
+        final long a4 = 0x1FFFFF & (load_4(a, 10) >> 4);
+        final long a5 = 0x1FFFFF & (load_3(a, 13) >> 1);
+        final long a6 = 0x1FFFFF & (load_4(a, 15) >> 6);
+        final long a7 = 0x1FFFFF & (load_3(a, 18) >> 3);
+        final long a8 = 0x1FFFFF & load_3(a, 21);
+        final long a9 = 0x1FFFFF & (load_4(a, 23) >> 5);
+        final long a10 = 0x1FFFFF & (load_3(a, 26) >> 2);
+        final long a11 = (load_4(a, 28) >> 7);
+        final long b0 = 0x1FFFFF & load_3(b, 0);
+        final long b1 = 0x1FFFFF & (load_4(b, 2) >> 5);
+        final long b2 = 0x1FFFFF & (load_3(b, 5) >> 2);
+        final long b3 = 0x1FFFFF & (load_4(b, 7) >> 7);
+        final long b4 = 0x1FFFFF & (load_4(b, 10) >> 4);
+        final long b5 = 0x1FFFFF & (load_3(b, 13) >> 1);
+        final long b6 = 0x1FFFFF & (load_4(b, 15) >> 6);
+        final long b7 = 0x1FFFFF & (load_3(b, 18) >> 3);
+        final long b8 = 0x1FFFFF & load_3(b, 21);
+        final long b9 = 0x1FFFFF & (load_4(b, 23) >> 5);
+        final long b10 = 0x1FFFFF & (load_3(b, 26) >> 2);
+        final long b11 = (load_4(b, 28) >> 7);
+        final long c0 = 0x1FFFFF & load_3(c, 0);
+        final long c1 = 0x1FFFFF & (load_4(c, 2) >> 5);
+        final long c2 = 0x1FFFFF & (load_3(c, 5) >> 2);
+        final long c3 = 0x1FFFFF & (load_4(c, 7) >> 7);
+        final long c4 = 0x1FFFFF & (load_4(c, 10) >> 4);
+        final long c5 = 0x1FFFFF & (load_3(c, 13) >> 1);
+        final long c6 = 0x1FFFFF & (load_4(c, 15) >> 6);
+        final long c7 = 0x1FFFFF & (load_3(c, 18) >> 3);
+        final long c8 = 0x1FFFFF & load_3(c, 21);
+        final long c9 = 0x1FFFFF & (load_4(c, 23) >> 5);
+        final long c10 = 0x1FFFFF & (load_3(c, 26) >> 2);
+        final long c11 = (load_4(c, 28) >> 7);
         long s0;
         long s1;
         long s2;
@@ -398,7 +398,7 @@ public class Ed25519ScalarOps implements ScalarOps {
         long s20;
         long s21;
         long s22;
-        long s23;
+        final long s23;
         long carry0;
         long carry1;
         long carry2;
@@ -416,12 +416,12 @@ public class Ed25519ScalarOps implements ScalarOps {
         long carry14;
         long carry15;
         long carry16;
-        long carry17;
-        long carry18;
-        long carry19;
-        long carry20;
-        long carry21;
-        long carry22;
+        final long carry17;
+        final long carry18;
+        final long carry19;
+        final long carry20;
+        final long carry21;
+        final long carry22;
 
         s0 = c0 + a0*b0;
         s1 = c1 + a0*b1 + a1*b0;
@@ -655,7 +655,7 @@ public class Ed25519ScalarOps implements ScalarOps {
         carry9 = s9 >> 21; s10 += carry9; s9 -= carry9 << 21;
         carry10 = s10 >> 21; s11 += carry10; s10 -= carry10 << 21;
 
-        byte[] result = new byte[32];
+        final byte[] result = new byte[32];
         result[0] = (byte) s0;
         result[1] = (byte) (s0 >> 8);
         result[2] = (byte) ((s0 >> 16) | (s1 << 5));

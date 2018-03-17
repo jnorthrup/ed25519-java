@@ -37,10 +37,9 @@ public class Ed25519FieldElement extends FieldElement {
      * @param f The underlying field, must be the finite field with $p = 2^{255} - 19$ elements
      * @param t The $2^{25.5}$ bit representation of the field element.
      */
-    public Ed25519FieldElement(EdDSAFiniteField f, int[] t) {
+    public Ed25519FieldElement(final EdDSAFiniteField f, final int[] t) {
         super(f);
-        if (t.length != 10)
-            throw new IllegalArgumentException("Invalid radix-2^51 representation");
+        assert 10 == t.length : "Invalid radix-2^51 representation";
         this.t = t;
     }
 
@@ -53,7 +52,7 @@ public class Ed25519FieldElement extends FieldElement {
      */
     public boolean isNonZero() {
         final byte[] s = toByteArray();
-        return Utils.equal(s, ZERO) == 0;
+        return 0 == Utils.equal(s, ZERO);
     }
 
     /**
@@ -74,12 +73,19 @@ public class Ed25519FieldElement extends FieldElement {
      * @param val The field element to add.
      * @return The field element this + val.
      */
-    public FieldElement add(FieldElement val) {
-        int[] g = ((Ed25519FieldElement)val).t;
-        int[] h = new int[10];
-        for (int i = 0; i < 10; i++) {
-            h[i] = t[i] + g[i];
-        }
+    public FieldElement add(final FieldElement val) {
+        final int[] g = ((Ed25519FieldElement)val).t;
+        final int[] h = new int[10];
+        h[0] = t[0] + g[0];
+        h[1] = t[1] + g[1];
+        h[2] = t[2] + g[2];
+        h[3] = t[3] + g[3];
+        h[4] = t[4] + g[4];
+        h[5] = t[5] + g[5];
+        h[6] = t[6] + g[6];
+        h[7] = t[7] + g[7];
+        h[8] = t[8] + g[8];
+        h[9] = t[9] + g[9];
         return new Ed25519FieldElement(f, h);
     }
 
@@ -103,12 +109,19 @@ public class Ed25519FieldElement extends FieldElement {
      * @param val The field element to subtract.
      * @return The field element this - val.
      **/
-    public FieldElement subtract(FieldElement val) {
-        int[] g = ((Ed25519FieldElement)val).t;
-        int[] h = new int[10];
-        for (int i = 0; i < 10; i++) {
-            h[i] = t[i] - g[i];
-        }
+    public FieldElement subtract(final FieldElement val) {
+        final int[] g = ((Ed25519FieldElement)val).t;
+        final int[] h = new int[10];
+        h[0] = t[0] - g[0];
+        h[1] = t[1] - g[1];
+        h[2] = t[2] - g[2];
+        h[3] = t[3] - g[3];
+        h[4] = t[4] - g[4];
+        h[5] = t[5] - g[5];
+        h[6] = t[6] - g[6];
+        h[7] = t[7] - g[7];
+        h[8] = t[8] - g[8];
+        h[9] = t[9] - g[9];
         return new Ed25519FieldElement(f, h);
     }
 
@@ -129,10 +142,17 @@ public class Ed25519FieldElement extends FieldElement {
      * @return The field element (-1) * this.
      */
     public FieldElement negate() {
-        int[] h = new int[10];
-        for (int i = 0; i < 10; i++) {
-            h[i] = - t[i];
-        }
+        final int[] h = new int[10];
+        h[0] = -t[0];
+        h[1] = -t[1];
+        h[2] = -t[2];
+        h[3] = -t[3];
+        h[4] = -t[4];
+        h[5] = -t[5];
+        h[6] = -t[6];
+        h[7] = -t[7];
+        h[8] = -t[8];
+        h[9] = -t[9];
         return new Ed25519FieldElement(f, h);
     }
 
@@ -174,122 +194,122 @@ public class Ed25519FieldElement extends FieldElement {
      * @param val The field element to multiply.
      * @return The (reasonably reduced) field element this * val.
      */
-    public FieldElement multiply(FieldElement val) {
-        int[] g = ((Ed25519FieldElement)val).t;
-        int g1_19 = 19 * g[1]; /* 1.959375*2^29 */
-        int g2_19 = 19 * g[2]; /* 1.959375*2^30; still ok */
-        int g3_19 = 19 * g[3];
-        int g4_19 = 19 * g[4];
-        int g5_19 = 19 * g[5];
-        int g6_19 = 19 * g[6];
-        int g7_19 = 19 * g[7];
-        int g8_19 = 19 * g[8];
-        int g9_19 = 19 * g[9];
-        int f1_2 = 2 * t[1];
-        int f3_2 = 2 * t[3];
-        int f5_2 = 2 * t[5];
-        int f7_2 = 2 * t[7];
-        int f9_2 = 2 * t[9];
-        long f0g0    = t[0] * (long) g[0];
-        long f0g1    = t[0] * (long) g[1];
-        long f0g2    = t[0] * (long) g[2];
-        long f0g3    = t[0] * (long) g[3];
-        long f0g4    = t[0] * (long) g[4];
-        long f0g5    = t[0] * (long) g[5];
-        long f0g6    = t[0] * (long) g[6];
-        long f0g7    = t[0] * (long) g[7];
-        long f0g8    = t[0] * (long) g[8];
-        long f0g9    = t[0] * (long) g[9];
-        long f1g0    = t[1] * (long) g[0];
-        long f1g1_2  = f1_2 * (long) g[1];
-        long f1g2    = t[1] * (long) g[2];
-        long f1g3_2  = f1_2 * (long) g[3];
-        long f1g4    = t[1] * (long) g[4];
-        long f1g5_2  = f1_2 * (long) g[5];
-        long f1g6    = t[1] * (long) g[6];
-        long f1g7_2  = f1_2 * (long) g[7];
-        long f1g8    = t[1] * (long) g[8];
-        long f1g9_38 = f1_2 * (long) g9_19;
-        long f2g0    = t[2] * (long) g[0];
-        long f2g1    = t[2] * (long) g[1];
-        long f2g2    = t[2] * (long) g[2];
-        long f2g3    = t[2] * (long) g[3];
-        long f2g4    = t[2] * (long) g[4];
-        long f2g5    = t[2] * (long) g[5];
-        long f2g6    = t[2] * (long) g[6];
-        long f2g7    = t[2] * (long) g[7];
-        long f2g8_19 = t[2] * (long) g8_19;
-        long f2g9_19 = t[2] * (long) g9_19;
-        long f3g0    = t[3] * (long) g[0];
-        long f3g1_2  = f3_2 * (long) g[1];
-        long f3g2    = t[3] * (long) g[2];
-        long f3g3_2  = f3_2 * (long) g[3];
-        long f3g4    = t[3] * (long) g[4];
-        long f3g5_2  = f3_2 * (long) g[5];
-        long f3g6    = t[3] * (long) g[6];
-        long f3g7_38 = f3_2 * (long) g7_19;
-        long f3g8_19 = t[3] * (long) g8_19;
-        long f3g9_38 = f3_2 * (long) g9_19;
-        long f4g0    = t[4] * (long) g[0];
-        long f4g1    = t[4] * (long) g[1];
-        long f4g2    = t[4] * (long) g[2];
-        long f4g3    = t[4] * (long) g[3];
-        long f4g4    = t[4] * (long) g[4];
-        long f4g5    = t[4] * (long) g[5];
-        long f4g6_19 = t[4] * (long) g6_19;
-        long f4g7_19 = t[4] * (long) g7_19;
-        long f4g8_19 = t[4] * (long) g8_19;
-        long f4g9_19 = t[4] * (long) g9_19;
-        long f5g0    = t[5] * (long) g[0];
-        long f5g1_2  = f5_2 * (long) g[1];
-        long f5g2    = t[5] * (long) g[2];
-        long f5g3_2  = f5_2 * (long) g[3];
-        long f5g4    = t[5] * (long) g[4];
-        long f5g5_38 = f5_2 * (long) g5_19;
-        long f5g6_19 = t[5] * (long) g6_19;
-        long f5g7_38 = f5_2 * (long) g7_19;
-        long f5g8_19 = t[5] * (long) g8_19;
-        long f5g9_38 = f5_2 * (long) g9_19;
-        long f6g0    = t[6] * (long) g[0];
-        long f6g1    = t[6] * (long) g[1];
-        long f6g2    = t[6] * (long) g[2];
-        long f6g3    = t[6] * (long) g[3];
-        long f6g4_19 = t[6] * (long) g4_19;
-        long f6g5_19 = t[6] * (long) g5_19;
-        long f6g6_19 = t[6] * (long) g6_19;
-        long f6g7_19 = t[6] * (long) g7_19;
-        long f6g8_19 = t[6] * (long) g8_19;
-        long f6g9_19 = t[6] * (long) g9_19;
-        long f7g0    = t[7] * (long) g[0];
-        long f7g1_2  = f7_2 * (long) g[1];
-        long f7g2    = t[7] * (long) g[2];
-        long f7g3_38 = f7_2 * (long) g3_19;
-        long f7g4_19 = t[7] * (long) g4_19;
-        long f7g5_38 = f7_2 * (long) g5_19;
-        long f7g6_19 = t[7] * (long) g6_19;
-        long f7g7_38 = f7_2 * (long) g7_19;
-        long f7g8_19 = t[7] * (long) g8_19;
-        long f7g9_38 = f7_2 * (long) g9_19;
-        long f8g0    = t[8] * (long) g[0];
-        long f8g1    = t[8] * (long) g[1];
-        long f8g2_19 = t[8] * (long) g2_19;
-        long f8g3_19 = t[8] * (long) g3_19;
-        long f8g4_19 = t[8] * (long) g4_19;
-        long f8g5_19 = t[8] * (long) g5_19;
-        long f8g6_19 = t[8] * (long) g6_19;
-        long f8g7_19 = t[8] * (long) g7_19;
-        long f8g8_19 = t[8] * (long) g8_19;
-        long f8g9_19 = t[8] * (long) g9_19;
-        long f9g0    = t[9] * (long) g[0];
-        long f9g1_38 = f9_2 * (long) g1_19;
-        long f9g2_19 = t[9] * (long) g2_19;
-        long f9g3_38 = f9_2 * (long) g3_19;
-        long f9g4_19 = t[9] * (long) g4_19;
-        long f9g5_38 = f9_2 * (long) g5_19;
-        long f9g6_19 = t[9] * (long) g6_19;
-        long f9g7_38 = f9_2 * (long) g7_19;
-        long f9g8_19 = t[9] * (long) g8_19;
-        long f9g9_38 = f9_2 * (long) g9_19;
+    public FieldElement multiply(final FieldElement val) {
+        final int[] g = ((Ed25519FieldElement)val).t;
+        final int g1_19 = 19 * g[1]; /* 1.959375*2^29 */
+        final int g2_19 = 19 * g[2]; /* 1.959375*2^30; still ok */
+        final int g3_19 = 19 * g[3];
+        final int g4_19 = 19 * g[4];
+        final int g5_19 = 19 * g[5];
+        final int g6_19 = 19 * g[6];
+        final int g7_19 = 19 * g[7];
+        final int g8_19 = 19 * g[8];
+        final int g9_19 = 19 * g[9];
+        final int f1_2 = 2 * t[1];
+        final int f3_2 = 2 * t[3];
+        final int f5_2 = 2 * t[5];
+        final int f7_2 = 2 * t[7];
+        final int f9_2 = 2 * t[9];
+        final long f0g0    = t[0] * (long) g[0];
+        final long f0g1    = t[0] * (long) g[1];
+        final long f0g2    = t[0] * (long) g[2];
+        final long f0g3    = t[0] * (long) g[3];
+        final long f0g4    = t[0] * (long) g[4];
+        final long f0g5    = t[0] * (long) g[5];
+        final long f0g6    = t[0] * (long) g[6];
+        final long f0g7    = t[0] * (long) g[7];
+        final long f0g8    = t[0] * (long) g[8];
+        final long f0g9    = t[0] * (long) g[9];
+        final long f1g0    = t[1] * (long) g[0];
+        final long f1g1_2  = f1_2 * (long) g[1];
+        final long f1g2    = t[1] * (long) g[2];
+        final long f1g3_2  = f1_2 * (long) g[3];
+        final long f1g4    = t[1] * (long) g[4];
+        final long f1g5_2  = f1_2 * (long) g[5];
+        final long f1g6    = t[1] * (long) g[6];
+        final long f1g7_2  = f1_2 * (long) g[7];
+        final long f1g8    = t[1] * (long) g[8];
+        final long f1g9_38 = f1_2 * (long) g9_19;
+        final long f2g0    = t[2] * (long) g[0];
+        final long f2g1    = t[2] * (long) g[1];
+        final long f2g2    = t[2] * (long) g[2];
+        final long f2g3    = t[2] * (long) g[3];
+        final long f2g4    = t[2] * (long) g[4];
+        final long f2g5    = t[2] * (long) g[5];
+        final long f2g6    = t[2] * (long) g[6];
+        final long f2g7    = t[2] * (long) g[7];
+        final long f2g8_19 = t[2] * (long) g8_19;
+        final long f2g9_19 = t[2] * (long) g9_19;
+        final long f3g0    = t[3] * (long) g[0];
+        final long f3g1_2  = f3_2 * (long) g[1];
+        final long f3g2    = t[3] * (long) g[2];
+        final long f3g3_2  = f3_2 * (long) g[3];
+        final long f3g4    = t[3] * (long) g[4];
+        final long f3g5_2  = f3_2 * (long) g[5];
+        final long f3g6    = t[3] * (long) g[6];
+        final long f3g7_38 = f3_2 * (long) g7_19;
+        final long f3g8_19 = t[3] * (long) g8_19;
+        final long f3g9_38 = f3_2 * (long) g9_19;
+        final long f4g0    = t[4] * (long) g[0];
+        final long f4g1    = t[4] * (long) g[1];
+        final long f4g2    = t[4] * (long) g[2];
+        final long f4g3    = t[4] * (long) g[3];
+        final long f4g4    = t[4] * (long) g[4];
+        final long f4g5    = t[4] * (long) g[5];
+        final long f4g6_19 = t[4] * (long) g6_19;
+        final long f4g7_19 = t[4] * (long) g7_19;
+        final long f4g8_19 = t[4] * (long) g8_19;
+        final long f4g9_19 = t[4] * (long) g9_19;
+        final long f5g0    = t[5] * (long) g[0];
+        final long f5g1_2  = f5_2 * (long) g[1];
+        final long f5g2    = t[5] * (long) g[2];
+        final long f5g3_2  = f5_2 * (long) g[3];
+        final long f5g4    = t[5] * (long) g[4];
+        final long f5g5_38 = f5_2 * (long) g5_19;
+        final long f5g6_19 = t[5] * (long) g6_19;
+        final long f5g7_38 = f5_2 * (long) g7_19;
+        final long f5g8_19 = t[5] * (long) g8_19;
+        final long f5g9_38 = f5_2 * (long) g9_19;
+        final long f6g0    = t[6] * (long) g[0];
+        final long f6g1    = t[6] * (long) g[1];
+        final long f6g2    = t[6] * (long) g[2];
+        final long f6g3    = t[6] * (long) g[3];
+        final long f6g4_19 = t[6] * (long) g4_19;
+        final long f6g5_19 = t[6] * (long) g5_19;
+        final long f6g6_19 = t[6] * (long) g6_19;
+        final long f6g7_19 = t[6] * (long) g7_19;
+        final long f6g8_19 = t[6] * (long) g8_19;
+        final long f6g9_19 = t[6] * (long) g9_19;
+        final long f7g0    = t[7] * (long) g[0];
+        final long f7g1_2  = f7_2 * (long) g[1];
+        final long f7g2    = t[7] * (long) g[2];
+        final long f7g3_38 = f7_2 * (long) g3_19;
+        final long f7g4_19 = t[7] * (long) g4_19;
+        final long f7g5_38 = f7_2 * (long) g5_19;
+        final long f7g6_19 = t[7] * (long) g6_19;
+        final long f7g7_38 = f7_2 * (long) g7_19;
+        final long f7g8_19 = t[7] * (long) g8_19;
+        final long f7g9_38 = f7_2 * (long) g9_19;
+        final long f8g0    = t[8] * (long) g[0];
+        final long f8g1    = t[8] * (long) g[1];
+        final long f8g2_19 = t[8] * (long) g2_19;
+        final long f8g3_19 = t[8] * (long) g3_19;
+        final long f8g4_19 = t[8] * (long) g4_19;
+        final long f8g5_19 = t[8] * (long) g5_19;
+        final long f8g6_19 = t[8] * (long) g6_19;
+        final long f8g7_19 = t[8] * (long) g7_19;
+        final long f8g8_19 = t[8] * (long) g8_19;
+        final long f8g9_19 = t[8] * (long) g9_19;
+        final long f9g0    = t[9] * (long) g[0];
+        final long f9g1_38 = f9_2 * (long) g1_19;
+        final long f9g2_19 = t[9] * (long) g2_19;
+        final long f9g3_38 = f9_2 * (long) g3_19;
+        final long f9g4_19 = t[9] * (long) g4_19;
+        final long f9g5_38 = f9_2 * (long) g5_19;
+        final long f9g6_19 = t[9] * (long) g6_19;
+        final long f9g7_38 = f9_2 * (long) g7_19;
+        final long f9g8_19 = t[9] * (long) g8_19;
+        final long f9g9_38 = f9_2 * (long) g9_19;
 
         /**
          * Remember: 2^255 congruent 19 modulo p.
@@ -313,15 +333,15 @@ public class Ed25519FieldElement extends FieldElement {
         long h8 = f0g8 + f1g7_2  + f2g6    + f3g5_2  + f4g4    + f5g3_2  + f6g2    + f7g1_2  + f8g0    + f9g9_38;
         long h9 = f0g9 + f1g8    + f2g7    + f3g6    + f4g5    + f5g4    + f6g3    + f7g2    + f8g1    + f9g0;
         long carry0;
-        long carry1;
-        long carry2;
-        long carry3;
+        final long carry1;
+        final long carry2;
+        final long carry3;
         long carry4;
-        long carry5;
-        long carry6;
-        long carry7;
-        long carry8;
-        long carry9;
+        final long carry5;
+        final long carry6;
+        final long carry7;
+        final long carry8;
+        final long carry9;
 
         /*
         |h0| <= (1.65*1.65*2^52*(1+19+19+19+19)+1.65*1.65*2^50*(38+38+38+38+38))
@@ -373,7 +393,7 @@ public class Ed25519FieldElement extends FieldElement {
         /* |h0| <= 2^25; from now on fits into int32 unchanged */
         /* |h1| <= 1.01*2^24 */
 
-        int[] h = new int[10];
+        final int[] h = new int[10];
         h[0] = (int) h0;
         h[1] = (int) h1;
         h[2] = (int) h2;
@@ -406,84 +426,84 @@ public class Ed25519FieldElement extends FieldElement {
      * @return The (reasonably reduced) square of this field element.
      */
     public FieldElement square() {
-        int f0 = t[0];
-        int f1 = t[1];
-        int f2 = t[2];
-        int f3 = t[3];
-        int f4 = t[4];
-        int f5 = t[5];
-        int f6 = t[6];
-        int f7 = t[7];
-        int f8 = t[8];
-        int f9 = t[9];
-        int f0_2 = 2 * f0;
-        int f1_2 = 2 * f1;
-        int f2_2 = 2 * f2;
-        int f3_2 = 2 * f3;
-        int f4_2 = 2 * f4;
-        int f5_2 = 2 * f5;
-        int f6_2 = 2 * f6;
-        int f7_2 = 2 * f7;
-        int f5_38 = 38 * f5; /* 1.959375*2^30 */
-        int f6_19 = 19 * f6; /* 1.959375*2^30 */
-        int f7_38 = 38 * f7; /* 1.959375*2^30 */
-        int f8_19 = 19 * f8; /* 1.959375*2^30 */
-        int f9_38 = 38 * f9; /* 1.959375*2^30 */
-        long f0f0    = f0   * (long) f0;
-        long f0f1_2  = f0_2 * (long) f1;
-        long f0f2_2  = f0_2 * (long) f2;
-        long f0f3_2  = f0_2 * (long) f3;
-        long f0f4_2  = f0_2 * (long) f4;
-        long f0f5_2  = f0_2 * (long) f5;
-        long f0f6_2  = f0_2 * (long) f6;
-        long f0f7_2  = f0_2 * (long) f7;
-        long f0f8_2  = f0_2 * (long) f8;
-        long f0f9_2  = f0_2 * (long) f9;
-        long f1f1_2  = f1_2 * (long) f1;
-        long f1f2_2  = f1_2 * (long) f2;
-        long f1f3_4  = f1_2 * (long) f3_2;
-        long f1f4_2  = f1_2 * (long) f4;
-        long f1f5_4  = f1_2 * (long) f5_2;
-        long f1f6_2  = f1_2 * (long) f6;
-        long f1f7_4  = f1_2 * (long) f7_2;
-        long f1f8_2  = f1_2 * (long) f8;
-        long f1f9_76 = f1_2 * (long) f9_38;
-        long f2f2    = f2   * (long) f2;
-        long f2f3_2  = f2_2 * (long) f3;
-        long f2f4_2  = f2_2 * (long) f4;
-        long f2f5_2  = f2_2 * (long) f5;
-        long f2f6_2  = f2_2 * (long) f6;
-        long f2f7_2  = f2_2 * (long) f7;
-        long f2f8_38 = f2_2 * (long) f8_19;
-        long f2f9_38 = f2   * (long) f9_38;
-        long f3f3_2  = f3_2 * (long) f3;
-        long f3f4_2  = f3_2 * (long) f4;
-        long f3f5_4  = f3_2 * (long) f5_2;
-        long f3f6_2  = f3_2 * (long) f6;
-        long f3f7_76 = f3_2 * (long) f7_38;
-        long f3f8_38 = f3_2 * (long) f8_19;
-        long f3f9_76 = f3_2 * (long) f9_38;
-        long f4f4    = f4   * (long) f4;
-        long f4f5_2  = f4_2 * (long) f5;
-        long f4f6_38 = f4_2 * (long) f6_19;
-        long f4f7_38 = f4   * (long) f7_38;
-        long f4f8_38 = f4_2 * (long) f8_19;
-        long f4f9_38 = f4   * (long) f9_38;
-        long f5f5_38 = f5   * (long) f5_38;
-        long f5f6_38 = f5_2 * (long) f6_19;
-        long f5f7_76 = f5_2 * (long) f7_38;
-        long f5f8_38 = f5_2 * (long) f8_19;
-        long f5f9_76 = f5_2 * (long) f9_38;
-        long f6f6_19 = f6   * (long) f6_19;
-        long f6f7_38 = f6   * (long) f7_38;
-        long f6f8_38 = f6_2 * (long) f8_19;
-        long f6f9_38 = f6   * (long) f9_38;
-        long f7f7_38 = f7   * (long) f7_38;
-        long f7f8_38 = f7_2 * (long) f8_19;
-        long f7f9_76 = f7_2 * (long) f9_38;
-        long f8f8_19 = f8   * (long) f8_19;
-        long f8f9_38 = f8   * (long) f9_38;
-        long f9f9_38 = f9   * (long) f9_38;
+        final int f0 = t[0];
+        final int f1 = t[1];
+        final int f2 = t[2];
+        final int f3 = t[3];
+        final int f4 = t[4];
+        final int f5 = t[5];
+        final int f6 = t[6];
+        final int f7 = t[7];
+        final int f8 = t[8];
+        final int f9 = t[9];
+        final int f0_2 = 2 * f0;
+        final int f1_2 = 2 * f1;
+        final int f2_2 = 2 * f2;
+        final int f3_2 = 2 * f3;
+        final int f4_2 = 2 * f4;
+        final int f5_2 = 2 * f5;
+        final int f6_2 = 2 * f6;
+        final int f7_2 = 2 * f7;
+        final int f5_38 = 38 * f5; /* 1.959375*2^30 */
+        final int f6_19 = 19 * f6; /* 1.959375*2^30 */
+        final int f7_38 = 38 * f7; /* 1.959375*2^30 */
+        final int f8_19 = 19 * f8; /* 1.959375*2^30 */
+        final int f9_38 = 38 * f9; /* 1.959375*2^30 */
+        final long f0f0    = f0   * (long) f0;
+        final long f0f1_2  = f0_2 * (long) f1;
+        final long f0f2_2  = f0_2 * (long) f2;
+        final long f0f3_2  = f0_2 * (long) f3;
+        final long f0f4_2  = f0_2 * (long) f4;
+        final long f0f5_2  = f0_2 * (long) f5;
+        final long f0f6_2  = f0_2 * (long) f6;
+        final long f0f7_2  = f0_2 * (long) f7;
+        final long f0f8_2  = f0_2 * (long) f8;
+        final long f0f9_2  = f0_2 * (long) f9;
+        final long f1f1_2  = f1_2 * (long) f1;
+        final long f1f2_2  = f1_2 * (long) f2;
+        final long f1f3_4  = f1_2 * (long) f3_2;
+        final long f1f4_2  = f1_2 * (long) f4;
+        final long f1f5_4  = f1_2 * (long) f5_2;
+        final long f1f6_2  = f1_2 * (long) f6;
+        final long f1f7_4  = f1_2 * (long) f7_2;
+        final long f1f8_2  = f1_2 * (long) f8;
+        final long f1f9_76 = f1_2 * (long) f9_38;
+        final long f2f2    = f2   * (long) f2;
+        final long f2f3_2  = f2_2 * (long) f3;
+        final long f2f4_2  = f2_2 * (long) f4;
+        final long f2f5_2  = f2_2 * (long) f5;
+        final long f2f6_2  = f2_2 * (long) f6;
+        final long f2f7_2  = f2_2 * (long) f7;
+        final long f2f8_38 = f2_2 * (long) f8_19;
+        final long f2f9_38 = f2   * (long) f9_38;
+        final long f3f3_2  = f3_2 * (long) f3;
+        final long f3f4_2  = f3_2 * (long) f4;
+        final long f3f5_4  = f3_2 * (long) f5_2;
+        final long f3f6_2  = f3_2 * (long) f6;
+        final long f3f7_76 = f3_2 * (long) f7_38;
+        final long f3f8_38 = f3_2 * (long) f8_19;
+        final long f3f9_76 = f3_2 * (long) f9_38;
+        final long f4f4    = f4   * (long) f4;
+        final long f4f5_2  = f4_2 * (long) f5;
+        final long f4f6_38 = f4_2 * (long) f6_19;
+        final long f4f7_38 = f4   * (long) f7_38;
+        final long f4f8_38 = f4_2 * (long) f8_19;
+        final long f4f9_38 = f4   * (long) f9_38;
+        final long f5f5_38 = f5   * (long) f5_38;
+        final long f5f6_38 = f5_2 * (long) f6_19;
+        final long f5f7_76 = f5_2 * (long) f7_38;
+        final long f5f8_38 = f5_2 * (long) f8_19;
+        final long f5f9_76 = f5_2 * (long) f9_38;
+        final long f6f6_19 = f6   * (long) f6_19;
+        final long f6f7_38 = f6   * (long) f7_38;
+        final long f6f8_38 = f6_2 * (long) f8_19;
+        final long f6f9_38 = f6   * (long) f9_38;
+        final long f7f7_38 = f7   * (long) f7_38;
+        final long f7f8_38 = f7_2 * (long) f8_19;
+        final long f7f9_76 = f7_2 * (long) f9_38;
+        final long f8f8_19 = f8   * (long) f8_19;
+        final long f8f9_38 = f8   * (long) f9_38;
+        final long f9f9_38 = f9   * (long) f9_38;
 
         /**
          * Same procedure as in multiply, but this time we have a higher symmetry leading to less summands.
@@ -500,15 +520,15 @@ public class Ed25519FieldElement extends FieldElement {
         long h8 = f0f8_2 + f1f7_4  + f2f6_2  + f3f5_4  + f4f4    + f9f9_38;
         long h9 = f0f9_2 + f1f8_2  + f2f7_2  + f3f6_2  + f4f5_2;
         long carry0;
-        long carry1;
-        long carry2;
-        long carry3;
+        final long carry1;
+        final long carry2;
+        final long carry3;
         long carry4;
-        long carry5;
-        long carry6;
-        long carry7;
-        long carry8;
-        long carry9;
+        final long carry5;
+        final long carry6;
+        final long carry7;
+        final long carry8;
+        final long carry9;
 
         carry0 = (h0 + (long) (1<<25)) >> 26; h1 += carry0; h0 -= carry0 << 26;
         carry4 = (h4 + (long) (1<<25)) >> 26; h5 += carry4; h4 -= carry4 << 26;
@@ -529,7 +549,7 @@ public class Ed25519FieldElement extends FieldElement {
 
         carry0 = (h0 + (long) (1<<25)) >> 26; h1 += carry0; h0 -= carry0 << 26;
 
-        int[] h = new int[10];
+        final int[] h = new int[10];
         h[0] = (int) h0;
         h[1] = (int) h1;
         h[2] = (int) h2;
@@ -562,84 +582,84 @@ public class Ed25519FieldElement extends FieldElement {
      * @return The (reasonably reduced) square of this field element times 2.
      */
     public FieldElement squareAndDouble() {
-        int f0 = t[0];
-        int f1 = t[1];
-        int f2 = t[2];
-        int f3 = t[3];
-        int f4 = t[4];
-        int f5 = t[5];
-        int f6 = t[6];
-        int f7 = t[7];
-        int f8 = t[8];
-        int f9 = t[9];
-        int f0_2 = 2 * f0;
-        int f1_2 = 2 * f1;
-        int f2_2 = 2 * f2;
-        int f3_2 = 2 * f3;
-        int f4_2 = 2 * f4;
-        int f5_2 = 2 * f5;
-        int f6_2 = 2 * f6;
-        int f7_2 = 2 * f7;
-        int f5_38 = 38 * f5; /* 1.959375*2^30 */
-        int f6_19 = 19 * f6; /* 1.959375*2^30 */
-        int f7_38 = 38 * f7; /* 1.959375*2^30 */
-        int f8_19 = 19 * f8; /* 1.959375*2^30 */
-        int f9_38 = 38 * f9; /* 1.959375*2^30 */
-        long f0f0    = f0   * (long) f0;
-        long f0f1_2  = f0_2 * (long) f1;
-        long f0f2_2  = f0_2 * (long) f2;
-        long f0f3_2  = f0_2 * (long) f3;
-        long f0f4_2  = f0_2 * (long) f4;
-        long f0f5_2  = f0_2 * (long) f5;
-        long f0f6_2  = f0_2 * (long) f6;
-        long f0f7_2  = f0_2 * (long) f7;
-        long f0f8_2  = f0_2 * (long) f8;
-        long f0f9_2  = f0_2 * (long) f9;
-        long f1f1_2  = f1_2 * (long) f1;
-        long f1f2_2  = f1_2 * (long) f2;
-        long f1f3_4  = f1_2 * (long) f3_2;
-        long f1f4_2  = f1_2 * (long) f4;
-        long f1f5_4  = f1_2 * (long) f5_2;
-        long f1f6_2  = f1_2 * (long) f6;
-        long f1f7_4  = f1_2 * (long) f7_2;
-        long f1f8_2  = f1_2 * (long) f8;
-        long f1f9_76 = f1_2 * (long) f9_38;
-        long f2f2    = f2   * (long) f2;
-        long f2f3_2  = f2_2 * (long) f3;
-        long f2f4_2  = f2_2 * (long) f4;
-        long f2f5_2  = f2_2 * (long) f5;
-        long f2f6_2  = f2_2 * (long) f6;
-        long f2f7_2  = f2_2 * (long) f7;
-        long f2f8_38 = f2_2 * (long) f8_19;
-        long f2f9_38 = f2   * (long) f9_38;
-        long f3f3_2  = f3_2 * (long) f3;
-        long f3f4_2  = f3_2 * (long) f4;
-        long f3f5_4  = f3_2 * (long) f5_2;
-        long f3f6_2  = f3_2 * (long) f6;
-        long f3f7_76 = f3_2 * (long) f7_38;
-        long f3f8_38 = f3_2 * (long) f8_19;
-        long f3f9_76 = f3_2 * (long) f9_38;
-        long f4f4    = f4   * (long) f4;
-        long f4f5_2  = f4_2 * (long) f5;
-        long f4f6_38 = f4_2 * (long) f6_19;
-        long f4f7_38 = f4   * (long) f7_38;
-        long f4f8_38 = f4_2 * (long) f8_19;
-        long f4f9_38 = f4   * (long) f9_38;
-        long f5f5_38 = f5   * (long) f5_38;
-        long f5f6_38 = f5_2 * (long) f6_19;
-        long f5f7_76 = f5_2 * (long) f7_38;
-        long f5f8_38 = f5_2 * (long) f8_19;
-        long f5f9_76 = f5_2 * (long) f9_38;
-        long f6f6_19 = f6   * (long) f6_19;
-        long f6f7_38 = f6   * (long) f7_38;
-        long f6f8_38 = f6_2 * (long) f8_19;
-        long f6f9_38 = f6   * (long) f9_38;
-        long f7f7_38 = f7   * (long) f7_38;
-        long f7f8_38 = f7_2 * (long) f8_19;
-        long f7f9_76 = f7_2 * (long) f9_38;
-        long f8f8_19 = f8   * (long) f8_19;
-        long f8f9_38 = f8   * (long) f9_38;
-        long f9f9_38 = f9   * (long) f9_38;
+        final int f0 = t[0];
+        final int f1 = t[1];
+        final int f2 = t[2];
+        final int f3 = t[3];
+        final int f4 = t[4];
+        final int f5 = t[5];
+        final int f6 = t[6];
+        final int f7 = t[7];
+        final int f8 = t[8];
+        final int f9 = t[9];
+        final int f0_2 = 2 * f0;
+        final int f1_2 = 2 * f1;
+        final int f2_2 = 2 * f2;
+        final int f3_2 = 2 * f3;
+        final int f4_2 = 2 * f4;
+        final int f5_2 = 2 * f5;
+        final int f6_2 = 2 * f6;
+        final int f7_2 = 2 * f7;
+        final int f5_38 = 38 * f5; /* 1.959375*2^30 */
+        final int f6_19 = 19 * f6; /* 1.959375*2^30 */
+        final int f7_38 = 38 * f7; /* 1.959375*2^30 */
+        final int f8_19 = 19 * f8; /* 1.959375*2^30 */
+        final int f9_38 = 38 * f9; /* 1.959375*2^30 */
+        final long f0f0    = f0   * (long) f0;
+        final long f0f1_2  = f0_2 * (long) f1;
+        final long f0f2_2  = f0_2 * (long) f2;
+        final long f0f3_2  = f0_2 * (long) f3;
+        final long f0f4_2  = f0_2 * (long) f4;
+        final long f0f5_2  = f0_2 * (long) f5;
+        final long f0f6_2  = f0_2 * (long) f6;
+        final long f0f7_2  = f0_2 * (long) f7;
+        final long f0f8_2  = f0_2 * (long) f8;
+        final long f0f9_2  = f0_2 * (long) f9;
+        final long f1f1_2  = f1_2 * (long) f1;
+        final long f1f2_2  = f1_2 * (long) f2;
+        final long f1f3_4  = f1_2 * (long) f3_2;
+        final long f1f4_2  = f1_2 * (long) f4;
+        final long f1f5_4  = f1_2 * (long) f5_2;
+        final long f1f6_2  = f1_2 * (long) f6;
+        final long f1f7_4  = f1_2 * (long) f7_2;
+        final long f1f8_2  = f1_2 * (long) f8;
+        final long f1f9_76 = f1_2 * (long) f9_38;
+        final long f2f2    = f2   * (long) f2;
+        final long f2f3_2  = f2_2 * (long) f3;
+        final long f2f4_2  = f2_2 * (long) f4;
+        final long f2f5_2  = f2_2 * (long) f5;
+        final long f2f6_2  = f2_2 * (long) f6;
+        final long f2f7_2  = f2_2 * (long) f7;
+        final long f2f8_38 = f2_2 * (long) f8_19;
+        final long f2f9_38 = f2   * (long) f9_38;
+        final long f3f3_2  = f3_2 * (long) f3;
+        final long f3f4_2  = f3_2 * (long) f4;
+        final long f3f5_4  = f3_2 * (long) f5_2;
+        final long f3f6_2  = f3_2 * (long) f6;
+        final long f3f7_76 = f3_2 * (long) f7_38;
+        final long f3f8_38 = f3_2 * (long) f8_19;
+        final long f3f9_76 = f3_2 * (long) f9_38;
+        final long f4f4    = f4   * (long) f4;
+        final long f4f5_2  = f4_2 * (long) f5;
+        final long f4f6_38 = f4_2 * (long) f6_19;
+        final long f4f7_38 = f4   * (long) f7_38;
+        final long f4f8_38 = f4_2 * (long) f8_19;
+        final long f4f9_38 = f4   * (long) f9_38;
+        final long f5f5_38 = f5   * (long) f5_38;
+        final long f5f6_38 = f5_2 * (long) f6_19;
+        final long f5f7_76 = f5_2 * (long) f7_38;
+        final long f5f8_38 = f5_2 * (long) f8_19;
+        final long f5f9_76 = f5_2 * (long) f9_38;
+        final long f6f6_19 = f6   * (long) f6_19;
+        final long f6f7_38 = f6   * (long) f7_38;
+        final long f6f8_38 = f6_2 * (long) f8_19;
+        final long f6f9_38 = f6   * (long) f9_38;
+        final long f7f7_38 = f7   * (long) f7_38;
+        final long f7f8_38 = f7_2 * (long) f8_19;
+        final long f7f9_76 = f7_2 * (long) f9_38;
+        final long f8f8_19 = f8   * (long) f8_19;
+        final long f8f9_38 = f8   * (long) f9_38;
+        final long f9f9_38 = f9   * (long) f9_38;
         long h0 = f0f0   + f1f9_76 + f2f8_38 + f3f7_76 + f4f6_38 + f5f5_38;
         long h1 = f0f1_2 + f2f9_38 + f3f8_38 + f4f7_38 + f5f6_38;
         long h2 = f0f2_2 + f1f1_2  + f3f9_76 + f4f8_38 + f5f7_76 + f6f6_19;
@@ -651,15 +671,15 @@ public class Ed25519FieldElement extends FieldElement {
         long h8 = f0f8_2 + f1f7_4  + f2f6_2  + f3f5_4  + f4f4    + f9f9_38;
         long h9 = f0f9_2 + f1f8_2  + f2f7_2  + f3f6_2  + f4f5_2;
         long carry0;
-        long carry1;
-        long carry2;
-        long carry3;
+        final long carry1;
+        final long carry2;
+        final long carry3;
         long carry4;
-        long carry5;
-        long carry6;
-        long carry7;
-        long carry8;
-        long carry9;
+        final long carry5;
+        final long carry6;
+        final long carry7;
+        final long carry8;
+        final long carry9;
 
         h0 += h0;
         h1 += h1;
@@ -691,7 +711,7 @@ public class Ed25519FieldElement extends FieldElement {
 
         carry0 = (h0 + (long) (1<<25)) >> 26; h1 += carry0; h0 -= carry0 << 26;
 
-        int[] h = new int[10];
+        final int[] h = new int[10];
         h[0] = (int) h0;
         h[1] = (int) h1;
         h[2] = (int) h2;
@@ -741,7 +761,7 @@ public class Ed25519FieldElement extends FieldElement {
         t2 = t1.square();
 
         // 2^10 - 2^5
-        for (int i = 1; i < 5; ++i) {
+        for (int i = 1; 5 > i; ++i) {
             t2 = t2.square();
         }
 
@@ -752,7 +772,7 @@ public class Ed25519FieldElement extends FieldElement {
         t2 = t1.square();
 
         // 2^20 - 2^10
-        for (int i = 1; i < 10; ++i) {
+        for (int i = 1; 10 > i; ++i) {
             t2 = t2.square();
         }
 
@@ -763,7 +783,7 @@ public class Ed25519FieldElement extends FieldElement {
         t3 = t2.square();
 
         // 2^40 - 2^20
-        for (int i = 1; i < 20; ++i) {
+        for (int i = 1; 20 > i; ++i) {
             t3 = t3.square();
         }
 
@@ -774,7 +794,7 @@ public class Ed25519FieldElement extends FieldElement {
         t2 = t2.square();
 
         // 2^50 - 2^10
-        for (int i = 1; i < 10; ++i) {
+        for (int i = 1; 10 > i; ++i) {
             t2 = t2.square();
         }
 
@@ -785,7 +805,7 @@ public class Ed25519FieldElement extends FieldElement {
         t2 = t1.square();
 
         // 2^100 - 2^50
-        for (int i = 1; i < 50; ++i) {
+        for (int i = 1; 50 > i; ++i) {
             t2 = t2.square();
         }
 
@@ -796,7 +816,7 @@ public class Ed25519FieldElement extends FieldElement {
         t3 = t2.square();
 
         // 2^200 - 2^100
-        for (int i = 1; i < 100; ++i) {
+        for (int i = 1; 100 > i; ++i) {
             t3 = t3.square();
         }
 
@@ -807,7 +827,7 @@ public class Ed25519FieldElement extends FieldElement {
         t2 = t2.square();
 
         // 2^250 - 2^50
-        for (int i = 1; i < 50; ++i) {
+        for (int i = 1; 50 > i; ++i) {
             t2 = t2.square();
         }
 
@@ -818,7 +838,7 @@ public class Ed25519FieldElement extends FieldElement {
         t1 = t1.square();
 
         // 2^255 - 2^5
-        for (int i = 1; i < 5; ++i) {
+        for (int i = 1; 5 > i; ++i) {
             t1 = t1.square();
         }
 
@@ -862,7 +882,7 @@ public class Ed25519FieldElement extends FieldElement {
         t1 = t0.square();
 
         // 2^10 - 2^5
-        for (int i = 1; i < 5; ++i) {
+        for (int i = 1; 5 > i; ++i) {
             t1 = t1.square();
         }
 
@@ -873,7 +893,7 @@ public class Ed25519FieldElement extends FieldElement {
         t1 = t0.square();
 
         // 2^20 - 2^10
-        for (int i = 1; i < 10; ++i) {
+        for (int i = 1; 10 > i; ++i) {
             t1 = t1.square();
         }
 
@@ -884,7 +904,7 @@ public class Ed25519FieldElement extends FieldElement {
         t2 = t1.square();
 
         // 2^40 - 2^20
-        for (int i = 1; i < 20; ++i) {
+        for (int i = 1; 20 > i; ++i) {
             t2 = t2.square();
         }
 
@@ -895,7 +915,7 @@ public class Ed25519FieldElement extends FieldElement {
         t1 = t1.square();
 
         // 2^50 - 2^10
-        for (int i = 1; i < 10; ++i) {
+        for (int i = 1; 10 > i; ++i) {
             t1 = t1.square();
         }
 
@@ -906,7 +926,7 @@ public class Ed25519FieldElement extends FieldElement {
         t1 = t0.square();
 
         // 2^100 - 2^50
-        for (int i = 1; i < 50; ++i) {
+        for (int i = 1; 50 > i; ++i) {
             t1 = t1.square();
         }
 
@@ -917,7 +937,7 @@ public class Ed25519FieldElement extends FieldElement {
         t2 = t1.square();
 
         // 2^200 - 2^100
-        for (int i = 1; i < 100; ++i) {
+        for (int i = 1; 100 > i; ++i) {
             t2 = t2.square();
         }
 
@@ -928,7 +948,7 @@ public class Ed25519FieldElement extends FieldElement {
         t1 = t1.square();
 
         // 2^250 - 2^50
-        for (int i = 1; i < 50; ++i) {
+        for (int i = 1; 50 > i; ++i) {
             t1 = t1.square();
         }
 
@@ -955,11 +975,11 @@ public class Ed25519FieldElement extends FieldElement {
      * @return a copy of this if $b == 0$, or a copy of val if $b == 1$.
      */
     @Override
-    public FieldElement cmov(FieldElement val, int b) {
-        Ed25519FieldElement that = (Ed25519FieldElement) val;
+    public FieldElement cmov(final FieldElement val, int b) {
+        final Ed25519FieldElement that = (Ed25519FieldElement) val;
         b = -b;
-        int[] result = new int[10];
-        for (int i = 0; i < 10; i++) {
+        final int[] result = new int[10];
+        for (int i = 0; 10 > i; i++) {
             result[i] = this.t[i];
             int x = this.t[i] ^ that.t[i];
             x &= b;
@@ -974,11 +994,11 @@ public class Ed25519FieldElement extends FieldElement {
     }
 
     @Override
-    public boolean equals(Object obj) {
+    public boolean equals(final Object obj) {
         if (!(obj instanceof Ed25519FieldElement))
             return false;
-        Ed25519FieldElement fe = (Ed25519FieldElement) obj;
-        return 1==Utils.equal(toByteArray(), fe.toByteArray());
+        final Ed25519FieldElement fe = (Ed25519FieldElement) obj;
+        return 1 == Utils.equal(toByteArray(), fe.toByteArray());
     }
 
     @Override

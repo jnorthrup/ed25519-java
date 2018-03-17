@@ -15,6 +15,7 @@ import java.security.PrivateKey;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.util.Arrays;
+import java.util.Objects;
 
 import net.i2p.crypto.eddsa.math.GroupElement;
 import net.i2p.crypto.eddsa.spec.EdDSANamedCurveTable;
@@ -52,7 +53,7 @@ public class EdDSAPrivateKey implements EdDSAKey, PrivateKey {
     public static final int OID_BYTE = 11;
     public static final int IDLEN_BYTE = 6;
 
-    public EdDSAPrivateKey(EdDSAPrivateKeySpec spec) {
+    public EdDSAPrivateKey(final EdDSAPrivateKeySpec spec) {
         seed = spec.seed;
         hashOfTheSeed = spec.hasOfTheSeed;
         privateKey = spec.privateKey;
@@ -61,7 +62,7 @@ public class EdDSAPrivateKey implements EdDSAKey, PrivateKey {
         edDSAParameterSpec = spec.getParams();
     }
 
-    public EdDSAPrivateKey(PKCS8EncodedKeySpec spec) throws InvalidKeySpecException {
+    public EdDSAPrivateKey(final PKCS8EncodedKeySpec spec) throws InvalidKeySpecException {
         this(new EdDSAPrivateKeySpec(decode(spec.getEncoded()),
                                      EdDSANamedCurveTable.getByName(EdDSANamedCurveTable.ED_25519)));
     }
@@ -138,10 +139,10 @@ public class EdDSAPrivateKey implements EdDSAKey, PrivateKey {
     public byte[] getEncoded() {
         if (!edDSAParameterSpec.equals(EdDSANamedCurveTable.getByName(EdDSANamedCurveTable.ED_25519)))
             return null;
-        if (seed == null)
+        if (null == seed)
             return null;
-        int totlen = 16 + seed.length;
-        byte[] encoded = new byte[totlen];
+        final int totlen = 16 + seed.length;
+        final byte[] encoded = new byte[totlen];
         int idx = 0;
         // sequence
         encoded[idx++] = 0x30;
@@ -192,89 +193,86 @@ public class EdDSAPrivateKey implements EdDSAKey, PrivateKey {
      *
      * @return 32 bytes for Ed25519, throws for other curves
      */
-    public static byte[] decode(byte[] d) throws InvalidKeySpecException {
+    public static byte[] decode(final byte[] d) throws InvalidKeySpecException {
         try {
             //
             // Setup and OID check
             //
             int totlen = 48;
             int idlen = 5;
-            int doid = d[OID_BYTE];
-            if (doid == OID_OLD) {
-                totlen = 49;
-                idlen = 8;
-            } else if (doid == OID_ED25519) {
-                // Detect parameter value of NULL
-                if (d[IDLEN_BYTE] == 7) {
-                    totlen = 50;
-                    idlen = 7;
-                }
-            } else {
-                throw new InvalidKeySpecException("unsupported key spec");
+            final int doid = d[OID_BYTE];
+            switch (doid) {
+                case OID_OLD:
+                    totlen = 49;
+                    idlen = 8;
+                    break;
+                case OID_ED25519:
+                    // Detect parameter value of NULL
+                    if (7 == d[IDLEN_BYTE]) {
+                        totlen = 50;
+                        idlen = 7;
+                    }
+                    break;
+                default:
+                    throw new InvalidKeySpecException("unsupported key spec");
             }
 
             //
             // Pre-decoding check
             //
-            if (d.length != totlen) {
-                throw new InvalidKeySpecException("invalid key spec length");
-            }
+            if (d.length == totlen) {
 
-            //
-            // Decoding
-            //
-            int idx = 0;
-            if (d[idx++] != 0x30 ||
-                d[idx++] != (totlen - 2) ||
-                d[idx++] != 0x02 ||
-                d[idx++] != 1 ||
-                d[idx++] != 0 ||
-                d[idx++] != 0x30 ||
-                d[idx++] != idlen ||
-                d[idx++] != 0x06 ||
-                d[idx++] != 3 ||
-                d[idx++] != (1 * 40) + 3 ||
-                d[idx++] != 101) {
-                throw new InvalidKeySpecException("unsupported key spec");
-            }
-            idx++; // OID, checked above
-            // parameters only with old OID
-            if (doid == OID_OLD) {
-                if (d[idx++] != 0x0a ||
-                    d[idx++] != 1 ||
-                    d[idx++] != 1) {
-                    throw new InvalidKeySpecException("unsupported key spec");
-                }
-            } else {
-                // Handle parameter value of NULL
                 //
-                // Quote https://tools.ietf.org/html/draft-ietf-curdle-pkix-04 :
-                //   For all of the OIDs, the parameters MUST be absent.
-                //   Regardless of the defect in the original 1997 syntax,
-                //   implementations MUST NOT accept a parameters value of NULL.
+                // Decoding
                 //
-                // But Java's default keystore puts it in (when decoding as
-                // PKCS8 and then re-encoding to pass on), so we must accept it.
-                if (idlen == 7) {
-                    if (d[idx++] != 0x05 ||
-                        d[idx++] != 0) {
-                        throw new InvalidKeySpecException("unsupported key spec");
+                int idx = 0;
+                if (0x30 == d[idx++] &&
+                        d[idx++] == (totlen - 2) &&
+                        0x02 == d[idx++] &&
+                        1 == d[idx++] &&
+                        0 == d[idx++] &&
+                        0x30 == d[idx++] &&
+                        d[idx++] == idlen &&
+                        0x06 == d[idx++] &&
+                        3 == d[idx++] &&
+                        (1 * 40) + 3 == d[idx++] &&
+                        101 == d[idx++]) {
+                    idx++; // OID, checked above
+                    // parameters only with old OID
+                    if (OID_OLD != doid) {
+                        // Handle parameter value of NULL
+                        //
+                        // Quote https://tools.ietf.org/html/draft-ietf-curdle-pkix-04 :
+                        //   For all of the OIDs, the parameters MUST be absent.
+                        //   Regardless of the defect in the original 1997 syntax,
+                        //   implementations MUST NOT accept a parameters value of NULL.
+                        //
+                        // But Java's default keystore puts it in (when decoding as
+                        // PKCS8 and then re-encoding to pass on), so we must accept it.
+                        if (7 == idlen) {
+                            assert 0x05 == d[idx++] &&
+                                    0 == d[idx++] : "unsupported key spec";
+                        }
+                        // PrivateKey wrapping the CurvePrivateKey
+                        assert 0x04 == d[idx++] &&
+                                34 == d[idx++] : "unsupported key spec";
+                    } else {
+                        assert 0x0a == d[idx++] &&
+                                1 == d[idx++] &&
+                                1 == d[idx++] : "unsupported key spec";
                     }
-                }
-                // PrivateKey wrapping the CurvePrivateKey
-                if (d[idx++] != 0x04 ||
-                    d[idx++] != 34) {
+                    if (0x04 == d[idx++] &&
+                            32 == d[idx++]) {
+                        final byte[] rv = new byte[32];
+                        System.arraycopy(d, idx, rv, 0, 32);
+                        return rv;
+                    }
                     throw new InvalidKeySpecException("unsupported key spec");
                 }
-            }
-            if (d[idx++] != 0x04 ||
-                d[idx++] != 32) {
                 throw new InvalidKeySpecException("unsupported key spec");
             }
-            byte[] rv = new byte[32];
-            System.arraycopy(d, idx, rv, 0, 32);
-            return rv;
-        } catch (IndexOutOfBoundsException ioobe) {
+            throw new InvalidKeySpecException("invalid key spec length");
+        } catch (final IndexOutOfBoundsException ioobe) {
             throw new InvalidKeySpecException(ioobe);
         }
     }
@@ -297,13 +295,7 @@ public class EdDSAPrivateKey implements EdDSAKey, PrivateKey {
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (o == this)
-            return true;
-        if (!(o instanceof EdDSAPrivateKey))
-            return false;
-        EdDSAPrivateKey pk = (EdDSAPrivateKey) o;
-        return Arrays.equals(seed, pk.seed) &&
-               edDSAParameterSpec.equals(pk.getEdDSAParameterSpec());
+    public boolean equals(final Object o) {
+        return o == this || (o instanceof EdDSAPrivateKey) && Arrays.equals(seed, ((EdDSAPrivateKey) o).seed) && Objects.equals(edDSAParameterSpec, ((EdDSAPrivateKey) o).getEdDSAParameterSpec());
     }
 }

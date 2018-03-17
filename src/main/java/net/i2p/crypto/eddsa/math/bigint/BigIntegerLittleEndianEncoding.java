@@ -12,6 +12,8 @@
 package net.i2p.crypto.eddsa.math.bigint;
 
 import java.math.BigInteger;
+import java.util.Objects;
+import java.util.stream.IntStream;
 
 import net.i2p.crypto.eddsa.math.EmptyEncoding;
 import net.i2p.crypto.eddsa.math.EdDSAFiniteField;
@@ -33,15 +35,16 @@ public class BigIntegerLittleEndianEncoding {
      *  @return array of length $b/8$
      *  @throws IllegalStateException if field not set
      */
-    public byte[] convertBigIntegerToLittleEndian(BigInteger x) {
-        if (getEdDSAFiniteField() == null)
-            throw new IllegalStateException("field not set");
-        byte[] in = x.toByteArray();
-        byte[] out = new byte[getEdDSAFiniteField().getb()/8];
-        for (int i = 0; i < in.length; i++) {
-            out[i] = in[in.length-1-i];
+    public byte[] convertBigIntegerToLittleEndian(final BigInteger x) {
+        Objects.requireNonNull(getEdDSAFiniteField(),"field not set");
+        final byte[] in = x.toByteArray();
+        final byte[] out = new byte[getEdDSAFiniteField().getb()/8];
+        int bound = in.length;
+        for (int i1 = 0; i1 < bound; i1++) {
+            out[i1] = in[in.length - 1 - i1];
         }
-        for (int i = in.length; i < out.length; i++) {
+        int bound1 = out.length;
+        for (int i = in.length; i < bound1; i++) {
             out[i] = 0;
         }
         return out;
@@ -53,8 +56,8 @@ public class BigIntegerLittleEndianEncoding {
      *  @param in the $(b-1)$-bit encoding of a FieldElement.
      *  @return the decoded value as a BigInteger
      */
-    public BigInteger toBigInteger(byte[] in) {
-        byte[] out = new byte[in.length];
+    public BigInteger toBigInteger(final byte[] in) {
+        final byte[] out = new byte[in.length];
         for (int i = 0; i < in.length; i++) {
             out[i] = in[in.length-1-i];
         }
@@ -65,7 +68,7 @@ public class BigIntegerLittleEndianEncoding {
         return emptyEncoding;
     }
 
-    public void setEdDSAFiniteField(EdDSAFiniteField f) {
+    public void setEdDSAFiniteField(final EdDSAFiniteField f) {
         emptyEncoding.setEdDSAFiniteField(f);
     }
 
@@ -75,12 +78,12 @@ public class BigIntegerLittleEndianEncoding {
 
     private class MyEmptyEncoding extends EmptyEncoding {
         @Override
-        public synchronized void setEdDSAFiniteField(EdDSAFiniteField f) {
+        public synchronized void setEdDSAFiniteField(final EdDSAFiniteField f) {
             super.setEdDSAFiniteField(f);
             mask = BigInteger.ONE.shiftLeft(f.getb()-1).subtract(BigInteger.ONE);
         }
 
-        public byte[] encode(FieldElement x) {
+        public byte[] encode(final FieldElement x) {
             return convertBigIntegerToLittleEndian(((BigIntegerFieldElement)x).bi.and(mask));
         }
 
@@ -93,11 +96,9 @@ public class BigIntegerLittleEndianEncoding {
          *  @throws IllegalStateException if field not set
          *  @throws IllegalArgumentException if encoding is invalid
          */
-        public FieldElement decode(byte[] in) {
-            if (getEdDSAFiniteField() == null)
-                throw new IllegalStateException("field not set");
-            if (in.length != getEdDSAFiniteField().getb()/8)
-                throw new IllegalArgumentException("Not a valid encoding");
+        public FieldElement decode(final byte[] in) {
+            Objects.requireNonNull(getEdDSAFiniteField(),"field not set");
+            assert in.length == getEdDSAFiniteField().getb() / 8 : "Not a valid encoding";
             return new BigIntegerFieldElement(getEdDSAFiniteField(), toBigInteger(in).and(mask));
         }
 
@@ -109,7 +110,7 @@ public class BigIntegerLittleEndianEncoding {
          * elements of $F_q$ are $\{1, 3, 5,\dots, q-2\}$.
          * @return true if negative
          */
-        public boolean isNegative(FieldElement x) {
+        public boolean isNegative(final FieldElement x) {
             return ((BigIntegerFieldElement)x).bi.testBit(0);
         }
     }

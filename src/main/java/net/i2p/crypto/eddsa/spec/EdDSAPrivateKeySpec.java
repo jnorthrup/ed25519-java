@@ -34,16 +34,15 @@ public class EdDSAPrivateKeySpec implements KeySpec {
      *  @param spec the parameter specification for this key
      *  @throws IllegalArgumentException if seed length is wrong or hash algorithm is unsupported
      */
-    public EdDSAPrivateKeySpec(byte[] seed, EdDSAParameterSpec spec) {
-        if (seed.length != spec.curve.getField().getb()/8)
-            throw new IllegalArgumentException("seed length is wrong");
+    public EdDSAPrivateKeySpec(final byte[] seed, final EdDSAParameterSpec spec) {
+        assert seed.length == spec.curve.getField().getb() / 8 : "seed length is wrong";
 
         this.spec = spec;
         this.seed = seed;
 
         try {
-            MessageDigest hash = MessageDigest.getInstance(spec.hashAlgo);
-            int b = spec.curve.getField().getb();
+            final MessageDigest hash = MessageDigest.getInstance(spec.hashAlgo);
+            final int b = spec.curve.getField().getb();
 
             // H(k)
             hasOfTheSeed = hash.digest(seed);
@@ -60,7 +59,7 @@ public class EdDSAPrivateKeySpec implements KeySpec {
             privateKey = Arrays.copyOfRange(hasOfTheSeed, 0, b/8);
 
             groupElement = spec.groupElement.scalarMultiply(privateKey);
-        } catch (NoSuchAlgorithmException e) {
+        } catch (final NoSuchAlgorithmException e) {
             throw new IllegalArgumentException("Unsupported hash algorithm");
         }
     }
@@ -74,14 +73,13 @@ public class EdDSAPrivateKeySpec implements KeySpec {
      *  @throws IllegalArgumentException if hash length is wrong
      *  @since 0.1.1
      */
-    public EdDSAPrivateKeySpec(EdDSAParameterSpec spec, byte[] hasOfTheSeed) {
-        if (hasOfTheSeed.length != spec.curve.getField().getb()/4)
-            throw new IllegalArgumentException("hash length is wrong");
+    public EdDSAPrivateKeySpec(final EdDSAParameterSpec spec, final byte[] hasOfTheSeed) {
+        assert hasOfTheSeed.length == spec.curve.getField().getb() / 4 : "hash length is wrong";
 
 	this.seed = null;
 	this.hasOfTheSeed = hasOfTheSeed;
 	this.spec = spec;
-        int b = spec.curve.getField().getb();
+        final int b = spec.curve.getField().getb();
 
         hasOfTheSeed[0] &= 248;
         hasOfTheSeed[(b/8)-1] &= 63;
@@ -91,7 +89,7 @@ public class EdDSAPrivateKeySpec implements KeySpec {
         groupElement = spec.groupElement.scalarMultiply(privateKey);
     }
 
-    public EdDSAPrivateKeySpec(byte[] seed, byte[] hasOfTheSeed, byte[] privateKey, GroupElement groupElement, EdDSAParameterSpec spec) {
+    public EdDSAPrivateKeySpec(final byte[] seed, final byte[] hasOfTheSeed, final byte[] privateKey, final GroupElement groupElement, final EdDSAParameterSpec spec) {
         this.seed = seed;
         this.hasOfTheSeed = hasOfTheSeed;
         this.privateKey = privateKey;

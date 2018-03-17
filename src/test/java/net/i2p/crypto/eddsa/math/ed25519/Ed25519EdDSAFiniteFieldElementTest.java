@@ -26,7 +26,7 @@ public class Ed25519EdDSAFiniteFieldElementTest extends AbstractEdDSAFiniteField
         return MathUtils.getRandomFieldElement();
     }
 
-    protected BigInteger toBigInteger(FieldElement f) {
+    protected BigInteger toBigInteger(final FieldElement f) {
         return MathUtils.toBigInteger(f);
     }
 
@@ -46,13 +46,13 @@ public class Ed25519EdDSAFiniteFieldElementTest extends AbstractEdDSAFiniteField
         new Ed25519FieldElement(MathUtils.getField(), new int[10]);
     }
 
-    @Test (expected = IllegalArgumentException.class)
+    @Test (expected = AssertionError.class)
     public void cannotConstructFieldElementFromArrayWithIncorrectLength() {
         // Assert:
         new Ed25519FieldElement(MathUtils.getField(), new int[9]);
     }
 
-    @Test (expected = IllegalArgumentException.class)
+    @Test (expected = AssertionError.class)
     public void cannotConstructFieldElementWithoutField() {
         // Assert:
         new Ed25519FieldElement(null, new int[9]);
@@ -80,7 +80,7 @@ public class Ed25519EdDSAFiniteFieldElementTest extends AbstractEdDSAFiniteField
     public void toStringReturnsCorrectRepresentation() {
         // Arrange:
         final byte[] bytes = new byte[32];
-        for (int i=0; i<32; i++) {
+        for (int i = 0; 32 > i; i++) {
             bytes[i] = (byte)(i+1);
         }
         final FieldElement f = MathUtils.getField().getEncoding().decode(bytes);
@@ -89,7 +89,7 @@ public class Ed25519EdDSAFiniteFieldElementTest extends AbstractEdDSAFiniteField
         final String fAsString = f.toString();
         final StringBuilder builder = new StringBuilder();
         builder.append("[Ed25519FieldElement val=");
-        for (byte b : bytes) {
+        for (final byte b : bytes) {
             builder.append(String.format("%02x", b));
         }
         builder.append("]");

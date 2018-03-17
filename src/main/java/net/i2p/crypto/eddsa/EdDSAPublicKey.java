@@ -49,14 +49,14 @@ public class EdDSAPublicKey implements EdDSAKey, PublicKey {
     public final byte[] abyte;
     private final EdDSAParameterSpec edDSAParameterSpec;
 
-    public EdDSAPublicKey(EdDSAPublicKeySpec spec) {
+    public EdDSAPublicKey(final EdDSAPublicKeySpec spec) {
         this.A = spec.A;
         this.aNeg = spec.getNegativeA();
         this.abyte = this.A.toByteArray();
         this.edDSAParameterSpec = spec.getParams();
     }
 
-    public EdDSAPublicKey(X509EncodedKeySpec spec) throws InvalidKeySpecException {
+    public EdDSAPublicKey(final X509EncodedKeySpec spec) throws InvalidKeySpecException {
         this(new EdDSAPublicKeySpec(decode(spec.getEncoded()),
                 EdDSANamedCurveTable.getByName(EdDSANamedCurveTable.ED_25519)));
     }
@@ -80,20 +80,20 @@ public class EdDSAPublicKey implements EdDSAKey, PublicKey {
      *
      * @return 32 bytes for Ed25519, throws for other curves
      */
-    public static byte[] decode(byte[] d) throws InvalidKeySpecException {
+    public static byte[] decode(final byte[] d) throws InvalidKeySpecException {
         try {
             //
             // Setup and OID check
             //
             int totlen = 44;
             int idlen = 5;
-            int doid = d[OID_BYTE];
-            if (doid == OID_OLD) {
+            final int doid = d[OID_BYTE];
+            if (OID_OLD == doid) {
                 totlen = 47;
                 idlen = 8;
-            } else if (doid == OID_ED25519) {
+            } else if (OID_ED25519 == doid) {
                 // Detect parameter value of NULL
-                if (d[IDLEN_BYTE] == 7) {
+                if (7 == d[IDLEN_BYTE]) {
                     totlen = 46;
                     idlen = 7;
                 }
@@ -104,32 +104,26 @@ public class EdDSAPublicKey implements EdDSAKey, PublicKey {
             //
             // Pre-decoding check
             //
-            if (d.length != totlen) {
-                throw new InvalidKeySpecException("invalid key spec length");
-            }
+            assert d.length == totlen : "invalid key spec length";
 
             //
             // Decoding
             //
             int idx = 0;
-            if (d[idx++] != 0x30 ||
-                    d[idx++] != (totlen - 2) ||
-                    d[idx++] != 0x30 ||
-                    d[idx++] != idlen ||
-                    d[idx++] != 0x06 ||
-                    d[idx++] != 3 ||
-                    d[idx++] != (1 * 40) + 3 ||
-                    d[idx++] != 101) {
-                throw new InvalidKeySpecException("unsupported key spec");
-            }
+            assert 0x30 == d[idx++] &&
+                    d[idx++] == (totlen - 2) &&
+                    0x30 == d[idx++] &&
+                    d[idx++] == idlen &&
+                    0x06 == d[idx++] &&
+                    3 == d[idx++] &&
+                    (1 * 40) + 3 == d[idx++] &&
+                    101 == d[idx++] : "unsupported key spec";
             idx++; // OID, checked above
             // parameters only with old OID
-            if (doid == OID_OLD) {
-                if (d[idx++] != 0x0a ||
-                        d[idx++] != 1 ||
-                        d[idx++] != 1) {
-                    throw new InvalidKeySpecException("unsupported key spec");
-                }
+            if (OID_OLD == doid) {
+                assert 0x0a == d[idx++] &&
+                        1 == d[idx++] &&
+                        1 == d[idx++] : "unsupported key spec";
             } else {
                 // Handle parameter value of NULL
                 //
@@ -140,22 +134,18 @@ public class EdDSAPublicKey implements EdDSAKey, PublicKey {
                 //
                 // But Java's default keystore puts it in (when decoding as
                 // PKCS8 and then re-encoding to pass on), so we must accept it.
-                if (idlen == 7) {
-                    if (d[idx++] != 0x05 ||
-                            d[idx++] != 0) {
-                        throw new InvalidKeySpecException("unsupported key spec");
-                    }
+                if (7 == idlen) {
+                    assert 0x05 == d[idx++] &&
+                            0 == d[idx++] : "unsupported key spec";
                 }
             }
-            if (d[idx++] != 0x03 ||
-                    d[idx++] != 33 ||
-                    d[idx++] != 0) {
-                throw new InvalidKeySpecException("unsupported key spec");
-            }
-            byte[] rv = new byte[32];
+            assert 0x03 == d[idx++] &&
+                    33 == d[idx++] &&
+                    0 == d[idx++] : "unsupported key spec";
+            final byte[] rv = new byte[32];
             System.arraycopy(d, idx, rv, 0, 32);
             return rv;
-        } catch (IndexOutOfBoundsException ioobe) {
+        } catch (final IndexOutOfBoundsException ioobe) {
             throw new InvalidKeySpecException(ioobe);
         }
     }
@@ -213,8 +203,8 @@ public class EdDSAPublicKey implements EdDSAKey, PublicKey {
     public byte[] getEncoded() {
         if (getEdDSAParameterSpec() instanceof EdDSANamedCurveSpec && ((EdDSANamedCurveSpec) getEdDSAParameterSpec()).getName().equals(EdDSANamedCurveTable.ED_25519)) {
 
-            int totlen = 12 + abyte.length;
-            byte[] rv = new byte[totlen];
+            final int totlen = 12 + abyte.length;
+            final byte[] rv = new byte[totlen];
             int idx = 0;
             // sequence
             rv[idx++] = 0x30;
@@ -247,12 +237,12 @@ public class EdDSAPublicKey implements EdDSAKey, PublicKey {
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(final Object o) {
         if (o == this)
             return true;
         if (!(o instanceof EdDSAPublicKey))
             return false;
-        EdDSAPublicKey pk = (EdDSAPublicKey) o;
+        final EdDSAPublicKey pk = (EdDSAPublicKey) o;
         return Arrays.equals(abyte, pk.abyte) &&
                 getEdDSAParameterSpec().equals(pk.getEdDSAParameterSpec());
     }

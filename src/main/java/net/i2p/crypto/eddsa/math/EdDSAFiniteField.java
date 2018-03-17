@@ -37,7 +37,7 @@ public class EdDSAFiniteField  {
     public final FieldElement qm5d8;
     public final EmptyEncoding enc;
 
-    public EdDSAFiniteField(int b, byte[] q, EmptyEncoding enc) {
+    public EdDSAFiniteField(final int b, final byte[] q, final EmptyEncoding enc) {
         this.b = b;
         this.enc = enc;
         this.enc.setEdDSAFiniteField(this);
@@ -57,7 +57,7 @@ public class EdDSAFiniteField  {
         qm5d8 = this.q.subtract(FIVE).divide(EIGHT);
     }
 
-    public FieldElement fromByteArray(byte[] x) {
+    public FieldElement fromByteArray(final byte[] x) {
         return enc.decode(x);
     }
 
@@ -87,10 +87,10 @@ public class EdDSAFiniteField  {
     }
 
     @Override
-    public boolean equals(Object obj) {
+    public boolean equals(final Object obj) {
         if (!(obj instanceof EdDSAFiniteField))
             return false;
-        EdDSAFiniteField f = (EdDSAFiniteField) obj;
+        final EdDSAFiniteField f = (EdDSAFiniteField) obj;
         return b == f.b && q.equals(f.q);
     }
 }

@@ -44,14 +44,14 @@ public class BigIntegerEdDSAFiniteFieldElementTest extends AbstractEdDSAFiniteFi
 
     protected FieldElement getRandomFieldElement() {
         BigInteger r;
-        Random rnd = new Random();
+        final Random rnd = new Random();
         do {
             r = new BigInteger(255, rnd);
-        } while (r.compareTo(getQ()) >= 0);
+        } while (0 <= r.compareTo(getQ()));
         return new BigIntegerFieldElement(ED_25519_ED_DSA_FINITE_FIELD, r);
     }
 
-    protected BigInteger toBigInteger(FieldElement f) {
+    protected BigInteger toBigInteger(final FieldElement f) {
         return ((BigIntegerFieldElement)f).bi;
     }
 
@@ -78,15 +78,15 @@ public class BigIntegerEdDSAFiniteFieldElementTest extends AbstractEdDSAFiniteFi
      */
     @Test
     public void testToByteArray() {
-        byte[] zero = ZERO.toByteArray();
+        final byte[] zero = ZERO.toByteArray();
         assertThat(zero.length, is(equalTo(BYTES_ZERO.length)));
         assertThat(zero, is(equalTo(BYTES_ZERO)));
 
-        byte[] one = ONE.toByteArray();
+        final byte[] one = ONE.toByteArray();
         assertThat(one.length, is(equalTo(BYTES_ONE.length)));
         assertThat(one, is(equalTo(BYTES_ONE)));
 
-        byte[] ten = new BigIntegerFieldElement(ED_25519_ED_DSA_FINITE_FIELD, BigInteger.TEN).toByteArray();
+        final byte[] ten = new BigIntegerFieldElement(ED_25519_ED_DSA_FINITE_FIELD, BigInteger.TEN).toByteArray();
         assertThat(ten.length, is(equalTo(BYTES_TEN.length)));
         assertThat(ten, is(equalTo(BYTES_TEN)));
     }

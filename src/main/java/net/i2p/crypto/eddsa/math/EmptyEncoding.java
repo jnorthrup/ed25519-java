@@ -20,11 +20,11 @@ package net.i2p.crypto.eddsa.math;
 public abstract   class EmptyEncoding implements Encoding {
     private EdDSAFiniteField edDSAFiniteField;
 
-    public synchronized void setEdDSAFiniteField(EdDSAFiniteField f) {
-        if (this.getEdDSAFiniteField() != null)
-            throw new IllegalStateException("already set");
-        this.edDSAFiniteField = f;
-        
+    public synchronized void setEdDSAFiniteField(final EdDSAFiniteField f) {
+        //noinspection IfCanBeAssertion
+        if (null != this.getEdDSAFiniteField()) throw new IllegalStateException("already set");
+        edDSAFiniteField = f;
+
     }
 
     public EdDSAFiniteField getEdDSAFiniteField() {

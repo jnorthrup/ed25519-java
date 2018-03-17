@@ -55,7 +55,7 @@ public class UtilsTest {
         final SecureRandom random = new SecureRandom();
         final byte[] bytes1 = new byte[32];
         final byte[] bytes2 = new byte[32];
-        for (int i=0; i<100; i++) {
+        for (int i = 0; 100 > i; i++) {
             random.nextBytes(bytes1);
             System.arraycopy(bytes1, 0, bytes2, 0, 32);
             Assert.assertThat(Utils.equal(bytes1, bytes2), IsEqual.equalTo(1));
@@ -68,7 +68,7 @@ public class UtilsTest {
         final byte[] bytes1 = new byte[32];
         final byte[] bytes2 = new byte[32];
         random.nextBytes(bytes1);
-        for (int i=0; i<32; i++) {
+        for (int i = 0; 32 > i; i++) {
             System.arraycopy(bytes1, 0, bytes2, 0, 32);
             bytes2[i] = (byte)(bytes2[i] ^ 0xff);
             Assert.assertThat(Utils.equal(bytes1, bytes2), IsEqual.equalTo(0));
@@ -80,8 +80,8 @@ public class UtilsTest {
      */
     @Test
     public void testByteArrayEqual() {
-        byte[] zero = new byte[32];
-        byte[] one = new byte[32];
+        final byte[] zero = new byte[32];
+        final byte[] one = new byte[32];
         one[0] = 1;
 
         assertThat(Utils.equal(zero, zero), is(1));

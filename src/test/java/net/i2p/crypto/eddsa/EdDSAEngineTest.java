@@ -48,13 +48,13 @@ public class EdDSAEngineTest {
 
     @Test
     public void testSign() throws Exception {
-        EdDSAParameterSpec spec = EdDSANamedCurveTable.getByName(EdDSANamedCurveTable.ED_25519);
+        final EdDSAParameterSpec spec = EdDSANamedCurveTable.getByName(EdDSANamedCurveTable.ED_25519);
         //Signature sgr = Signature.getInstance("EdDSA", "I2P");
-        Signature sgr = new EdDSAEngine(MessageDigest.getInstance(spec.hashAlgo));
+        final Signature sgr = new EdDSAEngine(MessageDigest.getInstance(spec.hashAlgo));
 
-        for (Ed25519TestVectors.TestTuple testCase : Ed25519TestVectors.testCases) {
-            EdDSAPrivateKeySpec privKey = new EdDSAPrivateKeySpec(testCase.seed, spec);
-            PrivateKey sKey = new EdDSAPrivateKey(privKey);
+        for (final Ed25519TestVectors.TestTuple testCase : Ed25519TestVectors.testCases) {
+            final EdDSAPrivateKeySpec privKey = new EdDSAPrivateKeySpec(testCase.seed, spec);
+            final PrivateKey sKey = new EdDSAPrivateKey(privKey);
             sgr.initSign(sKey);
 
             sgr.update(testCase.message);
@@ -66,12 +66,12 @@ public class EdDSAEngineTest {
 
     @Test
     public void testVerify() throws Exception {
-        EdDSAParameterSpec spec = EdDSANamedCurveTable.getByName(EdDSANamedCurveTable.ED_25519);
+        final EdDSAParameterSpec spec = EdDSANamedCurveTable.getByName(EdDSANamedCurveTable.ED_25519);
         //Signature sgr = Signature.getInstance("EdDSA", "I2P");
-        Signature sgr = new EdDSAEngine(MessageDigest.getInstance(spec.hashAlgo));
-        for (Ed25519TestVectors.TestTuple testCase : Ed25519TestVectors.testCases) {
-            EdDSAPublicKeySpec pubKey = new EdDSAPublicKeySpec(testCase.pk, spec);
-            PublicKey vKey = new EdDSAPublicKey(pubKey);
+        final Signature sgr = new EdDSAEngine(MessageDigest.getInstance(spec.hashAlgo));
+        for (final Ed25519TestVectors.TestTuple testCase : Ed25519TestVectors.testCases) {
+            final EdDSAPublicKeySpec pubKey = new EdDSAPublicKeySpec(testCase.pk, spec);
+            final PublicKey vKey = new EdDSAPublicKey(pubKey);
             sgr.initVerify(vKey);
 
             sgr.update(testCase.message);
@@ -86,26 +86,26 @@ public class EdDSAEngineTest {
      */
     @Test
     public void testVerifyWrongSigLength() throws Exception {
-        EdDSAParameterSpec spec = EdDSANamedCurveTable.getByName(EdDSANamedCurveTable.ED_25519);
+        final EdDSAParameterSpec spec = EdDSANamedCurveTable.getByName(EdDSANamedCurveTable.ED_25519);
         //Signature sgr = Signature.getInstance("EdDSA", "I2P");
-        Signature sgr = new EdDSAEngine(MessageDigest.getInstance(spec.hashAlgo));
-        EdDSAPublicKeySpec pubKey = new EdDSAPublicKeySpec(TEST_PK, spec);
-        PublicKey vKey = new EdDSAPublicKey(pubKey);
+        final Signature sgr = new EdDSAEngine(MessageDigest.getInstance(spec.hashAlgo));
+        final EdDSAPublicKeySpec pubKey = new EdDSAPublicKeySpec(TEST_PK, spec);
+        final PublicKey vKey = new EdDSAPublicKey(pubKey);
         sgr.initVerify(vKey);
 
         sgr.update(TEST_MSG);
 
-        exception.expect(SignatureException.class);
+        exception.expect(AssertionError.class);
         exception.expectMessage("signature length is wrong");
         sgr.verify(new byte[] {0});
     }
 
     @Test
     public void testSignResetsForReuse() throws Exception {
-        EdDSAParameterSpec spec = EdDSANamedCurveTable.getByName(EdDSANamedCurveTable.ED_25519);
-        Signature sgr = new EdDSAEngine(MessageDigest.getInstance(spec.hashAlgo));
-        EdDSAPrivateKeySpec privKey = new EdDSAPrivateKeySpec(TEST_SEED, spec);
-        PrivateKey sKey = new EdDSAPrivateKey(privKey);
+        final EdDSAParameterSpec spec = EdDSANamedCurveTable.getByName(EdDSANamedCurveTable.ED_25519);
+        final Signature sgr = new EdDSAEngine(MessageDigest.getInstance(spec.hashAlgo));
+        final EdDSAPrivateKeySpec privKey = new EdDSAPrivateKeySpec(TEST_SEED, spec);
+        final PrivateKey sKey = new EdDSAPrivateKey(privKey);
         sgr.initSign(sKey);
 
         // First usage
@@ -119,10 +119,10 @@ public class EdDSAEngineTest {
 
     @Test
     public void testVerifyResetsForReuse() throws Exception {
-        EdDSAParameterSpec spec = EdDSANamedCurveTable.getByName(EdDSANamedCurveTable.ED_25519);
-        Signature sgr = new EdDSAEngine(MessageDigest.getInstance(spec.hashAlgo));
-        EdDSAPublicKeySpec pubKey = new EdDSAPublicKeySpec(TEST_PK, spec);
-        PublicKey vKey = new EdDSAPublicKey(pubKey);
+        final EdDSAParameterSpec spec = EdDSANamedCurveTable.getByName(EdDSANamedCurveTable.ED_25519);
+        final Signature sgr = new EdDSAEngine(MessageDigest.getInstance(spec.hashAlgo));
+        final EdDSAPublicKeySpec pubKey = new EdDSAPublicKeySpec(TEST_PK, spec);
+        final PublicKey vKey = new EdDSAPublicKey(pubKey);
         sgr.initVerify(vKey);
 
         // First usage
@@ -136,10 +136,10 @@ public class EdDSAEngineTest {
 
     @Test
     public void testSignOneShotMode() throws Exception {
-        EdDSAParameterSpec spec = EdDSANamedCurveTable.getByName(EdDSANamedCurveTable.ED_25519);
-        Signature sgr = new EdDSAEngine(MessageDigest.getInstance(spec.hashAlgo));
-        EdDSAPrivateKeySpec privKey = new EdDSAPrivateKeySpec(TEST_SEED, spec);
-        PrivateKey sKey = new EdDSAPrivateKey(privKey);
+        final EdDSAParameterSpec spec = EdDSANamedCurveTable.getByName(EdDSANamedCurveTable.ED_25519);
+        final Signature sgr = new EdDSAEngine(MessageDigest.getInstance(spec.hashAlgo));
+        final EdDSAPrivateKeySpec privKey = new EdDSAPrivateKeySpec(TEST_SEED, spec);
+        final PrivateKey sKey = new EdDSAPrivateKey(privKey);
         sgr.initSign(sKey);
         sgr.setParameter(EdDSAEngine.ONE_SHOT_MODE);
 
@@ -150,10 +150,10 @@ public class EdDSAEngineTest {
 
     @Test
     public void testVerifyOneShotMode() throws Exception {
-        EdDSAParameterSpec spec = EdDSANamedCurveTable.getByName(EdDSANamedCurveTable.ED_25519);
-        Signature sgr = new EdDSAEngine(MessageDigest.getInstance(spec.hashAlgo));
-        EdDSAPublicKeySpec pubKey = new EdDSAPublicKeySpec(TEST_PK, spec);
-        PublicKey vKey = new EdDSAPublicKey(pubKey);
+        final EdDSAParameterSpec spec = EdDSANamedCurveTable.getByName(EdDSANamedCurveTable.ED_25519);
+        final Signature sgr = new EdDSAEngine(MessageDigest.getInstance(spec.hashAlgo));
+        final EdDSAPublicKeySpec pubKey = new EdDSAPublicKeySpec(TEST_PK, spec);
+        final PublicKey vKey = new EdDSAPublicKey(pubKey);
         sgr.initVerify(vKey);
         sgr.setParameter(EdDSAEngine.ONE_SHOT_MODE);
 
@@ -164,10 +164,10 @@ public class EdDSAEngineTest {
 
     @Test
     public void testSignOneShotModeMultipleUpdates() throws Exception {
-        EdDSAParameterSpec spec = EdDSANamedCurveTable.getByName(EdDSANamedCurveTable.ED_25519);
-        Signature sgr = new EdDSAEngine(MessageDigest.getInstance(spec.hashAlgo));
-        EdDSAPrivateKeySpec privKey = new EdDSAPrivateKeySpec(TEST_SEED, spec);
-        PrivateKey sKey = new EdDSAPrivateKey(privKey);
+        final EdDSAParameterSpec spec = EdDSANamedCurveTable.getByName(EdDSANamedCurveTable.ED_25519);
+        final Signature sgr = new EdDSAEngine(MessageDigest.getInstance(spec.hashAlgo));
+        final EdDSAPrivateKeySpec privKey = new EdDSAPrivateKeySpec(TEST_SEED, spec);
+        final PrivateKey sKey = new EdDSAPrivateKey(privKey);
         sgr.initSign(sKey);
         sgr.setParameter(EdDSAEngine.ONE_SHOT_MODE);
 
@@ -180,10 +180,10 @@ public class EdDSAEngineTest {
 
     @Test
     public void testVerifyOneShotModeMultipleUpdates() throws Exception {
-        EdDSAParameterSpec spec = EdDSANamedCurveTable.getByName(EdDSANamedCurveTable.ED_25519);
-        EdDSAPublicKeySpec pubKey = new EdDSAPublicKeySpec(TEST_PK, spec);
-        Signature sgr = new EdDSAEngine(MessageDigest.getInstance(spec.hashAlgo));
-        PublicKey vKey = new EdDSAPublicKey(pubKey);
+        final EdDSAParameterSpec spec = EdDSANamedCurveTable.getByName(EdDSANamedCurveTable.ED_25519);
+        final EdDSAPublicKeySpec pubKey = new EdDSAPublicKeySpec(TEST_PK, spec);
+        final Signature sgr = new EdDSAEngine(MessageDigest.getInstance(spec.hashAlgo));
+        final PublicKey vKey = new EdDSAPublicKey(pubKey);
         sgr.initVerify(vKey);
         sgr.setParameter(EdDSAEngine.ONE_SHOT_MODE);
 
@@ -196,10 +196,10 @@ public class EdDSAEngineTest {
 
     @Test
     public void testSignOneShot() throws Exception {
-        EdDSAParameterSpec spec = EdDSANamedCurveTable.getByName(EdDSANamedCurveTable.ED_25519);
-        EdDSAPrivateKeySpec privKey = new EdDSAPrivateKeySpec(TEST_SEED, spec);
-        EdDSAEngine sgr = new EdDSAEngine(MessageDigest.getInstance(spec.hashAlgo));
-        PrivateKey sKey = new EdDSAPrivateKey(privKey);
+        final EdDSAParameterSpec spec = EdDSANamedCurveTable.getByName(EdDSANamedCurveTable.ED_25519);
+        final EdDSAPrivateKeySpec privKey = new EdDSAPrivateKeySpec(TEST_SEED, spec);
+        final EdDSAEngine sgr = new EdDSAEngine(MessageDigest.getInstance(spec.hashAlgo));
+        final PrivateKey sKey = new EdDSAPrivateKey(privKey);
         sgr.initSign(sKey);
 
         assertThat("signOneShot() failed", sgr.signOneShot(TEST_MSG), is(equalTo(TEST_MSG_SIG)));
@@ -207,10 +207,10 @@ public class EdDSAEngineTest {
 
     @Test
     public void testVerifyOneShot() throws Exception {
-        EdDSAParameterSpec spec = EdDSANamedCurveTable.getByName(EdDSANamedCurveTable.ED_25519);
-        EdDSAPublicKeySpec pubKey = new EdDSAPublicKeySpec(TEST_PK, spec);
-        EdDSAEngine sgr = new EdDSAEngine(MessageDigest.getInstance(spec.hashAlgo));
-        PublicKey vKey = new EdDSAPublicKey(pubKey);
+        final EdDSAParameterSpec spec = EdDSANamedCurveTable.getByName(EdDSANamedCurveTable.ED_25519);
+        final EdDSAPublicKeySpec pubKey = new EdDSAPublicKeySpec(TEST_PK, spec);
+        final EdDSAEngine sgr = new EdDSAEngine(MessageDigest.getInstance(spec.hashAlgo));
+        final PublicKey vKey = new EdDSAPublicKey(pubKey);
         sgr.initVerify(vKey);
 
         assertThat("verifyOneShot() failed", sgr.verifyOneShot(TEST_MSG, TEST_MSG_SIG), is(true));
@@ -218,14 +218,14 @@ public class EdDSAEngineTest {
 
     @Test
     public void testVerifyX509PublicKeyInfo() throws Exception {
-        EdDSAParameterSpec spec = EdDSANamedCurveTable.getByName("Ed25519");
-        Signature sgr = new EdDSAEngine(MessageDigest.getInstance(spec.hashAlgo));
-        for (Ed25519TestVectors.TestTuple testCase : Ed25519TestVectors.testCases) {
-            EdDSAPublicKeySpec pubKey = new EdDSAPublicKeySpec(testCase.pk, spec);
-            PublicKey vKey = new EdDSAPublicKey(pubKey);
-            byte[] encoded = vKey.getEncoded();
-            DerValue derValue = new DerValue(encoded);
-            PublicKey x509Key = X509Key.parse(derValue);
+        final EdDSAParameterSpec spec = EdDSANamedCurveTable.getByName("Ed25519");
+        final Signature sgr = new EdDSAEngine(MessageDigest.getInstance(spec.hashAlgo));
+        for (final Ed25519TestVectors.TestTuple testCase : Ed25519TestVectors.testCases) {
+            final EdDSAPublicKeySpec pubKey = new EdDSAPublicKeySpec(testCase.pk, spec);
+            final PublicKey vKey = new EdDSAPublicKey(pubKey);
+            final byte[] encoded = vKey.getEncoded();
+            final DerValue derValue = new DerValue(encoded);
+            final PublicKey x509Key = X509Key.parse(derValue);
             sgr.initVerify(x509Key);
 
             sgr.update(testCase.message);

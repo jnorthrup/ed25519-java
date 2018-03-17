@@ -41,14 +41,13 @@ public class EdDSAParameterSpec implements AlgorithmParameterSpec  {
      * @param groupElement the parameter B
      * @throws IllegalArgumentException if hash algorithm is unsupported or length is wrong
      */
-    public EdDSAParameterSpec(Curve curve, String hashAlgo,
-                              ScalarOps scalarOps, GroupElement groupElement) {
+    public EdDSAParameterSpec(final Curve curve, final String hashAlgo,
+                              final ScalarOps scalarOps, final GroupElement groupElement) {
         try {
-            MessageDigest hash = MessageDigest.getInstance(hashAlgo);
+            final MessageDigest hash = MessageDigest.getInstance(hashAlgo);
             // EdDSA hash function must produce 2b-bit output
-            if (curve.getField().getb()/4 != hash.getDigestLength())
-                throw new IllegalArgumentException("Hash output is not 2b-bit");
-        } catch (NoSuchAlgorithmException e) {
+            assert curve.getField().getb() / 4 == hash.getDigestLength() : "Hash output is not 2b-bit";
+        } catch (final NoSuchAlgorithmException e) {
             throw new IllegalArgumentException("Unsupported hash algorithm");
         }
 
@@ -66,7 +65,7 @@ public class EdDSAParameterSpec implements AlgorithmParameterSpec  {
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(final Object o) {
         return o == this || o instanceof EdDSAParameterSpec && Objects.equals(hashAlgo, ((EdDSAParameterSpec) o).hashAlgo) && curve.equals(((EdDSAParameterSpec) o).curve) && groupElement.equals(((EdDSAParameterSpec) o).groupElement);
     }
 }

@@ -29,15 +29,14 @@ public class EdDSAPublicKeySpec implements KeySpec {
      * @param spec the parameter specification for this key
      * @throws IllegalArgumentException if key length is wrong
      */
-    public EdDSAPublicKeySpec(byte[] pk, EdDSAParameterSpec spec) {
-        if (pk.length != spec.curve.getField().getb()/8)
-            throw new IllegalArgumentException("public-key length is wrong");
+    public EdDSAPublicKeySpec(final byte[] pk, final EdDSAParameterSpec spec) {
+        assert pk.length == spec.curve.getField().getb() / 8 : "public-key length is wrong";
 
         this.A = new GroupElement(spec.curve, pk);
         this.spec = spec;
     }
 
-    public EdDSAPublicKeySpec(GroupElement A, EdDSAParameterSpec spec) {
+    public EdDSAPublicKeySpec(final GroupElement A, final EdDSAParameterSpec spec) {
         this.A = A;
         this.spec = spec;
     }
@@ -45,7 +44,7 @@ public class EdDSAPublicKeySpec implements KeySpec {
     public GroupElement getNegativeA() {
         // Only read Aneg once, otherwise read re-ordering might occur between here and return. Requires all GroupElement's fields to be final.
         GroupElement ourAneg = Aneg;
-        if(ourAneg == null) {
+        if(null == ourAneg) {
             ourAneg = A.negate();
             Aneg = ourAneg;
         }

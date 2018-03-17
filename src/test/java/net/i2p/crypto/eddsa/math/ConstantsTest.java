@@ -42,12 +42,12 @@ public class ConstantsTest {
 
     @Test
     public void testb() {
-        int b = curve.getField().getb();
+        final int b = curve.getField().getb();
         assertThat(b, is(greaterThanOrEqualTo(10)));
         try {
-            MessageDigest h = MessageDigest.getInstance(ed25519.hashAlgo);
+            final MessageDigest h = MessageDigest.getInstance(ed25519.hashAlgo);
             assertThat(8 * h.getDigestLength(), is(equalTo(2 * b)));
-        } catch (NoSuchAlgorithmException e) {
+        } catch (final NoSuchAlgorithmException e) {
             fail(e.getMessage());
         }
     }
@@ -83,7 +83,7 @@ public class ConstantsTest {
 
     @Test
     public void testB() {
-        GroupElement B = ed25519.groupElement;
+        final GroupElement B = ed25519.groupElement;
         assertThat(B.isOnCurve(curve), is(true));
         //assertThat(B.scalarMultiply(new BigIntegerLittleEndianEncoding().encode(ed25519.getL(), curve.getField().getb()/8)), is(equalTo(P3_ZERO)));
     }

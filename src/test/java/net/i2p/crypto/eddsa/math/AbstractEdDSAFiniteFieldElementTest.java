@@ -55,7 +55,7 @@ public abstract class AbstractEdDSAFiniteFieldElementTest {
 
     @Test
     public void addReturnsCorrectResult() {
-        for (int i=0; i<1000; i++) {
+        for (int i = 0; 1000 > i; i++) {
             // Arrange:
             final FieldElement f1 = getRandomFieldElement();
             final FieldElement f2 = getRandomFieldElement();
@@ -73,7 +73,7 @@ public abstract class AbstractEdDSAFiniteFieldElementTest {
 
     @Test
     public void subtractReturnsCorrectResult() {
-        for (int i=0; i<1000; i++) {
+        for (int i = 0; 1000 > i; i++) {
             // Arrange:
             final FieldElement f1 = getRandomFieldElement();
             final FieldElement f2 = getRandomFieldElement();
@@ -91,7 +91,7 @@ public abstract class AbstractEdDSAFiniteFieldElementTest {
 
     @Test
     public void negateReturnsCorrectResult() {
-        for (int i=0; i<1000; i++) {
+        for (int i = 0; 1000 > i; i++) {
             // Arrange:
             final FieldElement f1 = getRandomFieldElement();
             final BigInteger b1 = toBigInteger(f1);
@@ -107,7 +107,7 @@ public abstract class AbstractEdDSAFiniteFieldElementTest {
 
     @Test
     public void multiplyReturnsCorrectResult() {
-        for (int i=0; i<1000; i++) {
+        for (int i = 0; 1000 > i; i++) {
             // Arrange:
             final FieldElement f1 = getRandomFieldElement();
             final FieldElement f2 = getRandomFieldElement();
@@ -125,7 +125,7 @@ public abstract class AbstractEdDSAFiniteFieldElementTest {
 
     @Test
     public void squareReturnsCorrectResult() {
-        for (int i=0; i<1000; i++) {
+        for (int i = 0; 1000 > i; i++) {
             // Arrange:
             final FieldElement f1 = getRandomFieldElement();
             final BigInteger b1 = toBigInteger(f1);
@@ -141,7 +141,7 @@ public abstract class AbstractEdDSAFiniteFieldElementTest {
 
     @Test
     public void squareAndDoubleReturnsCorrectResult() {
-        for (int i=0; i<1000; i++) {
+        for (int i = 0; 1000 > i; i++) {
             // Arrange:
             final FieldElement f1 = getRandomFieldElement();
             final BigInteger b1 = toBigInteger(f1);
@@ -157,7 +157,7 @@ public abstract class AbstractEdDSAFiniteFieldElementTest {
 
     @Test
     public void invertReturnsCorrectResult() {
-        for (int i=0; i<1000; i++) {
+        for (int i = 0; 1000 > i; i++) {
             // Arrange:
             final FieldElement f1 = getRandomFieldElement();
             final BigInteger b1 = toBigInteger(f1);
@@ -173,7 +173,7 @@ public abstract class AbstractEdDSAFiniteFieldElementTest {
 
     @Test
     public void pow22523ReturnsCorrectResult() {
-        for (int i=0; i<1000; i++) {
+        for (int i = 0; 1000 > i; i++) {
             // Arrange:
             final FieldElement f1 = getRandomFieldElement();
             final BigInteger b1 = toBigInteger(f1);

@@ -20,17 +20,17 @@ public class BigIntegerScalarOps implements ScalarOps {
     public final BigInteger l;
     public final BigIntegerLittleEndianEncoding enc;
 
-    public BigIntegerScalarOps(EdDSAFiniteField f, BigInteger l) {
+    public BigIntegerScalarOps(final EdDSAFiniteField f, final BigInteger l) {
         this.l = l;
         enc = new BigIntegerLittleEndianEncoding();
         enc.setEdDSAFiniteField(f);
     }
 
-    public byte[] reduce(byte[] s) {
+    public byte[] reduce(final byte[] s) {
         return enc.convertBigIntegerToLittleEndian(enc.toBigInteger(s).mod(l));
     }
 
-    public byte[] multiplyAndAdd(byte[] a, byte[] b, byte[] c) {
+    public byte[] multiplyAndAdd(final byte[] a, final byte[] b, final byte[] c) {
         return enc.convertBigIntegerToLittleEndian(enc.toBigInteger(a).multiply(enc.toBigInteger(b)).add(enc.toBigInteger(c)).mod(l));
     }
 

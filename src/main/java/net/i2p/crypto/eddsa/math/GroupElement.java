@@ -266,8 +266,15 @@ public class GroupElement  {
      * @param precomputeSingleAndDouble If true, populate both precmp and dblPrecmp, else set both to null.
      */
     // TODO
-    public GroupElement(final Curve curve, final byte[] s, boolean precomputeSingleAndDouble) {
-        FieldElement x, y, yy, u, v, v3, vxx, check;
+    public GroupElement(final Curve curve, final byte[] s, final boolean precomputeSingleAndDouble) {
+        FieldElement x;
+        final FieldElement y;
+        final FieldElement yy;
+        final FieldElement u;
+        final FieldElement v;
+        final FieldElement v3;
+        final FieldElement vxx;
+        FieldElement check;
         y = curve.getField().fromByteArray(s);
         yy = y.square();
 
@@ -294,8 +301,7 @@ public class GroupElement  {
         if (check.isNonZero()) {
             check = vxx.add(u);             // vx^2+u
 
-            if (check.isNonZero())
-                throw new IllegalArgumentException("not a valid GroupElement");
+            assert !check.isNonZero() : "not a valid GroupElement";
             x = x.multiply(curve.getI());
         }
 
@@ -385,10 +391,10 @@ public class GroupElement  {
         switch (this.repr) {
             case P2:
             case P3:
-                FieldElement recip = Z.invert();
-                FieldElement x = X.multiply(recip);
-                FieldElement y = Y.multiply(recip);
-                byte[] s = y.toByteArray();
+                final FieldElement recip = Z.invert();
+                final FieldElement x = X.multiply(recip);
+                final FieldElement y = Y.multiply(recip);
+                final byte[] s = y.toByteArray();
                 s[s.length-1] |= (x.isNegative() ? (byte) 0x80 : 0);
                 return s;
             default:
@@ -504,12 +510,12 @@ public class GroupElement  {
      */
     public GroupElement[][] precomputeSingle() {
         // Precomputation for single scalar multiplication.
-        GroupElement[][] precmp = new GroupElement[32][8];
+        final GroupElement[][] precmp = new GroupElement[32][8];
         // TODO-CR BR: check that this == base point when the method is called.
         GroupElement Bi = this;
-        for (int i = 0; i < 32; i++) {
+        for (int i = 0; 32 > i; i++) {
             GroupElement Bij = Bi;
-            for (int j = 0; j < 8; j++) {
+            for (int j = 0; 8 > j; j++) {
                 final FieldElement recip = Bij.Z.invert();
                 final FieldElement x = Bij.X.multiply(recip);
                 final FieldElement y = Bij.Y.multiply(recip);
@@ -517,7 +523,7 @@ public class GroupElement  {
                 Bij = Bij.add(Bi.toCached()).toP3();
             }
             // Only every second summand is precomputed (16^2 = 256)
-            for (int k = 0; k < 8; k++) {
+            for (int k = 0; 8 > k; k++) {
                 Bi = Bi.add(Bi.toCached()).toP3();
             }
         }
@@ -530,9 +536,9 @@ public class GroupElement  {
     public GroupElement[] precomputeDouble() {
         // Precomputation for double scalar multiplication.
         // P,3P,5P,7P,9P,11P,13P,15P
-        GroupElement[] dblPrecmp = new GroupElement[8];
+        final GroupElement[] dblPrecmp = new GroupElement[8];
         GroupElement Bi = this;
-        for (int i = 0; i < 8; i++) {
+        for (int i = 0; 8 > i; i++) {
             final FieldElement recip = Bi.Z.invert();
             final FieldElement x = Bi.X.multiply(recip);
             final FieldElement y = Bi.Y.multiply(recip);
@@ -580,7 +586,13 @@ public class GroupElement  {
         switch (this.repr) {
         case P2:
         case P3: // Ignore T for P3 representation
-            FieldElement XX, YY, B, A, AA, Yn, Zn;
+            final FieldElement XX;
+            final FieldElement YY;
+            final FieldElement B;
+            final FieldElement A;
+            final FieldElement AA;
+            final FieldElement Yn;
+            final FieldElement Zn;
             XX = this.X.square();
             YY = this.Y.square();
             B = this.Z.squareAndDouble();
@@ -639,13 +651,16 @@ public class GroupElement  {
      * @param q the PRECOMP representation of the GroupElement to add.
      * @return the P1P1 representation of the result.
      */
-    public GroupElement madd(GroupElement q) {
-        if (this.repr != Representation.P3)
-            throw new UnsupportedOperationException();
-        if (q.repr != Representation.PRECOMP)
-            throw new IllegalArgumentException();
+    public GroupElement madd(final GroupElement q) {
+        assert Representation.P3 == this.repr;
+        assert Representation.PRECOMP == q.repr;
 
-        FieldElement YpX, YmX, A, B, C, D;
+        final FieldElement YpX;
+        final FieldElement YmX;
+        final FieldElement A;
+        final FieldElement B;
+        final FieldElement C;
+        final FieldElement D;
         YpX = this.Y.add(this.X);
         YmX = this.Y.subtract(this.X);
         A = YpX.multiply(q.X); // q->y+x
@@ -668,13 +683,16 @@ public class GroupElement  {
      * @param q the PRECOMP representation of the GroupElement to subtract.
      * @return the P1P1 representation of the result.
      */
-    public GroupElement msub(GroupElement q) {
-        if (this.repr != Representation.P3)
-            throw new UnsupportedOperationException();
-        if (q.repr != Representation.PRECOMP)
-            throw new IllegalArgumentException();
+    public GroupElement msub(final GroupElement q) {
+        assert Representation.P3 == this.repr;
+        assert Representation.PRECOMP == q.repr;
 
-        FieldElement YpX, YmX, A, B, C, D;
+        final FieldElement YpX;
+        final FieldElement YmX;
+        final FieldElement A;
+        final FieldElement B;
+        final FieldElement C;
+        final FieldElement D;
         YpX = this.Y.add(this.X);
         YmX = this.Y.subtract(this.X);
         A = YpX.multiply(q.Y); // q->y-x
@@ -710,13 +728,17 @@ public class GroupElement  {
      * @param q the CACHED representation of the GroupElement to add.
      * @return the P1P1 representation of the result.
      */
-    public GroupElement add(GroupElement q) {
-        if (this.repr != Representation.P3)
-            throw new UnsupportedOperationException();
-        if (q.repr != Representation.CACHED)
-            throw new IllegalArgumentException();
+    public GroupElement add(final GroupElement q) {
+        assert Representation.P3 == this.repr;
+        assert Representation.CACHED == q.repr;
 
-        FieldElement YpX, YmX, A, B, C, ZZ, D;
+        final FieldElement YpX;
+        final FieldElement YmX;
+        final FieldElement A;
+        final FieldElement B;
+        final FieldElement C;
+        final FieldElement ZZ;
+        final FieldElement D;
         YpX = this.Y.add(this.X);
         YmX = this.Y.subtract(this.X);
         A = YpX.multiply(q.X); // q->Y+X
@@ -739,13 +761,17 @@ public class GroupElement  {
      * @param q the PRECOMP representation of the GroupElement to subtract.
      * @return the P1P1 representation of the result.
      */
-    public GroupElement sub(GroupElement q) {
-        if (this.repr != Representation.P3)
-            throw new UnsupportedOperationException();
-        if (q.repr != Representation.CACHED)
-            throw new IllegalArgumentException();
+    public GroupElement sub(final GroupElement q) {
+        assert Representation.P3 == this.repr;
+        assert Representation.CACHED == q.repr;
 
-        FieldElement YpX, YmX, A, B, C, ZZ, D;
+        final FieldElement YpX;
+        final FieldElement YmX;
+        final FieldElement A;
+        final FieldElement B;
+        final FieldElement C;
+        final FieldElement ZZ;
+        final FieldElement D;
         YpX = Y.add(X);
         YmX = Y.subtract(X);
         A = YpX.multiply(q.Y); // q->Y-X
@@ -764,8 +790,7 @@ public class GroupElement  {
      * @return The negative of this group element.
      */
     public GroupElement negate() {
-        if (this.repr != Representation.P3)
-            throw new UnsupportedOperationException();
+        assert Representation.P3 == this.repr;
         return this.curve.getZero(Representation.P3).sub(toCached()).toP3PrecomputeDouble();
     }
 
@@ -775,7 +800,7 @@ public class GroupElement  {
     }
 
     @Override
-    public boolean equals(Object obj) {
+    public boolean equals(final Object obj) {
         if (obj == this)
             return true;
         if (!(obj instanceof GroupElement))
@@ -784,7 +809,7 @@ public class GroupElement  {
         if (!this.repr.equals(ge.repr)) {
             try {
                 ge = ge.toRep(this.repr);
-            } catch (RuntimeException e) {
+            } catch (final RuntimeException e) {
                 return false;
             }
         }
@@ -834,14 +859,14 @@ public class GroupElement  {
         final byte[] e = new byte[64];
         int i;
         // Radix 16 notation
-        for (i = 0; i < 32; i++) {
+        for (i = 0; 32 > i; i++) {
             e[2*i+0] = (byte) (a[i] & 15);
             e[2*i+1] = (byte) ((a[i] >> 4) & 15);
         }
         /* each e[i] is between 0 and 15 */
         /* e[63] is between 0 and 7 */
         int carry = 0;
-        for (i = 0; i < 63; i++) {
+        for (i = 0; 63 > i; i++) {
             e[i] += carry;
             carry = e[i] + 8;
             carry >>= 4;
@@ -922,14 +947,14 @@ public class GroupElement  {
         final byte[] e = toRadix16(a);
 
         GroupElement h = this.curve.getZero(Representation.P3);
-        for (i = 1; i < 64; i += 2) {
+        for (i = 1; 64 > i; i += 2) {
             t = select(i/2, e[i]);
             h = h.madd(t).toP3();
         }
 
         h = h.dbl().toP2().dbl().toP2().dbl().toP2().dbl().toP3();
 
-        for (i = 0; i < 64; i += 2) {
+        for (i = 0; 64 > i; i += 2) {
             t = select(i/2, e[i]);
             h = h.madd(t).toP3();
         }
@@ -950,26 +975,26 @@ public class GroupElement  {
      * @return The byte array $r$ in the above described form.
      */
     static byte[] slide(final byte[] a) {
-        byte[] r = new byte[256];
+        final byte[] r = new byte[256];
 
         // Put each bit of 'a' into a separate byte, 0 or 1
-        for (int i = 0; i < 256; ++i) {
+        for (int i = 0; 256 > i; ++i) {
             r[i] = (byte) (1 & (a[i >> 3] >> (i & 7)));
         }
 
         // Note: r[i] will always be odd.
-        for (int i = 0; i < 256; ++i) {
-            if (r[i] != 0) {
-                for (int b = 1; b <= 6 && i + b < 256; ++b) {
+        for (int i = 0; 256 > i; ++i) {
+            if (0 != r[i]) {
+                for (int b = 1; 6 >= b && 256 > i + b; ++b) {
                     // Accumulate bits if possible
-                    if (r[i + b] != 0) {
-                        if (r[i] + (r[i + b] << b) <= 15) {
+                    if (0 != r[i + b]) {
+                        if (15 >= r[i] + (r[i + b] << b)) {
                             r[i] += r[i + b] << b;
                             r[i + b] = 0;
-                        } else if (r[i] - (r[i + b] << b) >= -15) {
+                        } else if (-15 <= r[i] - (r[i + b] << b)) {
                             r[i] -= r[i + b] << b;
-                            for (int k = i + b; k < 256; ++k) {
-                                if (r[k] == 0) {
+                            for (int k = i + b; 256 > k; ++k) {
+                                if (0 == r[k]) {
                                     r[k] = 1;
                                     break;
                                 }
@@ -1004,26 +1029,29 @@ public class GroupElement  {
         GroupElement r = this.curve.getZero(Representation.P2);
 
         int i;
-        for (i = 255; i >= 0; --i) {
-            if (aslide[i] != 0 || bslide[i] != 0) break;
+        i = 255;
+        while (0 <= i) {
+            if (0 != aslide[i] || 0 != bslide[i]) break;
+            --i;
         }
 
-        for (; i >= 0; --i) {
+        while (0 <= i) {
             GroupElement t = r.dbl();
 
-                if (aslide[i] > 0) {
+                if (0 < aslide[i]) {
                     t = t.toP3().madd(A.dblPrecmp[aslide[i]/2]);
-                } else if(aslide[i] < 0) {
+                } else if(0 > aslide[i]) {
                     t = t.toP3().msub(A.dblPrecmp[(-aslide[i])/2]);
                 }
 
-                if (bslide[i] > 0) {
+                if (0 < bslide[i]) {
                     t = t.toP3().madd(this.dblPrecmp[bslide[i]/2]);
-                } else if(bslide[i] < 0) {
+                } else if(0 > bslide[i]) {
                     t = t.toP3().msub(this.dblPrecmp[(-bslide[i])/2]);
                 }
 
             r = t.toP2();
+            --i;
         }
 
         return r;
@@ -1042,16 +1070,16 @@ public class GroupElement  {
      * @param curve The curve to check.
      * @return true if the point lies on the curve.
      */
-    public boolean isOnCurve(Curve curve) {
+    public boolean isOnCurve(final Curve curve) {
         switch (repr) {
         case P2:
         case P3:
-            FieldElement recip = Z.invert();
-            FieldElement x = X.multiply(recip);
-            FieldElement y = Y.multiply(recip);
-            FieldElement xx = x.square();
-            FieldElement yy = y.square();
-            FieldElement dxxyy = curve.getD().multiply(xx).multiply(yy);
+            final FieldElement recip = Z.invert();
+            final FieldElement x = X.multiply(recip);
+            final FieldElement y = Y.multiply(recip);
+            final FieldElement xx = x.square();
+            final FieldElement yy = y.square();
+            final FieldElement dxxyy = curve.getD().multiply(xx).multiply(yy);
             return curve.getField().ONE.add(dxxyy).add(xx).equals(yy);
 
         default:

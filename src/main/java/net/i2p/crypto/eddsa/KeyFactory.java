@@ -30,8 +30,8 @@ import net.i2p.crypto.eddsa.spec.EdDSAPublicKeySpec;
  */
 public final class KeyFactory extends KeyFactorySpi {
 
-    protected PrivateKey engineGeneratePrivate(KeySpec keySpec) throws InvalidKeySpecException {
-        EdDSAPrivateKey ret;
+    protected PrivateKey engineGeneratePrivate(final KeySpec keySpec) throws InvalidKeySpecException {
+        final EdDSAPrivateKey ret;
         if (keySpec instanceof EdDSAPrivateKeySpec)
             ret = new EdDSAPrivateKey((EdDSAPrivateKeySpec) keySpec);
         else {
@@ -41,27 +41,27 @@ public final class KeyFactory extends KeyFactorySpi {
         return ret;
     }
 
-    protected PublicKey engineGeneratePublic(KeySpec keySpec) {
+    protected PublicKey engineGeneratePublic(final KeySpec keySpec) {
         assert keySpec instanceof EdDSAPublicKeySpec : "key spec not recognised: " + keySpec.getClass();
         return new EdDSAPublicKey((EdDSAPublicKeySpec) keySpec);
     }
 
     @SuppressWarnings("unchecked")
-    protected <T extends KeySpec> T engineGetKeySpec(Key key, Class<T> keySpec) {
-        T ret;
+    protected <T extends KeySpec> T engineGetKeySpec(final Key key, final Class<T> keySpec) {
+        final T ret;
         if (!keySpec.isAssignableFrom(EdDSAPublicKeySpec.class) || !(key instanceof EdDSAPublicKey)) {
             assert keySpec.isAssignableFrom(EdDSAPrivateKeySpec.class) && key instanceof EdDSAPrivateKey : "not implemented yet " + key + " " + keySpec;
-            EdDSAPrivateKey k = (EdDSAPrivateKey) key;
+            final EdDSAPrivateKey k = (EdDSAPrivateKey) key;
             ret=(T) new EdDSAPrivateKeySpec(k.seed, k.hashOfTheSeed, k.privateKey, k.groupElement, k.getEdDSAParameterSpec());
         } else {
-            EdDSAPublicKey k = (EdDSAPublicKey) key;
+            final EdDSAPublicKey k = (EdDSAPublicKey) key;
             Objects.requireNonNull(k.getEdDSAParameterSpec());
             ret=(T) new EdDSAPublicKeySpec(k.A, k.getEdDSAParameterSpec());
         }
         return ret;
     }
 
-    protected Key engineTranslateKey(Key key) throws InvalidKeyException {
+    protected Key engineTranslateKey(final Key key) throws InvalidKeyException {
         throw new InvalidKeyException("No other EdDSA key providers known");
     }
 }

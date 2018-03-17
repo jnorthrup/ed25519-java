@@ -45,10 +45,10 @@ public class Ed25519LittleEndianEncodingTest {
 
     @Test
     public void encodeReturnsCorrectByteArray() {
-        for (int i=0; i<10000; i++){
+        for (int i = 0; 10000 > i; i++){
             // Arrange:
             final int[] t = new int[10];
-            for (int j=0; j<10; j++) {
+            for (int j = 0; 10 > j; j++) {
                 t[j] = random.nextInt(1 << 28) - (1 << 27);
             }
             final FieldElement fieldElement1 = new Ed25519FieldElement(MathUtils.getField(), t);
@@ -82,7 +82,7 @@ public class Ed25519LittleEndianEncodingTest {
 
     @Test
     public void decodeReturnsCorrectFieldElement() {
-        for (int i=0; i<10000; i++) {
+        for (int i = 0; 10000 > i; i++) {
             // Arrange:
             final byte[] bytes = new byte[32];
             random.nextBytes(bytes);
@@ -100,10 +100,10 @@ public class Ed25519LittleEndianEncodingTest {
 
     @Test
     public void isNegativeReturnsCorrectResult() {
-        for (int i=0; i<10000; i++) {
+        for (int i = 0; 10000 > i; i++) {
             // Arrange:
             final int[] t = new int[10];
-            for (int j=0; j<10; j++) {
+            for (int j = 0; 10 > j; j++) {
                 t[j] = random.nextInt(1 << 28) - (1 << 27);
             }
             final boolean isNegative = MathUtils.toBigInteger(t).mod(MathUtils.getQ()).mod(new BigInteger("2")).equals(BigInteger.ONE);

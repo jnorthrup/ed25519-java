@@ -13,6 +13,7 @@ package net.i2p.crypto.eddsa.spec;
 
 import java.util.HashMap;
 import java.util.Locale;
+import java.util.Objects;
 
 import net.i2p.crypto.eddsa.Utils;
 import net.i2p.crypto.eddsa.math.Curve;
@@ -41,21 +42,19 @@ public class EdDSANamedCurveTable {
 
     public static volatile HashMap<String, EdDSANamedCurveSpec> curves = new HashMap<String, EdDSANamedCurveSpec>();
 
-    public static synchronized void putCurve(String name, EdDSANamedCurveSpec curve) {
-        HashMap<String, EdDSANamedCurveSpec> newCurves = new HashMap<String, EdDSANamedCurveSpec>(curves);
+    public static synchronized void putCurve(final String name, final EdDSANamedCurveSpec curve) {
+        final HashMap<String, EdDSANamedCurveSpec> newCurves = new HashMap<String, EdDSANamedCurveSpec>(curves);
         newCurves.put(name, curve);
         curves = newCurves;
     }
 
-    public static void defineCurve(EdDSANamedCurveSpec curve) {
+    public static void defineCurve(final EdDSANamedCurveSpec curve) {
         putCurve(curve.getName().toLowerCase(Locale.ENGLISH), curve);
     }
 
-    static void defineCurveAlias(String name, String alias) {
-        EdDSANamedCurveSpec curve = curves.get(name.toLowerCase(Locale.ENGLISH));
-        if (curve == null) {
-            throw new IllegalStateException();
-        }
+    static void defineCurveAlias(final String name, final String alias) {
+        final EdDSANamedCurveSpec curve = curves.get(name.toLowerCase(Locale.ENGLISH));
+        Objects.requireNonNull(curve);
         putCurve(alias.toLowerCase(Locale.ENGLISH), curve);
     }
 
@@ -71,7 +70,7 @@ public class EdDSANamedCurveTable {
                         true)));
     }
 
-    public static EdDSANamedCurveSpec getByName(String name) {
+    public static EdDSANamedCurveSpec getByName(final String name) {
         return curves.get(name.toLowerCase(Locale.ENGLISH));
     }
 }

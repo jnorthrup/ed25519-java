@@ -12,6 +12,7 @@
 package net.i2p.crypto.eddsa.math;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 /**
  * Note: concrete subclasses must implement hashCode() and equals()
@@ -21,9 +22,7 @@ public abstract class FieldElement  {
     protected final EdDSAFiniteField f;
 
     public FieldElement(EdDSAFiniteField f) {
-        if (null == f) {
-            throw new IllegalArgumentException("field cannot be null");
-        }
+        assert null != f : "field cannot be null";
         this.f = f;
     }
 
@@ -55,7 +54,7 @@ public abstract class FieldElement  {
 
     public abstract FieldElement negate();
 
-    public FieldElement divide(FieldElement val) {
+    public FieldElement divide(final FieldElement val) {
         return multiply(val.invert());
     }
 

@@ -69,7 +69,7 @@ public class MathUtils {
      */
     public static BigInteger toBigInteger(final int[] t) {
         BigInteger b = BigInteger.ZERO;
-        for (int i=0; i<10; i++) {
+        for (int i = 0; 10 > i; i++) {
             b = b.add(BigInteger.ONE.multiply(BigInteger.valueOf(t[i])).shiftLeft(exponents[i]));
         }
 
@@ -120,14 +120,14 @@ public class MathUtils {
      * @return The 32 byte representation.
      */
     public static byte[] toByteArray(final BigInteger b) {
-        if (b.compareTo(BigInteger.ONE.shiftLeft(256)) >= 0) {
+        if (0 <= b.compareTo(BigInteger.ONE.shiftLeft(256))) {
             throw new RuntimeException("only numbers < 2^256 are allowed");
         }
         final byte[] bytes = new byte[32];
         final byte[] original = b.toByteArray();
 
         // Although b < 2^256, original can have length > 32 with some bytes set to 0.
-        final int offset = original.length > 32? original.length - 32 : 0;
+        final int offset = 32 < original.length ? original.length - 32 : 0;
         for (int i=0; i<original.length - offset; i++) {
             bytes[original.length - i - offset - 1] = original[i + offset];
         }
@@ -174,7 +174,7 @@ public class MathUtils {
      */
     public static FieldElement getRandomFieldElement() {
         final int[] t = new int[10];
-        for (int j=0; j<10; j++) {
+        for (int j = 0; 10 > j; j++) {
             t[j] = random.nextInt(1 << 25) - (1 << 24);
         }
         return new Ed25519FieldElement(getField(), t);
@@ -196,13 +196,13 @@ public class MathUtils {
      *
      * @return The group element.
      */
-    public static GroupElement getRandomGroupElement(boolean precompute) {
+    public static GroupElement getRandomGroupElement(final boolean precompute) {
         final byte[] bytes = new byte[32];
         while (true) {
             try {
                 random.nextBytes(bytes);
                 return new GroupElement(curve, bytes, precompute);
-            } catch (IllegalArgumentException e) {
+            } catch (final Throwable e) {
                 // Will fail in about 87.5%, so try again.
             }
         }
@@ -217,7 +217,7 @@ public class MathUtils {
      * @return The group element.
      */
     public static GroupElement toGroupElement(final byte[] bytes) {
-        final boolean shouldBeNegative = (bytes[31] >> 7) != 0;
+        final boolean shouldBeNegative = 0 != (bytes[31] >> 7);
         bytes[31] &= 0x7f;
         final BigInteger y = MathUtils.toBigInteger(bytes);
 
@@ -249,12 +249,12 @@ public class MathUtils {
      * @return The same group element in the new representation.
      */
     public static GroupElement toRepresentation(final GroupElement g, final GroupElement.Representation repr) {
-        BigInteger x;
-        BigInteger y;
+        final BigInteger x;
+        final BigInteger y;
         final BigInteger gX = toBigInteger(g.getX().toByteArray());
         final BigInteger gY = toBigInteger(g.getY().toByteArray());
         final BigInteger gZ = toBigInteger(g.getZ().toByteArray());
-        final BigInteger gT = null == g.getT()? null : toBigInteger(g.getT().toByteArray());
+        final BigInteger gT = null == g.getT() ? null : toBigInteger(g.getT().toByteArray());
 
         // Switch to affine coordinates.
         switch (g.getRepresentation()) {
@@ -330,8 +330,8 @@ public class MathUtils {
      */
     public static GroupElement addGroupElements(final GroupElement g1, final GroupElement g2) {
         // Relying on a special representation of the group elements.
-        if ((g1.getRepresentation() != GroupElement.Representation.P2 && g1.getRepresentation() != GroupElement.Representation.P3) ||
-            (g2.getRepresentation() != GroupElement.Representation.P2 && g2.getRepresentation() != GroupElement.Representation.P3)) {
+        if ((GroupElement.Representation.P2 != g1.getRepresentation() && GroupElement.Representation.P3 != g1.getRepresentation()) ||
+            (GroupElement.Representation.P2 != g2.getRepresentation() && GroupElement.Representation.P3 != g2.getRepresentation())) {
             throw new IllegalArgumentException("g1 and g2 must have representation P2 or P3");
         }
 
@@ -356,12 +356,12 @@ public class MathUtils {
         // x3 = (x1 * y2 + x2 * y1) / (1 + d * x1 * x2 * y1 * y2) and
         // y3 = (x1 * x2 + y1 * y2) / (1 - d * x1 * x2 * y1 * y2) and
         // d = -121665/121666
-        BigInteger dx1x2y1y2 = d.multiply(g1x).multiply(g2x).multiply(g1y).multiply(g2y).mod(getQ());
-        BigInteger x3 = g1x.multiply(g2y).add(g2x.multiply(g1y))
+        final BigInteger dx1x2y1y2 = d.multiply(g1x).multiply(g2x).multiply(g1y).multiply(g2y).mod(getQ());
+        final BigInteger x3 = g1x.multiply(g2y).add(g2x.multiply(g1y))
                 .multiply(BigInteger.ONE.add(dx1x2y1y2).modInverse(getQ())).mod(getQ());
-        BigInteger y3 = g1x.multiply(g2x).add(g1y.multiply(g2y))
+        final BigInteger y3 = g1x.multiply(g2x).add(g1y.multiply(g2y))
                 .multiply(BigInteger.ONE.subtract(dx1x2y1y2).modInverse(getQ())).mod(getQ());
-        BigInteger t3 = x3.multiply(y3).mod(getQ());
+        final BigInteger t3 = x3.multiply(y3).mod(getQ());
 
         return GroupElement.p3(g1.getCurve(), toFieldElement(x3), toFieldElement(y3), getField().ONE, toFieldElement(t3), false);
     }
@@ -388,9 +388,9 @@ public class MathUtils {
     public static GroupElement scalarMultiplyGroupElement(final GroupElement g, final FieldElement f) {
         final byte[] bytes = f.toByteArray();
         GroupElement h = curve.getZero(GroupElement.Representation.P3);
-        for (int i=254; i>=0; i--) {
+        for (int i = 254; 0 <= i; i--) {
             h = doubleGroupElement(h);
-            if (Utils.bit(bytes, i) == 1) {
+            if (1 == Utils.bit(bytes, i)) {
                 h = addGroupElements(h, g);
             }
         }
@@ -424,7 +424,7 @@ public class MathUtils {
      * @return The negated group element.
      */
     public static GroupElement negateGroupElement(final GroupElement g) {
-        if (g.getRepresentation() != GroupElement.Representation.P3) {
+        if (GroupElement.Representation.P3 != g.getRepresentation()) {
             throw new IllegalArgumentException("g must have representation P3");
         }
 
@@ -435,7 +435,7 @@ public class MathUtils {
     @Test
     public void mathUtilsWorkAsExpected() {
         final GroupElement neutral = GroupElement.p3(curve, curve.getField().ZERO, curve.getField().ONE, curve.getField().ONE, curve.getField().ZERO, false);
-        for (int i=0; i<1000; i++) {
+        for (int i = 0; 1000 > i; i++) {
             final GroupElement g = getRandomGroupElement();
 
             // Act:
@@ -447,7 +447,7 @@ public class MathUtils {
             Assert.assertThat(g, IsEqual.equalTo(h2));
         }
 
-        for (int i=0; i<1000; i++) {
+        for (int i = 0; 1000 > i; i++) {
             GroupElement g = getRandomGroupElement();
 
             // P3 -> P2.
@@ -472,7 +472,7 @@ public class MathUtils {
             Assert.assertThat(g, IsEqual.equalTo(h));
         }
 
-        for (int i=0; i<10; i++) {
+        for (int i = 0; 10 > i; i++) {
             // Arrange:
             final GroupElement g = MathUtils.getRandomGroupElement();
 

@@ -29,14 +29,14 @@ public class Curve  {
     public final GroupElement zeroP3PrecomputedDouble;
     public final GroupElement zeroPrecomp;
 
-    public Curve(EdDSAFiniteField edDSAFiniteField, byte[] d, FieldElement I) {
+    public Curve(final EdDSAFiniteField edDSAFiniteField, final byte[] d, final FieldElement I) {
         this.edDSAFiniteField = edDSAFiniteField;
         this.d = edDSAFiniteField.fromByteArray(d);
         this.d2 = this.d.add(this.d);
         this.I = I;
 
-        FieldElement zero = edDSAFiniteField.ZERO;
-        FieldElement one = edDSAFiniteField.ONE;
+        final FieldElement zero = edDSAFiniteField.ZERO;
+        final FieldElement one = edDSAFiniteField.ONE;
         zeroP2 = GroupElement.p2(this, zero, one, one);
         zeroP3 = GroupElement.p3(this, zero, one, one, zero, false);
         zeroP3PrecomputedDouble = GroupElement.p3(this, zero, one, one, zero, true);
@@ -59,7 +59,7 @@ public class Curve  {
         return I;
     }
 
-    public GroupElement getZero(GroupElement.Representation repr) {
+    public GroupElement getZero(final GroupElement.Representation repr) {
         switch (repr) {
         case P2:
             return zeroP2;
@@ -74,8 +74,8 @@ public class Curve  {
         }
     }
 
-    public GroupElement createPoint(byte[] P, boolean precompute) {
-        GroupElement ge = new GroupElement(this, P, precompute);
+    public GroupElement createPoint(final byte[] P, final boolean precompute) {
+        final GroupElement ge = new GroupElement(this, P, precompute);
         return ge;
     }
 
@@ -87,12 +87,12 @@ public class Curve  {
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(final Object o) {
         if (o == this)
             return true;
         if (!(o instanceof Curve))
             return false;
-        Curve c = (Curve) o;
+        final Curve c = (Curve) o;
         return edDSAFiniteField.equals(c.getField()) &&
                d.equals(c.getD()) &&
                I.equals(c.getI());
