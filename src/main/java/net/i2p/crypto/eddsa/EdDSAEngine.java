@@ -69,13 +69,13 @@ import sun.security.x509.X509Key;
 public final class EdDSAEngine extends Signature {
     public static final String SIGNATURE_ALGORITHM = "NONEwithEdDSA";
 
-    private MessageDigest digest;
-    private ByteArrayOutputStream baos;
-    private EdDSAKey key;
-    private boolean oneShotMode;
-    private byte[] oneShotBytes;
-    private int oneShotOffset;
-    private int oneShotLength;
+    public MessageDigest digest;
+    public ByteArrayOutputStream baos;
+    public EdDSAKey key;
+    public boolean oneShotMode;
+    public byte[] oneShotBytes;
+    public int oneShotOffset;
+    public int oneShotLength;
 
     /**
      *  To efficiently sign or verify data in one shot, pass this to setParameters()
@@ -86,7 +86,7 @@ public final class EdDSAEngine extends Signature {
      */
     public static final AlgorithmParameterSpec ONE_SHOT_MODE = new OneShotSpec();
 
-    private static class OneShotSpec implements AlgorithmParameterSpec {}
+    public static class OneShotSpec implements AlgorithmParameterSpec {}
 
     /**
      * No specific EdDSA-internal hash requested, allows any EdDSA key.
@@ -104,7 +104,7 @@ public final class EdDSAEngine extends Signature {
         this.digest = digest;
     }
 
-    private void reset() {
+    public void reset() {
         if (digest != null)
             digest.reset();
         if (baos != null)
@@ -123,11 +123,11 @@ public final class EdDSAEngine extends Signature {
             if (digest == null) {
                 // Instantiate the digest from the key parameters
                 try {
-                    digest = MessageDigest.getInstance(key.getParams().getHashAlgorithm());
+                    digest = MessageDigest.getInstance(key.getEdDSAParameterSpec().hashAlgo);
                 } catch (NoSuchAlgorithmException e) {
-                    throw new InvalidKeyException("cannot get required digest " + key.getParams().getHashAlgorithm() + " for private key.");
+                    throw new InvalidKeyException("cannot get required digest " + key.getEdDSAParameterSpec().hashAlgo + " for private key.");
                 }
-            } else if (!key.getParams().getHashAlgorithm().equals(digest.getAlgorithm()))
+            } else if (!key.getEdDSAParameterSpec().hashAlgo.equals(digest.getAlgorithm()))
                 throw new InvalidKeyException("Key hash algorithm does not match chosen digest");
             digestInitSign(privKey);
         } else {
@@ -135,11 +135,11 @@ public final class EdDSAEngine extends Signature {
         }
     }
 
-    private void digestInitSign(EdDSAPrivateKey privKey) {
+    public void digestInitSign(EdDSAPrivateKey privKey) {
         // Preparing for hash
         // r = H(h_b,...,h_2b-1,M)
-        int b = privKey.getParams().getCurve().getField().getb();
-        digest.update(privKey.getH(), b/8, b/4 - b/8);
+        int b = privKey.getEdDSAParameterSpec().curve.getField().getb();
+        digest.update(privKey.hashOfTheSeed, b/8, b/4 - b/8);
     }
 
     @Override
@@ -151,11 +151,11 @@ public final class EdDSAEngine extends Signature {
             if (digest == null) {
                 // Instantiate the digest from the key parameters
                 try {
-                    digest = MessageDigest.getInstance(key.getParams().getHashAlgorithm());
+                    digest = MessageDigest.getInstance(key.getEdDSAParameterSpec().hashAlgo);
                 } catch (NoSuchAlgorithmException e) {
-                    throw new InvalidKeyException("cannot get required digest " + key.getParams().getHashAlgorithm() + " for private key.");
+                    throw new InvalidKeyException("cannot get required digest " + key.getEdDSAParameterSpec().hashAlgo + " for private key.");
                 }
-            } else if (!key.getParams().getHashAlgorithm().equals(digest.getAlgorithm()))
+            } else if (!key.getEdDSAParameterSpec().hashAlgo.equals(digest.getAlgorithm()))
                 throw new InvalidKeyException("Key hash algorithm does not match chosen digest");
         } else if (publicKey instanceof X509Key) {
             // X509Certificate will sometimes contain an X509Key rather than the EdDSAPublicKey itself; the contained
@@ -216,10 +216,10 @@ public final class EdDSAEngine extends Signature {
         }
     }
 
-    private byte[] x_engineSign() throws SignatureException {
-        Curve curve = key.getParams().getCurve();
-        ScalarOps sc = key.getParams().getScalarOps();
-        byte[] a = ((EdDSAPrivateKey) key).geta();
+    public byte[] x_engineSign() throws SignatureException {
+        Curve curve = key.getEdDSAParameterSpec().curve;
+        ScalarOps sc = key.getEdDSAParameterSpec().scalarOps;
+        byte[] a = ((EdDSAPrivateKey) key).privateKey;
 
         byte[] message;
         int offset, length;
@@ -246,7 +246,7 @@ public final class EdDSAEngine extends Signature {
         r = sc.reduce(r);
 
         // R = rB
-        GroupElement R = key.getParams().getB().scalarMultiply(r);
+        GroupElement R = key.getEdDSAParameterSpec().groupElement.scalarMultiply(r);
         byte[] Rbyte = R.toByteArray();
 
         // S = (r + H(Rbar,Abar,M)*a) mod l
@@ -273,15 +273,15 @@ public final class EdDSAEngine extends Signature {
         }
     }
 
-    private boolean x_engineVerify(byte[] sigBytes) throws SignatureException {
-        Curve curve = key.getParams().getCurve();
+    public boolean x_engineVerify(byte[] sigBytes) throws SignatureException {
+        Curve curve = key.getEdDSAParameterSpec().curve;
         int b = curve.getField().getb();
         if (sigBytes.length != b/4)
             throw new SignatureException("signature length is wrong");
 
         // R is first b/8 bytes of sigBytes, S is second b/8 bytes
         digest.update(sigBytes, 0, b/8);
-        digest.update(((EdDSAPublicKey) key).getAbyte());
+        digest.update(((EdDSAPublicKey) key).abyte);
         // h = H(Rbar,Abar,M)
         byte[] message;
         int offset, length;
@@ -303,12 +303,12 @@ public final class EdDSAEngine extends Signature {
         byte[] h = digest.digest();
 
         // h mod l
-        h = key.getParams().getScalarOps().reduce(h);
+        h = key.getEdDSAParameterSpec().scalarOps.reduce(h);
 
         byte[] Sbyte = Arrays.copyOfRange(sigBytes, b/8, b/4);
         // R = SB - H(Rbar,Abar,M)A
-        GroupElement R = key.getParams().getB().doubleScalarMultiplyVariableTime(
-                ((EdDSAPublicKey) key).getNegativeA(), h, Sbyte);
+        GroupElement R = key.getEdDSAParameterSpec().groupElement.doubleScalarMultiplyVariableTime(
+                ((EdDSAPublicKey) key).aNeg, h, Sbyte);
 
         // Variable time. This should be okay, because there are no secret
         // values used anywhere in verification.

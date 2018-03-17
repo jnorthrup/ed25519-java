@@ -23,11 +23,11 @@ import net.i2p.crypto.eddsa.math.GroupElement;
  *
  */
 public class EdDSAPrivateKeySpec implements KeySpec {
-    private final byte[] seed;
-    private final byte[] h;
-    private final byte[] a;
-    private final GroupElement A;
-    private final EdDSAParameterSpec spec;
+    public final byte[] seed;
+    public final byte[] hasOfTheSeed;
+    public final byte[] privateKey;
+    public final GroupElement groupElement;
+    public final EdDSAParameterSpec spec;
 
     /**
      *  @param seed the private key
@@ -35,18 +35,18 @@ public class EdDSAPrivateKeySpec implements KeySpec {
      *  @throws IllegalArgumentException if seed length is wrong or hash algorithm is unsupported
      */
     public EdDSAPrivateKeySpec(byte[] seed, EdDSAParameterSpec spec) {
-        if (seed.length != spec.getCurve().getField().getb()/8)
+        if (seed.length != spec.curve.getField().getb()/8)
             throw new IllegalArgumentException("seed length is wrong");
 
         this.spec = spec;
         this.seed = seed;
 
         try {
-            MessageDigest hash = MessageDigest.getInstance(spec.getHashAlgorithm());
-            int b = spec.getCurve().getField().getb();
+            MessageDigest hash = MessageDigest.getInstance(spec.hashAlgo);
+            int b = spec.curve.getField().getb();
 
             // H(k)
-            h = hash.digest(seed);
+            hasOfTheSeed = hash.digest(seed);
 
             /*a = BigInteger.valueOf(2).pow(b-2);
             for (int i=3;i<(b-2);i++) {
@@ -54,12 +54,12 @@ public class EdDSAPrivateKeySpec implements KeySpec {
             }*/
             // Saves ~0.4ms per key when running signing tests.
             // TODO: are these bitflips the same for any hash function?
-            h[0] &= 248;
-            h[(b/8)-1] &= 63;
-            h[(b/8)-1] |= 64;
-            a = Arrays.copyOfRange(h, 0, b/8);
+            hasOfTheSeed[0] &= 248;
+            hasOfTheSeed[(b/8)-1] &= 63;
+            hasOfTheSeed[(b/8)-1] |= 64;
+            privateKey = Arrays.copyOfRange(hasOfTheSeed, 0, b/8);
 
-            A = spec.getB().scalarMultiply(a);
+            groupElement = spec.groupElement.scalarMultiply(privateKey);
         } catch (NoSuchAlgorithmException e) {
             throw new IllegalArgumentException("Unsupported hash algorithm");
         }
@@ -70,61 +70,33 @@ public class EdDSAPrivateKeySpec implements KeySpec {
      *  getSeed() will return null if this constructor is used.
      *
      *  @param spec the parameter specification for this key
-     *  @param h the private key
+     *  @param hasOfTheSeed the private key
      *  @throws IllegalArgumentException if hash length is wrong
      *  @since 0.1.1
      */
-    public EdDSAPrivateKeySpec(EdDSAParameterSpec spec, byte[] h) {
-        if (h.length != spec.getCurve().getField().getb()/4)
+    public EdDSAPrivateKeySpec(EdDSAParameterSpec spec, byte[] hasOfTheSeed) {
+        if (hasOfTheSeed.length != spec.curve.getField().getb()/4)
             throw new IllegalArgumentException("hash length is wrong");
 
 	this.seed = null;
-	this.h = h;
+	this.hasOfTheSeed = hasOfTheSeed;
 	this.spec = spec;
-	int b = spec.getCurve().getField().getb();
+        int b = spec.curve.getField().getb();
 
-        h[0] &= 248;
-        h[(b/8)-1] &= 63;
-        h[(b/8)-1] |= 64;
-        a = Arrays.copyOfRange(h, 0, b/8);
+        hasOfTheSeed[0] &= 248;
+        hasOfTheSeed[(b/8)-1] &= 63;
+        hasOfTheSeed[(b/8)-1] |= 64;
+        privateKey = Arrays.copyOfRange(hasOfTheSeed, 0, b/8);
 
-        A = spec.getB().scalarMultiply(a);
+        groupElement = spec.groupElement.scalarMultiply(privateKey);
     }
 
-    public EdDSAPrivateKeySpec(byte[] seed, byte[] h, byte[] a, GroupElement A, EdDSAParameterSpec spec) {
+    public EdDSAPrivateKeySpec(byte[] seed, byte[] hasOfTheSeed, byte[] privateKey, GroupElement groupElement, EdDSAParameterSpec spec) {
         this.seed = seed;
-        this.h = h;
-        this.a = a;
-        this.A = A;
+        this.hasOfTheSeed = hasOfTheSeed;
+        this.privateKey = privateKey;
+        this.groupElement = groupElement;
         this.spec = spec;
-    }
-
-    /**
-     *  @return will be null if constructed directly from the private key
-     */
-    public byte[] getSeed() {
-        return seed;
-    }
-
-    /**
-     *  @return the hash
-     */
-    public byte[] getH() {
-        return h;
-    }
-
-    /**
-     *  @return the private key
-     */
-    public byte[] geta() {
-        return a;
-    }
-
-    /**
-     *  @return the public key
-     */
-    public GroupElement getA() {
-        return A;
     }
 
     public EdDSAParameterSpec getParams() {

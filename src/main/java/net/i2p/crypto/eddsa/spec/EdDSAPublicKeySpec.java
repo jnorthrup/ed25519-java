@@ -20,9 +20,9 @@ import net.i2p.crypto.eddsa.math.GroupElement;
  *
  */
 public class EdDSAPublicKeySpec implements KeySpec {
-    private final GroupElement A;
-    private GroupElement Aneg = null;
-    private final EdDSAParameterSpec spec;
+    public final GroupElement A;
+    public GroupElement Aneg = null;
+    public final EdDSAParameterSpec spec;
 
     /**
      * @param pk the public key
@@ -30,20 +30,16 @@ public class EdDSAPublicKeySpec implements KeySpec {
      * @throws IllegalArgumentException if key length is wrong
      */
     public EdDSAPublicKeySpec(byte[] pk, EdDSAParameterSpec spec) {
-        if (pk.length != spec.getCurve().getField().getb()/8)
+        if (pk.length != spec.curve.getField().getb()/8)
             throw new IllegalArgumentException("public-key length is wrong");
 
-        this.A = new GroupElement(spec.getCurve(), pk);
+        this.A = new GroupElement(spec.curve, pk);
         this.spec = spec;
     }
 
     public EdDSAPublicKeySpec(GroupElement A, EdDSAParameterSpec spec) {
         this.A = A;
         this.spec = spec;
-    }
-
-    public GroupElement getA() {
-        return A;
     }
 
     public GroupElement getNegativeA() {

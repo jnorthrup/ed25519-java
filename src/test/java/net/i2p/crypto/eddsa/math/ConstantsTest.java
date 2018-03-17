@@ -32,7 +32,7 @@ import org.junit.Test;
  */
 public class ConstantsTest {
     static final EdDSANamedCurveSpec ed25519 = EdDSANamedCurveTable.getByName(EdDSANamedCurveTable.ED_25519);
-    static final Curve curve = ed25519.getCurve();
+    static final Curve curve = ed25519.curve;
 
     static final FieldElement ZERO = curve.getField().ZERO;
     static final FieldElement ONE = curve.getField().ONE;
@@ -45,7 +45,7 @@ public class ConstantsTest {
         int b = curve.getField().getb();
         assertThat(b, is(greaterThanOrEqualTo(10)));
         try {
-            MessageDigest h = MessageDigest.getInstance(ed25519.getHashAlgorithm());
+            MessageDigest h = MessageDigest.getInstance(ed25519.hashAlgo);
             assertThat(8 * h.getDigestLength(), is(equalTo(2 * b)));
         } catch (NoSuchAlgorithmException e) {
             fail(e.getMessage());
@@ -83,7 +83,7 @@ public class ConstantsTest {
 
     @Test
     public void testB() {
-        GroupElement B = ed25519.getB();
+        GroupElement B = ed25519.groupElement;
         assertThat(B.isOnCurve(curve), is(true));
         //assertThat(B.scalarMultiply(new BigIntegerLittleEndianEncoding().encode(ed25519.getL(), curve.getField().getb()/8)), is(equalTo(P3_ZERO)));
     }

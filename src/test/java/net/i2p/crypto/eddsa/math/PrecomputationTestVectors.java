@@ -28,7 +28,7 @@ public class PrecomputationTestVectors {
 
     public static GroupElement[][] getPrecomputation(String fileName) {
         EdDSANamedCurveSpec ed25519 = EdDSANamedCurveTable.getByName(EdDSANamedCurveTable.ED_25519);
-        Curve curve = ed25519.getCurve();
+        Curve curve = ed25519.curve;
         EdDSAFiniteField edDSAFiniteField = curve.getField();
         GroupElement[][] precmp = new GroupElement[32][8];
         BufferedReader file = null;
@@ -71,7 +71,7 @@ public class PrecomputationTestVectors {
 
     public static GroupElement[] getDoublePrecomputation(String fileName) {
         EdDSANamedCurveSpec ed25519 = EdDSANamedCurveTable.getByName(EdDSANamedCurveTable.ED_25519);
-        Curve curve = ed25519.getCurve();
+        Curve curve = ed25519.curve;
         EdDSAFiniteField edDSAFiniteField = curve.getField();
         GroupElement[] dblPrecmp = new GroupElement[8];
         BufferedReader file = null;

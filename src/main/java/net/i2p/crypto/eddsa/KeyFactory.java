@@ -19,7 +19,7 @@ import java.security.PublicKey;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.KeySpec;
 import java.security.spec.PKCS8EncodedKeySpec;
-import java.security.spec.X509EncodedKeySpec;
+import java.util.Objects;
 
 import net.i2p.crypto.eddsa.spec.EdDSAPrivateKeySpec;
 import net.i2p.crypto.eddsa.spec.EdDSAPublicKeySpec;
@@ -30,43 +30,35 @@ import net.i2p.crypto.eddsa.spec.EdDSAPublicKeySpec;
  */
 public final class KeyFactory extends KeyFactorySpi {
 
-    protected PrivateKey engineGeneratePrivate(KeySpec keySpec)
-            throws InvalidKeySpecException {
-        if (keySpec instanceof EdDSAPrivateKeySpec) {
-            return new EdDSAPrivateKey((EdDSAPrivateKeySpec) keySpec);
+    protected PrivateKey engineGeneratePrivate(KeySpec keySpec) throws InvalidKeySpecException {
+        EdDSAPrivateKey ret;
+        if (keySpec instanceof EdDSAPrivateKeySpec)
+            ret = new EdDSAPrivateKey((EdDSAPrivateKeySpec) keySpec);
+        else {
+            assert keySpec instanceof PKCS8EncodedKeySpec : "key spec not recognised: " + keySpec.getClass();
+            ret = new EdDSAPrivateKey((PKCS8EncodedKeySpec) keySpec);
         }
-        if (keySpec instanceof PKCS8EncodedKeySpec) {
-            return new EdDSAPrivateKey((PKCS8EncodedKeySpec) keySpec);
-        }
-        throw new InvalidKeySpecException("key spec not recognised: " + keySpec.getClass());
+        return ret;
     }
 
-    protected PublicKey engineGeneratePublic(KeySpec keySpec)
-            throws InvalidKeySpecException {
-        if (keySpec instanceof EdDSAPublicKeySpec) {
-            return new EdDSAPublicKey((EdDSAPublicKeySpec) keySpec);
-        }
-        if (keySpec instanceof X509EncodedKeySpec) {
-            return new EdDSAPublicKey((X509EncodedKeySpec) keySpec);
-        }
-        throw new InvalidKeySpecException("key spec not recognised: " + keySpec.getClass());
+    protected PublicKey engineGeneratePublic(KeySpec keySpec) {
+        assert keySpec instanceof EdDSAPublicKeySpec : "key spec not recognised: " + keySpec.getClass();
+        return new EdDSAPublicKey((EdDSAPublicKeySpec) keySpec);
     }
 
     @SuppressWarnings("unchecked")
-    protected <T extends KeySpec> T engineGetKeySpec(Key key, Class<T> keySpec)
-            throws InvalidKeySpecException {
-        if (keySpec.isAssignableFrom(EdDSAPublicKeySpec.class) && key instanceof EdDSAPublicKey) {
-            EdDSAPublicKey k = (EdDSAPublicKey) key;
-            if (k.getParams() != null) {
-                return (T) new EdDSAPublicKeySpec(k.getA(), k.getParams());
-            }
-        } else if (keySpec.isAssignableFrom(EdDSAPrivateKeySpec.class) && key instanceof EdDSAPrivateKey) {
+    protected <T extends KeySpec> T engineGetKeySpec(Key key, Class<T> keySpec) {
+        T ret;
+        if (!keySpec.isAssignableFrom(EdDSAPublicKeySpec.class) || !(key instanceof EdDSAPublicKey)) {
+            assert keySpec.isAssignableFrom(EdDSAPrivateKeySpec.class) && key instanceof EdDSAPrivateKey : "not implemented yet " + key + " " + keySpec;
             EdDSAPrivateKey k = (EdDSAPrivateKey) key;
-            if (k.getParams() != null) {
-                return (T) new EdDSAPrivateKeySpec(k.getSeed(), k.getH(), k.geta(), k.getA(), k.getParams());
-            }
+            ret=(T) new EdDSAPrivateKeySpec(k.seed, k.hashOfTheSeed, k.privateKey, k.groupElement, k.getEdDSAParameterSpec());
+        } else {
+            EdDSAPublicKey k = (EdDSAPublicKey) key;
+            Objects.requireNonNull(k.getEdDSAParameterSpec());
+            ret=(T) new EdDSAPublicKeySpec(k.A, k.getEdDSAParameterSpec());
         }
-        throw new InvalidKeySpecException("not implemented yet " + key + " " + keySpec);
+        return ret;
     }
 
     protected Key engineTranslateKey(Key key) throws InvalidKeyException {

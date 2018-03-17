@@ -11,8 +11,6 @@
  */
 package net.i2p.crypto.eddsa.math;
 
-import java.io.Serializable;
-
 /**
  * An EdDSA finite field. Includes several pre-computed values.
  * @author str4d
@@ -27,22 +25,22 @@ public class EdDSAFiniteField  {
     public final FieldElement FIVE;
     public final FieldElement EIGHT;
 
-    private final int b;
-    private final FieldElement q;
+    public final int b;
+    public final FieldElement q;
     /**
      * q-2
      */
-    private final FieldElement qm2;
+    public final FieldElement qm2;
     /**
      * (q-5) / 8
      */
-    private final FieldElement qm5d8;
-    private final Encoding enc;
+    public final FieldElement qm5d8;
+    public final EmptyEncoding enc;
 
-    public EdDSAFiniteField(int b, byte[] q, Encoding enc) {
+    public EdDSAFiniteField(int b, byte[] q, EmptyEncoding enc) {
         this.b = b;
         this.enc = enc;
-        this.enc.setField(this);
+        this.enc.setEdDSAFiniteField(this);
 
         this.q = fromByteArray(q);
 

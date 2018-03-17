@@ -39,26 +39,26 @@ import net.i2p.crypto.eddsa.spec.EdDSAPrivateKeySpec;
  */
 public class EdDSAPrivateKey implements EdDSAKey, PrivateKey {
 
-    private final byte[] seed;
-    private final byte[] h;
-    private final byte[] a;
-    private final GroupElement A;
-    private final byte[] Abyte;
-    private final EdDSAParameterSpec edDsaSpec;
+    public final byte[] seed;
+    public final byte[] hashOfTheSeed;
+    public final byte[] privateKey;
+    public final GroupElement groupElement;
+    public final byte[] abyte;
+    public final EdDSAParameterSpec edDSAParameterSpec;
 
     // OID 1.3.101.xxx
-    private static final int OID_OLD = 100;
-    private static final int OID_ED25519 = 112;
-    private static final int OID_BYTE = 11;
-    private static final int IDLEN_BYTE = 6;
+    public static final int OID_OLD = 100;
+    public static final int OID_ED25519 = 112;
+    public static final int OID_BYTE = 11;
+    public static final int IDLEN_BYTE = 6;
 
     public EdDSAPrivateKey(EdDSAPrivateKeySpec spec) {
-        this.seed = spec.getSeed();
-        this.h = spec.getH();
-        this.a = spec.geta();
-        this.A = spec.getA();
-        this.Abyte = this.A.toByteArray();
-        this.edDsaSpec = spec.getParams();
+        seed = spec.seed;
+        hashOfTheSeed = spec.hasOfTheSeed;
+        privateKey = spec.privateKey;
+        groupElement = spec.groupElement;
+        abyte = groupElement.toByteArray();
+        edDSAParameterSpec = spec.getParams();
     }
 
     public EdDSAPrivateKey(PKCS8EncodedKeySpec spec) throws InvalidKeySpecException {
@@ -136,42 +136,42 @@ public class EdDSAPrivateKey implements EdDSAKey, PrivateKey {
      */
     @Override
     public byte[] getEncoded() {
-        if (!edDsaSpec.equals(EdDSANamedCurveTable.getByName(EdDSANamedCurveTable.ED_25519)))
+        if (!edDSAParameterSpec.equals(EdDSANamedCurveTable.getByName(EdDSANamedCurveTable.ED_25519)))
             return null;
         if (seed == null)
             return null;
         int totlen = 16 + seed.length;
-        byte[] rv = new byte[totlen];
+        byte[] encoded = new byte[totlen];
         int idx = 0;
         // sequence
-        rv[idx++] = 0x30;
-        rv[idx++] = (byte) (totlen - 2);
+        encoded[idx++] = 0x30;
+        encoded[idx++] = (byte) (totlen - 2);
         // version
-        rv[idx++] = 0x02;
-        rv[idx++] = 1;
+        encoded[idx++] = 0x02;
+        encoded[idx++] = 1;
         // v1 - no public key included
-        rv[idx++] = 0;
+        encoded[idx++] = 0;
         // Algorithm Identifier
         // sequence
-        rv[idx++] = 0x30;
-        rv[idx++] = 5;
+        encoded[idx++] = 0x30;
+        encoded[idx++] = 5;
         // OID
         // https://msdn.microsoft.com/en-us/library/windows/desktop/bb540809%28v=vs.85%29.aspx
-        rv[idx++] = 0x06;
-        rv[idx++] = 3;
-        rv[idx++] = (1 * 40) + 3;
-        rv[idx++] = 101;
-        rv[idx++] = (byte) OID_ED25519;
+        encoded[idx++] = 0x06;
+        encoded[idx++] = 3;
+        encoded[idx++] = (1 * 40) + 3;
+        encoded[idx++] = 101;
+        encoded[idx++] = OID_ED25519;
         // params - absent
         // PrivateKey
-        rv[idx++] = 0x04;  // octet string
-        rv[idx++] = (byte) (2 + seed.length);
+        encoded[idx++] = 0x04;  // octet string
+        encoded[idx++] = (byte) (2 + seed.length);
         // CurvePrivateKey
-        rv[idx++] = 0x04;  // octet string
-        rv[idx++] = (byte) seed.length;
+        encoded[idx++] = 0x04;  // octet string
+        encoded[idx++] = (byte) seed.length;
         // the key
-        System.arraycopy(seed, 0, rv, idx, seed.length);
-        return rv;
+        System.arraycopy(seed, 0, encoded, idx, seed.length);
+        return  encoded;
     }
 
     /**
@@ -192,7 +192,7 @@ public class EdDSAPrivateKey implements EdDSAKey, PrivateKey {
      *
      * @return 32 bytes for Ed25519, throws for other curves
      */
-    private static byte[] decode(byte[] d) throws InvalidKeySpecException {
+    public static byte[] decode(byte[] d) throws InvalidKeySpecException {
         try {
             //
             // Setup and OID check
@@ -280,44 +280,15 @@ public class EdDSAPrivateKey implements EdDSAKey, PrivateKey {
     }
 
     @Override
-    public EdDSAParameterSpec getParams() {
-        return edDsaSpec;
-    }
-
-    /**
-     *  @return will be null if constructed from a spec which was
-     *          directly constructed from H
-     */
-    public byte[] getSeed() {
-        return seed;
-    }
-
-    /**
-     *  @return the hash of the seed
-     */
-    public byte[] getH() {
-        return h;
-    }
-
-    /**
-     *  @return the private key
-     */
-    public byte[] geta() {
-        return a;
-    }
-
-    /**
-     *  @return the public key
-     */
-    public GroupElement getA() {
-        return A;
+    public EdDSAParameterSpec getEdDSAParameterSpec() {
+        return edDSAParameterSpec;
     }
 
     /**
      *  @return the public key
      */
     public byte[] getAbyte() {
-        return Abyte;
+        return abyte;
     }
 
     @Override
@@ -332,7 +303,7 @@ public class EdDSAPrivateKey implements EdDSAKey, PrivateKey {
         if (!(o instanceof EdDSAPrivateKey))
             return false;
         EdDSAPrivateKey pk = (EdDSAPrivateKey) o;
-        return Arrays.equals(seed, pk.getSeed()) &&
-               edDsaSpec.equals(pk.getParams());
+        return Arrays.equals(seed, pk.seed) &&
+               edDSAParameterSpec.equals(pk.getEdDSAParameterSpec());
     }
 }

@@ -40,20 +40,20 @@ import java.util.Arrays;
 public class EdDSAPublicKey implements EdDSAKey, PublicKey {
 
     // OID 1.3.101.xxx
-    private static final int OID_OLD = 100;
-    private static final int OID_ED25519 = 112;
-    private static final int OID_BYTE = 8;
-    private static final int IDLEN_BYTE = 3;
-    private final GroupElement A;
-    private final GroupElement Aneg;
-    private final byte[] Abyte;
-    private final EdDSAParameterSpec edDsaSpec;
+    public static final int OID_OLD = 100;
+    public static final int OID_ED25519 = 112;
+    public static final int OID_BYTE = 8;
+    public static final int IDLEN_BYTE = 3;
+    public final GroupElement A;
+    public final GroupElement aNeg;
+    public final byte[] abyte;
+    private final EdDSAParameterSpec edDSAParameterSpec;
 
     public EdDSAPublicKey(EdDSAPublicKeySpec spec) {
-        this.A = spec.getA();
-        this.Aneg = spec.getNegativeA();
-        this.Abyte = this.A.toByteArray();
-        this.edDsaSpec = spec.getParams();
+        this.A = spec.A;
+        this.aNeg = spec.getNegativeA();
+        this.abyte = this.A.toByteArray();
+        this.edDSAParameterSpec = spec.getParams();
     }
 
     public EdDSAPublicKey(X509EncodedKeySpec spec) throws InvalidKeySpecException {
@@ -80,7 +80,7 @@ public class EdDSAPublicKey implements EdDSAKey, PublicKey {
      *
      * @return 32 bytes for Ed25519, throws for other curves
      */
-    private static byte[] decode(byte[] d) throws InvalidKeySpecException {
+    public static byte[] decode(byte[] d) throws InvalidKeySpecException {
         try {
             //
             // Setup and OID check
@@ -211,9 +211,9 @@ public class EdDSAPublicKey implements EdDSAKey, PublicKey {
      */
     @Override
     public byte[] getEncoded() {
-        if (edDsaSpec instanceof EdDSANamedCurveSpec && ((EdDSANamedCurveSpec) edDsaSpec).getName().equals(EdDSANamedCurveTable.ED_25519)) {
+        if (getEdDSAParameterSpec() instanceof EdDSANamedCurveSpec && ((EdDSANamedCurveSpec) getEdDSAParameterSpec()).getName().equals(EdDSANamedCurveTable.ED_25519)) {
 
-            int totlen = 12 + Abyte.length;
+            int totlen = 12 + abyte.length;
             byte[] rv = new byte[totlen];
             int idx = 0;
             // sequence
@@ -233,34 +233,17 @@ public class EdDSAPublicKey implements EdDSAKey, PublicKey {
             // params - absent
             // the key
             rv[idx++] = 0x03; // bit string
-            rv[idx++] = (byte) (1 + Abyte.length);
+            rv[idx++] = (byte) (1 + abyte.length);
             rv[idx++] = 0; // number of trailing unused bits
-            System.arraycopy(Abyte, 0, rv, idx, Abyte.length);
+            System.arraycopy(abyte, 0, rv, idx, abyte.length);
             return rv;
         }
         return null;
     }
 
     @Override
-    public EdDSAParameterSpec getParams() {
-        return edDsaSpec;
-    }
-
-    public GroupElement getA() {
-        return A;
-    }
-
-    public GroupElement getNegativeA() {
-        return Aneg;
-    }
-
-    public byte[] getAbyte() {
-        return Abyte;
-    }
-
-    @Override
     public int hashCode() {
-        return Arrays.hashCode(Abyte);
+        return Arrays.hashCode(abyte);
     }
 
     @Override
@@ -270,7 +253,12 @@ public class EdDSAPublicKey implements EdDSAKey, PublicKey {
         if (!(o instanceof EdDSAPublicKey))
             return false;
         EdDSAPublicKey pk = (EdDSAPublicKey) o;
-        return Arrays.equals(Abyte, pk.getAbyte()) &&
-                edDsaSpec.equals(pk.getParams());
+        return Arrays.equals(abyte, pk.abyte) &&
+                getEdDSAParameterSpec().equals(pk.getEdDSAParameterSpec());
+    }
+
+    @Override
+    public EdDSAParameterSpec getEdDSAParameterSpec() {
+        return edDSAParameterSpec;
     }
 }

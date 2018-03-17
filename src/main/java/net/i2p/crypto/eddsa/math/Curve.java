@@ -11,8 +11,6 @@
  */
 package net.i2p.crypto.eddsa.math;
 
-import java.io.Serializable;
-
 /**
  * A twisted Edwards curve.
  * Points on the curve satisfy $-x^2 + y^2 = 1 + d x^2y^2$
@@ -21,24 +19,24 @@ import java.io.Serializable;
  */
 public class Curve  {
 
-    private final EdDSAFiniteField f;
-    private final FieldElement d;
-    private final FieldElement d2;
-    private final FieldElement I;
+    public final EdDSAFiniteField edDSAFiniteField;
+    public final FieldElement d;
+    public final FieldElement d2;
+    public final FieldElement I;
 
-    private final GroupElement zeroP2;
-    private final GroupElement zeroP3;
-    private final GroupElement zeroP3PrecomputedDouble;
-    private final GroupElement zeroPrecomp;
+    public final GroupElement zeroP2;
+    public final GroupElement zeroP3;
+    public final GroupElement zeroP3PrecomputedDouble;
+    public final GroupElement zeroPrecomp;
 
-    public Curve(EdDSAFiniteField f, byte[] d, FieldElement I) {
-        this.f = f;
-        this.d = f.fromByteArray(d);
+    public Curve(EdDSAFiniteField edDSAFiniteField, byte[] d, FieldElement I) {
+        this.edDSAFiniteField = edDSAFiniteField;
+        this.d = edDSAFiniteField.fromByteArray(d);
         this.d2 = this.d.add(this.d);
         this.I = I;
 
-        FieldElement zero = f.ZERO;
-        FieldElement one = f.ONE;
+        FieldElement zero = edDSAFiniteField.ZERO;
+        FieldElement one = edDSAFiniteField.ONE;
         zeroP2 = GroupElement.p2(this, zero, one, one);
         zeroP3 = GroupElement.p3(this, zero, one, one, zero, false);
         zeroP3PrecomputedDouble = GroupElement.p3(this, zero, one, one, zero, true);
@@ -46,7 +44,7 @@ public class Curve  {
     }
 
     public EdDSAFiniteField getField() {
-        return f;
+        return edDSAFiniteField;
     }
 
     public FieldElement getD() {
@@ -83,7 +81,7 @@ public class Curve  {
 
     @Override
     public int hashCode() {
-        return f.hashCode() ^
+        return edDSAFiniteField.hashCode() ^
                d.hashCode() ^
                I.hashCode();
     }
@@ -95,7 +93,7 @@ public class Curve  {
         if (!(o instanceof Curve))
             return false;
         Curve c = (Curve) o;
-        return f.equals(c.getField()) &&
+        return edDSAFiniteField.equals(c.getField()) &&
                d.equals(c.getD()) &&
                I.equals(c.getI());
     }

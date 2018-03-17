@@ -84,7 +84,7 @@ public class BigIntegerFieldElement extends FieldElement  {
 
     public FieldElement invert() {
         // Euler's theorem
-        //return modPow(f.getQm2(), f.getQ());
+        //return modPow(edDSAFiniteField.getQm2(), edDSAFiniteField.getQ());
         return new BigIntegerFieldElement(f, bi.modInverse(((BigIntegerFieldElement)f.getQ()).bi));
     }
 

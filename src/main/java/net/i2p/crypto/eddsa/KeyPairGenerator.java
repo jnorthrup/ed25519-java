@@ -30,12 +30,12 @@ import net.i2p.crypto.eddsa.spec.EdDSAPublicKeySpec;
  *  Default keysize is 256 (Ed25519)
  */
 public final class KeyPairGenerator extends KeyPairGeneratorSpi {
-    private static final int DEFAULT_KEYSIZE = 256;
-    private EdDSAParameterSpec edParams;
-    private SecureRandom random;
-    private boolean initialized;
+    public static final int DEFAULT_KEYSIZE = 256;
+    public EdDSAParameterSpec edParams;
+    public SecureRandom random;
+    public boolean initialized;
 
-    private static final Hashtable<Integer, AlgorithmParameterSpec> edParameters;
+    public static final Hashtable<Integer, AlgorithmParameterSpec> edParameters;
 
     static {
         edParameters = new Hashtable<Integer, AlgorithmParameterSpec>();
@@ -71,11 +71,11 @@ public final class KeyPairGenerator extends KeyPairGeneratorSpi {
         if (!initialized)
             initialize(DEFAULT_KEYSIZE, new SecureRandom());
 
-        byte[] seed = new byte[edParams.getCurve().getField().getb()/8];
+        byte[] seed = new byte[edParams.curve.getField().getb()/8];
         random.nextBytes(seed);
 
         EdDSAPrivateKeySpec privKey = new EdDSAPrivateKeySpec(seed, edParams);
-        EdDSAPublicKeySpec pubKey = new EdDSAPublicKeySpec(privKey.getA(), edParams);
+        EdDSAPublicKeySpec pubKey = new EdDSAPublicKeySpec(privKey.groupElement, edParams);
 
         return new KeyPair(new EdDSAPublicKey(pubKey), new EdDSAPrivateKey(privKey));
     }

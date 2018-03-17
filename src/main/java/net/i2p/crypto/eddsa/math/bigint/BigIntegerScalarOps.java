@@ -17,21 +17,21 @@ import net.i2p.crypto.eddsa.math.EdDSAFiniteField;
 import net.i2p.crypto.eddsa.math.ScalarOps;
 
 public class BigIntegerScalarOps implements ScalarOps {
-    private final BigInteger l;
-    private final BigIntegerLittleEndianEncoding enc;
+    public final BigInteger l;
+    public final BigIntegerLittleEndianEncoding enc;
 
     public BigIntegerScalarOps(EdDSAFiniteField f, BigInteger l) {
         this.l = l;
         enc = new BigIntegerLittleEndianEncoding();
-        enc.setField(f);
+        enc.setEdDSAFiniteField(f);
     }
 
     public byte[] reduce(byte[] s) {
-        return enc.encode(enc.toBigInteger(s).mod(l));
+        return enc.convertBigIntegerToLittleEndian(enc.toBigInteger(s).mod(l));
     }
 
     public byte[] multiplyAndAdd(byte[] a, byte[] b, byte[] c) {
-        return enc.encode(enc.toBigInteger(a).multiply(enc.toBigInteger(b)).add(enc.toBigInteger(c)).mod(l));
+        return enc.convertBigIntegerToLittleEndian(enc.toBigInteger(a).multiply(enc.toBigInteger(b)).add(enc.toBigInteger(c)).mod(l));
     }
 
 }

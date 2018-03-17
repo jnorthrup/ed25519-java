@@ -24,12 +24,12 @@ import java.security.SecureRandom;
  * Utility class to help with calculations.
  */
 public class MathUtils {
-    private static final int[] exponents = {0, 26, 26 + 25, 2*26 + 25, 2*26 + 2*25, 3*26 + 2*25, 3*26 + 3*25, 4*26 + 3*25, 4*26 + 4*25, 5*26 + 4*25};
-    private static final SecureRandom random = new SecureRandom();
-    private static final EdDSANamedCurveSpec ed25519 = EdDSANamedCurveTable.getByName(EdDSANamedCurveTable.ED_25519);
-    private static final Curve curve = ed25519.getCurve();
-    private static final BigInteger d = new BigInteger("-121665").multiply(new BigInteger("121666").modInverse(getQ()));
-    private static final BigInteger groupOrder = BigInteger.ONE.shiftLeft(252).add(new BigInteger("27742317777372353535851937790883648493"));
+    public static final int[] exponents = {0, 26, 26 + 25, 2*26 + 25, 2*26 + 2*25, 3*26 + 2*25, 3*26 + 3*25, 4*26 + 3*25, 4*26 + 4*25, 5*26 + 4*25};
+    public static final SecureRandom random = new SecureRandom();
+    public static final EdDSANamedCurveSpec ed25519 = EdDSANamedCurveTable.getByName(EdDSANamedCurveTable.ED_25519);
+    public static final Curve curve = ed25519.curve;
+    public static final BigInteger d = new BigInteger("-121665").multiply(new BigInteger("121666").modInverse(getQ()));
+    public static final BigInteger groupOrder = BigInteger.ONE.shiftLeft(252).add(new BigInteger("27742317777372353535851937790883648493"));
 
     /**
      * Gets q = 2^255 - 19 as BigInteger.
@@ -54,7 +54,7 @@ public class MathUtils {
         return new EdDSAFiniteField(
                 256, // b
                 Utils.hexToBytes("edffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff7f"), // q
-                new Ed25519LittleEndianEncoding());
+                new Ed25519LittleEndianEncoding().getEmptyEncoding());
     }
 
     // region field element

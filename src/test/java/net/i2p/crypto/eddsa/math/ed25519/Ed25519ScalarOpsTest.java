@@ -29,7 +29,7 @@ import static org.junit.Assert.assertThat;
  */
 public class Ed25519ScalarOpsTest {
 
-    private static final Ed25519ScalarOps scalarOps = new Ed25519ScalarOps();
+    public static final Ed25519ScalarOps scalarOps = new Ed25519ScalarOps();
 
     /**
      * Test method for {@link net.i2p.crypto.eddsa.math.bigint.BigIntegerScalarOps#reduce(byte[])}.

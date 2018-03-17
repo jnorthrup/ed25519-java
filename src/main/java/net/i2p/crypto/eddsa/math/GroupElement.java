@@ -447,7 +447,7 @@ public class GroupElement  {
      * @param repr The representation to convert to.
      * @return A new group element in the given representation.
      */
-    private GroupElement toRep(final Representation repr) {
+    public GroupElement toRep(final Representation repr) {
         switch (this.repr) {
             case P2:
                 switch (repr) {
@@ -502,7 +502,7 @@ public class GroupElement  {
     /**
      * Precomputes table for {@link #scalarMultiply(byte[])}.
      */
-    private GroupElement[][] precomputeSingle() {
+    public GroupElement[][] precomputeSingle() {
         // Precomputation for single scalar multiplication.
         GroupElement[][] precmp = new GroupElement[32][8];
         // TODO-CR BR: check that this == base point when the method is called.
@@ -527,7 +527,7 @@ public class GroupElement  {
     /**
      * Precomputes table for {@link #doubleScalarMultiplyVariableTime(GroupElement, byte[], byte[])}.
      */
-    private GroupElement[] precomputeDouble() {
+    public GroupElement[] precomputeDouble() {
         // Precomputation for double scalar multiplication.
         // P,3P,5P,7P,9P,11P,13P,15P
         GroupElement[] dblPrecmp = new GroupElement[8];
@@ -639,7 +639,7 @@ public class GroupElement  {
      * @param q the PRECOMP representation of the GroupElement to add.
      * @return the P1P1 representation of the result.
      */
-    private GroupElement madd(GroupElement q) {
+    public GroupElement madd(GroupElement q) {
         if (this.repr != Representation.P3)
             throw new UnsupportedOperationException();
         if (q.repr != Representation.PRECOMP)
@@ -668,7 +668,7 @@ public class GroupElement  {
      * @param q the PRECOMP representation of the GroupElement to subtract.
      * @return the P1P1 representation of the result.
      */
-    private GroupElement msub(GroupElement q) {
+    public GroupElement msub(GroupElement q) {
         if (this.repr != Representation.P3)
             throw new UnsupportedOperationException();
         if (q.repr != Representation.PRECOMP)

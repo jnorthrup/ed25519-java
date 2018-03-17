@@ -16,7 +16,6 @@ import static org.junit.Assert.*;
 
 import java.security.spec.PKCS8EncodedKeySpec;
 
-import net.i2p.crypto.eddsa.Utils;
 import net.i2p.crypto.eddsa.spec.EdDSAPrivateKeySpec;
 
 import org.junit.Test;
@@ -43,11 +42,11 @@ public class EdDSAPrivateKeyTest {
 
         // Encode
         EdDSAPrivateKeySpec decoded = new EdDSAPrivateKeySpec(
-                keyIn.getSeed(),
-                keyIn.getH(),
-                keyIn.geta(),
-                keyIn.getA(),
-                keyIn.getParams());
+                keyIn.seed,
+                keyIn.hashOfTheSeed,
+                keyIn.privateKey,
+                keyIn.groupElement,
+                keyIn.getEdDSAParameterSpec());
         EdDSAPrivateKey keyOut = new EdDSAPrivateKey(decoded);
 
         // Check
@@ -62,11 +61,11 @@ public class EdDSAPrivateKeyTest {
 
         // Encode
         EdDSAPrivateKeySpec decoded = new EdDSAPrivateKeySpec(
-                keyIn.getSeed(),
-                keyIn.getH(),
-                keyIn.geta(),
-                keyIn.getA(),
-                keyIn.getParams());
+                keyIn.seed,
+                keyIn.hashOfTheSeed,
+                keyIn.privateKey,
+                keyIn.groupElement,
+                keyIn.getEdDSAParameterSpec());
         EdDSAPrivateKey keyOut = new EdDSAPrivateKey(decoded);
 
         // Check
@@ -81,11 +80,11 @@ public class EdDSAPrivateKeyTest {
 
         // Encode
         EdDSAPrivateKeySpec decoded = new EdDSAPrivateKeySpec(
-                keyIn.getSeed(),
-                keyIn.getH(),
-                keyIn.geta(),
-                keyIn.getA(),
-                keyIn.getParams());
+                keyIn.seed,
+                keyIn.hashOfTheSeed,
+                keyIn.privateKey,
+                keyIn.groupElement,
+                keyIn.getEdDSAParameterSpec());
         EdDSAPrivateKey keyOut = new EdDSAPrivateKey(decoded);
 
         // Check

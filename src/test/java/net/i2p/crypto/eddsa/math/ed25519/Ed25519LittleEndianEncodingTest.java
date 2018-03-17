@@ -23,7 +23,7 @@ import java.security.SecureRandom;
  */
 public class Ed25519LittleEndianEncodingTest {
 
-    private static final SecureRandom random = new SecureRandom();
+    public static final SecureRandom random = new SecureRandom();
 
     @Test
     public void encodeReturnsCorrectByteArrayForSimpleFieldElements() {

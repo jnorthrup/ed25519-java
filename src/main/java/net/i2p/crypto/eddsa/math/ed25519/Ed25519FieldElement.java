@@ -44,7 +44,7 @@ public class Ed25519FieldElement extends FieldElement {
         this.t = t;
     }
 
-    private static final byte[] ZERO = new byte[32];
+    public static final byte[] ZERO = new byte[32];
 
     /**
      * Gets a value indicating whether or not the field element is non-zero.
@@ -57,13 +57,13 @@ public class Ed25519FieldElement extends FieldElement {
     }
 
     /**
-     * $h = f + g$
+     * $h = edDSAFiniteField + g$
      * <p>
      * TODO-CR BR: $h$ is allocated via new, probably not a good idea. Do we need the copying into temp variables if we do that?
      * <p>
      * Preconditions:
      * </p><ul>
-     * <li>$|f|$ bounded by $1.1*2^{25},1.1*2^{24},1.1*2^{25},1.1*2^{24},$ etc.
+     * <li>$|edDSAFiniteField|$ bounded by $1.1*2^{25},1.1*2^{24},1.1*2^{25},1.1*2^{24},$ etc.
      * <li>$|g|$ bounded by $1.1*2^{25},1.1*2^{24},1.1*2^{25},1.1*2^{24},$ etc.
      * </ul><p>
      * Postconditions:
@@ -84,15 +84,15 @@ public class Ed25519FieldElement extends FieldElement {
     }
 
     /**
-     * $h = f - g$
+     * $h = edDSAFiniteField - g$
      * <p>
-     * Can overlap $h$ with $f$ or $g$.
+     * Can overlap $h$ with $edDSAFiniteField$ or $g$.
      * <p>
      * TODO-CR BR: See above.
      * <p>
      * Preconditions:
      * </p><ul>
-     * <li>$|f|$ bounded by $1.1*2^{25},1.1*2^{24},1.1*2^{25},1.1*2^{24},$ etc.
+     * <li>$|edDSAFiniteField|$ bounded by $1.1*2^{25},1.1*2^{24},1.1*2^{25},1.1*2^{24},$ etc.
      * <li>$|g|$ bounded by $1.1*2^{25},1.1*2^{24},1.1*2^{25},1.1*2^{24},$ etc.
      * </ul><p>
      * Postconditions:
@@ -113,13 +113,13 @@ public class Ed25519FieldElement extends FieldElement {
     }
 
     /**
-     * $h = -f$
+     * $h = -edDSAFiniteField$
      * <p>
      * TODO-CR BR: see above.
      * <p>
      * Preconditions:
      * </p><ul>
-     * <li>$|f|$ bounded by $1.1*2^{25},1.1*2^{24},1.1*2^{25},1.1*2^{24},$ etc.
+     * <li>$|edDSAFiniteField|$ bounded by $1.1*2^{25},1.1*2^{24},1.1*2^{25},1.1*2^{24},$ etc.
      * </ul><p>
      * Postconditions:
      * </p><ul>
@@ -137,13 +137,13 @@ public class Ed25519FieldElement extends FieldElement {
     }
 
     /**
-     * $h = f * g$
+     * $h = edDSAFiniteField * g$
      * <p>
-     * Can overlap $h$ with $f$ or $g$.
+     * Can overlap $h$ with $edDSAFiniteField$ or $g$.
      * <p>
      * Preconditions:
      * </p><ul>
-     * <li>$|f|$ bounded by
+     * <li>$|edDSAFiniteField|$ bounded by
      * $1.65*2^{26},1.65*2^{25},1.65*2^{26},1.65*2^{25},$ etc.
      * <li>$|g|$ bounded by
      * $1.65*2^{26},1.65*2^{25},1.65*2^{26},1.65*2^{25},$ etc.
@@ -388,13 +388,13 @@ public class Ed25519FieldElement extends FieldElement {
     }
 
     /**
-     * $h = f * f$
+     * $h = edDSAFiniteField * edDSAFiniteField$
      * <p>
-     * Can overlap $h$ with $f$.
+     * Can overlap $h$ with $edDSAFiniteField$.
      * <p>
      * Preconditions:
      * </p><ul>
-     * <li>$|f|$ bounded by $1.65*2^{26},1.65*2^{25},1.65*2^{26},1.65*2^{25},$ etc.
+     * <li>$|edDSAFiniteField|$ bounded by $1.65*2^{26},1.65*2^{25},1.65*2^{26},1.65*2^{25},$ etc.
      * </ul><p>
      * Postconditions:
      * </p><ul>
@@ -544,13 +544,13 @@ public class Ed25519FieldElement extends FieldElement {
     }
 
     /**
-     * $h = 2 * f * f$
+     * $h = 2 * edDSAFiniteField * edDSAFiniteField$
      * <p>
-     * Can overlap $h$ with $f$.
+     * Can overlap $h$ with $edDSAFiniteField$.
      * <p>
      * Preconditions:
      * </p><ul>
-     * <li>$|f|$ bounded by $1.65*2^{26},1.65*2^{25},1.65*2^{26},1.65*2^{25},$ etc.
+     * <li>$|edDSAFiniteField|$ bounded by $1.65*2^{26},1.65*2^{25},1.65*2^{26},1.65*2^{25},$ etc.
      * </ul><p>
      * Postconditions:
      * </p><ul>

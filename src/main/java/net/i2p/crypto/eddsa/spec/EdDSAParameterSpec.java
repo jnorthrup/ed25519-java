@@ -20,28 +20,29 @@ import net.i2p.crypto.eddsa.math.GroupElement;
 import net.i2p.crypto.eddsa.math.ScalarOps;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 /**
  * Parameter specification for an EdDSA algorithm.
  * @author str4d
  *
  */
-public class EdDSAParameterSpec implements AlgorithmParameterSpec, Serializable {
+public class EdDSAParameterSpec implements AlgorithmParameterSpec  {
 
-    private final Curve curve;
-    private final String hashAlgo;
-    private final ScalarOps sc;
-    private final GroupElement B;
+    public final Curve curve;
+    public final String hashAlgo;
+    public final ScalarOps scalarOps;
+    public final GroupElement groupElement;
 
     /**
      * @param curve the curve
      * @param hashAlgo the JCA string for the hash algorithm
-     * @param sc the parameter L represented as ScalarOps
-     * @param B the parameter B
+     * @param scalarOps the parameter L represented as ScalarOps
+     * @param groupElement the parameter B
      * @throws IllegalArgumentException if hash algorithm is unsupported or length is wrong
      */
     public EdDSAParameterSpec(Curve curve, String hashAlgo,
-            ScalarOps sc, GroupElement B) {
+                              ScalarOps scalarOps, GroupElement groupElement) {
         try {
             MessageDigest hash = MessageDigest.getInstance(hashAlgo);
             // EdDSA hash function must produce 2b-bit output
@@ -53,45 +54,19 @@ public class EdDSAParameterSpec implements AlgorithmParameterSpec, Serializable 
 
         this.curve = curve;
         this.hashAlgo = hashAlgo;
-        this.sc = sc;
-        this.B = B;
-    }
-
-    public Curve getCurve() {
-        return curve;
-    }
-
-    public String getHashAlgorithm() {
-        return hashAlgo;
-    }
-
-    public ScalarOps getScalarOps() {
-        return sc;
-    }
-
-    /**
-     *  @return the base (generator)
-     */
-    public GroupElement getB() {
-        return B;
+        this.scalarOps = scalarOps;
+        this.groupElement = groupElement;
     }
 
     @Override
     public int hashCode() {
         return hashAlgo.hashCode() ^
                curve.hashCode() ^
-               B.hashCode();
+               groupElement.hashCode();
     }
 
     @Override
     public boolean equals(Object o) {
-        if (o == this)
-            return true;
-        if (!(o instanceof EdDSAParameterSpec))
-            return false;
-        EdDSAParameterSpec s = (EdDSAParameterSpec) o;
-        return hashAlgo.equals(s.getHashAlgorithm()) &&
-               curve.equals(s.getCurve()) &&
-               B.equals(s.getB());
+        return o == this || o instanceof EdDSAParameterSpec && Objects.equals(hashAlgo, ((EdDSAParameterSpec) o).hashAlgo) && curve.equals(((EdDSAParameterSpec) o).curve) && groupElement.equals(((EdDSAParameterSpec) o).groupElement);
     }
 }

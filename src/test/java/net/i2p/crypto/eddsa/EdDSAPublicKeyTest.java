@@ -16,7 +16,6 @@ import static org.junit.Assert.*;
 
 import java.security.spec.X509EncodedKeySpec;
 
-import net.i2p.crypto.eddsa.Utils;
 import net.i2p.crypto.eddsa.spec.EdDSAPublicKeySpec;
 
 import org.junit.Test;
@@ -43,8 +42,8 @@ public class EdDSAPublicKeyTest {
 
         // Encode
         EdDSAPublicKeySpec decoded = new EdDSAPublicKeySpec(
-                keyIn.getA(),
-                keyIn.getParams());
+                keyIn.A,
+                keyIn.getEdDSAParameterSpec());
         EdDSAPublicKey keyOut = new EdDSAPublicKey(decoded);
 
         // Check
@@ -59,8 +58,8 @@ public class EdDSAPublicKeyTest {
 
         // Encode
         EdDSAPublicKeySpec decoded = new EdDSAPublicKeySpec(
-                keyIn.getA(),
-                keyIn.getParams());
+                keyIn.A,
+                keyIn.getEdDSAParameterSpec());
         EdDSAPublicKey keyOut = new EdDSAPublicKey(decoded);
 
         // Check
@@ -75,8 +74,8 @@ public class EdDSAPublicKeyTest {
 
         // Encode
         EdDSAPublicKeySpec decoded = new EdDSAPublicKeySpec(
-                keyIn.getA(),
-                keyIn.getParams());
+                keyIn.A,
+                keyIn.getEdDSAParameterSpec());
         EdDSAPublicKey keyOut = new EdDSAPublicKey(decoded);
 
         // Check

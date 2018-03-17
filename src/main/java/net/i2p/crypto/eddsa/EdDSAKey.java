@@ -27,5 +27,5 @@ public interface EdDSAKey {
      * @return a parameter specification representing the EdDSA domain
      *         parameters for the key.
      */
-    EdDSAParameterSpec getParams();
+    EdDSAParameterSpec getEdDSAParameterSpec();
 }
