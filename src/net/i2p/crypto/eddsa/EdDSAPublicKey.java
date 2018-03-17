@@ -78,10 +78,10 @@ public class EdDSAPublicKey implements EdDSAKey, PublicKey {
      * This implements the following specs:
      *<ul><li>
      * General encoding: https://tools.ietf.org/html/draft-ietf-curdle-pkix-04
-     *</li></li>
+     *</li><li>
      * Key encoding: https://tools.ietf.org/html/rfc8032
      *</li></ul>
-     *</p><p>
+     *<p>
      * For keys in older formats, decoding and then re-encoding is sufficient to
      * migrate them to the canonical encoding.
      *</p>
@@ -113,7 +113,7 @@ public class EdDSAPublicKey implements EdDSAKey, PublicKey {
      */
     @Override
     public byte[] getEncoded() {
-        if (!edDsaSpec.equals(EdDSANamedCurveTable.ed25519))
+        if (!edDsaSpec.equals(EdDSANamedCurveTable.ED_25519))
             return null;
         int totlen = 12 + Abyte.length;
         byte[] rv = new byte[totlen];
