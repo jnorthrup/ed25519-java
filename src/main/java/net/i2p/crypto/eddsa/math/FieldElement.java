@@ -1,29 +1,25 @@
 package net.i2p.crypto.eddsa.math;
 
 public interface FieldElement {
-    /**
-     * Encode a FieldElement in its $(b-1)$-bit encoding.
-     * @return the $(b-1)$-bit encoding of this FieldElement.
-     */
-    byte[] toByteArray();
+    abstract byte[] toByteArray();
 
     boolean isNonZero();
 
-    boolean isNegative();
+    abstract boolean isNegative();
 
-    FieldElement add(FieldElement val);
+    FieldElement add(FieldElement element);
 
-    FieldElement addOne();
+    abstract FieldElement addOne();
 
-    FieldElement subtract(FieldElement val);
+    FieldElement subtract(FieldElement fieldElement);
 
-    FieldElement subtractOne();
+    abstract FieldElement subtractOne();
 
     FieldElement negate();
 
-    FieldElement divide(FieldElement val);
+    abstract FieldElement divide(FieldElement fieldElement);
 
-    FieldElement multiply(FieldElement val);
+    FieldElement multiply(FieldElement fieldElement);
 
     FieldElement square();
 
@@ -34,4 +30,6 @@ public interface FieldElement {
     FieldElement pow22523();
 
     FieldElement cmov(FieldElement fieldElement, int b);
+
+    EdDSAFiniteField getEdDSAFiniteField();
 }

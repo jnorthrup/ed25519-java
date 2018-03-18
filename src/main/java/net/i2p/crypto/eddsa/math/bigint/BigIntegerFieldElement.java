@@ -38,8 +38,8 @@ public class BigIntegerFieldElement extends BaseFieldElement {
         return !bi.equals(BigInteger.ZERO);
     }
 
-    public FieldElement add(final FieldElement val) {
-        return new BigIntegerFieldElement(getEdDSAFiniteField(), bi.add(((BigIntegerFieldElement)val).bi)).mod(getEdDSAFiniteField().getQ());
+    public FieldElement add(final FieldElement element) {
+        return new BigIntegerFieldElement(getEdDSAFiniteField(), bi.add(((BigIntegerFieldElement) element).bi)).mod(getEdDSAFiniteField().getQ());
     }
 
     @Override
@@ -47,8 +47,8 @@ public class BigIntegerFieldElement extends BaseFieldElement {
         return new BigIntegerFieldElement(getEdDSAFiniteField(), bi.add(BigInteger.ONE)).mod(getEdDSAFiniteField().getQ());
     }
 
-    public FieldElement subtract(final FieldElement val) {
-        return new BigIntegerFieldElement(getEdDSAFiniteField(), bi.subtract(((BigIntegerFieldElement)val).bi)).mod(getEdDSAFiniteField().getQ());
+    public FieldElement subtract(final FieldElement fieldElement) {
+        return new BigIntegerFieldElement(getEdDSAFiniteField(), bi.subtract(((BigIntegerFieldElement) fieldElement).bi)).mod(getEdDSAFiniteField().getQ());
     }
 
     @Override
@@ -61,16 +61,16 @@ public class BigIntegerFieldElement extends BaseFieldElement {
     }
 
     @Override
-    public FieldElement divide(final FieldElement val) {
-        return divide(((BigIntegerFieldElement)val).bi);
+    public FieldElement divide(final FieldElement fieldElement) {
+        return divide(((BigIntegerFieldElement) fieldElement).bi);
     }
 
-    private FieldElement divide(final BigInteger val) {
-        return new BigIntegerFieldElement(getEdDSAFiniteField(), bi.divide(val)).mod(getEdDSAFiniteField().getQ());
+    private FieldElement divide(final BigInteger bigInteger) {
+        return new BigIntegerFieldElement(getEdDSAFiniteField(), bi.divide(bigInteger)).mod(getEdDSAFiniteField().getQ());
     }
 
-    public FieldElement multiply(final FieldElement val) {
-        return new BigIntegerFieldElement(getEdDSAFiniteField(), bi.multiply(((BigIntegerFieldElement)val).bi)).mod(getEdDSAFiniteField().getQ());
+    public FieldElement multiply(final FieldElement fieldElement) {
+        return new BigIntegerFieldElement(getEdDSAFiniteField(), bi.multiply(((BigIntegerFieldElement) fieldElement).bi)).mod(getEdDSAFiniteField().getQ());
     }
 
     public FieldElement square() {

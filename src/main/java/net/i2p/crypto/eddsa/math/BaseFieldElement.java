@@ -48,10 +48,11 @@ public abstract class BaseFieldElement implements FieldElement {
     }
 
     @Override
-    public FieldElement divide(final FieldElement val) {
-        return multiply(val.invert());
+    public FieldElement divide(final FieldElement fieldElement) {
+        return multiply(fieldElement).invert() ;
     }
 
+    @Override
     public EdDSAFiniteField getEdDSAFiniteField() {
         return edDSAFiniteField;
     }

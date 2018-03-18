@@ -70,11 +70,11 @@ public class Ed25519FieldElement extends BaseFieldElement {
      * <li>$|h|$ bounded by $1.1*2^{26},1.1*2^{25},1.1*2^{26},1.1*2^{25},$ etc.
      * </ul>
      *
-     * @param val The field element to add.
+     * @param element The field element to add.
      * @return The field element this + val.
      */
-    public FieldElement add(final FieldElement val) {
-        final int[] g = ((Ed25519FieldElement)val).t;
+    public FieldElement add(final FieldElement element) {
+        final int[] g = ((Ed25519FieldElement) element).t;
         final int[] h = new int[10];
         h[0] = t[0] + g[0];
         h[1] = t[1] + g[1];
@@ -106,11 +106,11 @@ public class Ed25519FieldElement extends BaseFieldElement {
      * <li>$|h|$ bounded by $1.1*2^{26},1.1*2^{25},1.1*2^{26},1.1*2^{25},$ etc.
      * </ul>
      *
-     * @param val The field element to subtract.
+     * @param fieldElement The field element to subtract.
      * @return The field element this - val.
      **/
-    public FieldElement subtract(final FieldElement val) {
-        final int[] g = ((Ed25519FieldElement)val).t;
+    public FieldElement subtract(final FieldElement fieldElement) {
+        final int[] g = ((Ed25519FieldElement) fieldElement).t;
         final int[] h = new int[10];
         h[0] = t[0] - g[0];
         h[1] = t[1] - g[1];
@@ -191,11 +191,11 @@ public class Ed25519FieldElement extends BaseFieldElement {
      * <p>
      * With tighter constraints on inputs can squeeze carries into int32.
      *
-     * @param val The field element to multiply.
+     * @param fieldElement The field element to multiply.
      * @return The (reasonably reduced) field element this * val.
      */
-    public FieldElement multiply(final FieldElement val) {
-        final int[] g = ((Ed25519FieldElement)val).t;
+    public FieldElement multiply(final FieldElement fieldElement) {
+        final int[] g = ((Ed25519FieldElement) fieldElement).t;
         final int g1_19 = 19 * g[1]; /* 1.959375*2^29 */
         final int g2_19 = 19 * g[2]; /* 1.959375*2^30; still ok */
         final int g3_19 = 19 * g[3];
