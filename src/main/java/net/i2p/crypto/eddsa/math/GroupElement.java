@@ -377,7 +377,7 @@ public class GroupElement {
      * @return The group element in the P2 representation.
      */
     public GroupElement toP2() {
-        return toRep(Representation.P2);
+        return Representation.P2.toRep(this);
     }
 
     /**
@@ -386,7 +386,7 @@ public class GroupElement {
      * @return The group element in the P3 representation.
      */
     public GroupElement toP3() {
-        return toRep(Representation.P3);
+        return Representation.P3.toRep(this);
     }
 
     /**
@@ -395,7 +395,7 @@ public class GroupElement {
      * @return The group element in the P3 representation.
      */
     public GroupElement toP3PrecomputeDouble() {
-        return toRep(Representation.P3PrecomputedDouble);
+        return Representation.P3PrecomputedDouble.toRep(this);
     }
 
     /**
@@ -404,131 +404,7 @@ public class GroupElement {
      * @return The group element in the CACHED representation.
      */
     public GroupElement toCached() {
-        return toRep(Representation.CACHED);
-    }
-
-    /**
-     * Convert a GroupElement from one Representation to another.
-     * TODO-CR: Add additional conversion?
-     * $r = p$
-     * <p>
-     * Supported conversions:
-     * <p><ul>
-     * <li>P3 $\rightarrow$ P2
-     * <li>P3 $\rightarrow$ CACHED (1 multiply, 1 add, 1 subtract)
-     * <li>P1P1 $\rightarrow$ P2 (3 multiply)
-     * <li>P1P1 $\rightarrow$ P3 (4 multiply)
-     *
-     * @param repr The representation to convert to.
-     * @return A new group element in the given representation.
-     */
-    public GroupElement toRep(final Representation repr) {
-        switch (this.getRepr()) {
-            case P2:
-                switch (repr) {
-                    case P2:
-                        return new P2GroupElement(this.getCurve(), this.getX(), this.getY(), this.getZ());
-                    default:
-                        throw new IllegalArgumentException();
-                }
-            case P3:
-                switch (repr) {
-                    case P2:
-                        return new P2GroupElement(this.getCurve(), this.getX(), this.getY(), this.getZ());
-                    case P3:
-                        final Curve curve1 = this.getCurve();
-                        final FieldElement x = this.getX();
-                        final FieldElement y = this.getY();
-                        final FieldElement z = this.getZ();
-                        final FieldElement t = this.getT();
-                        /**
-                     * Creates a new group element in P3 representation.
-                     *
-                     * @param curve The curve.
-                     * @param X The $X$ coordinate.
-                     * @param Y The $Y$ coordinate.
-                     * @param Z The $Z$ coordinate.
-                     * @param T The $T$ coordinate.
-                     * @param precomputeDoubleOnly If true, populate dblPrecmp, else set to null.
-                     * @return The group element in P3 representation.
-                     */
-                        return false ? new P3PreGroupElement(curve1, x, y, z, t) : new P3GroupElement(curve1, x, y, z, t);
-                    case CACHED:
-                        return cached(this.getCurve(), this.getY().add(this.getX()), this.getY().subtract(this.getX()), this.getZ(), this.getT().multiply(this.getCurve().getD2()));
-                    default:
-                        throw new IllegalArgumentException();
-                }
-            case P1P1:
-                switch (repr) {
-                    case P2:
-                        return new P2GroupElement(this.getCurve(), this.getX().multiply(this.getT()), getY().multiply(this.getZ()), this.getZ().multiply(this.getT()));
-                    case P3:
-                        final Curve curve2 = this.getCurve();
-                        final FieldElement x1 = this.getX().multiply(this.getT());
-                        final FieldElement y1 = getY().multiply(this.getZ());
-                        final FieldElement z1 = this.getZ().multiply(this.getT());
-                        final FieldElement t1 = this.getX().multiply(this.getY());
-                        /**
-                     * Creates a new group element in P3 representation.
-                     *
-                     * @param curve The curve.
-                     * @param X The $X$ coordinate.
-                     * @param Y The $Y$ coordinate.
-                     * @param Z The $Z$ coordinate.
-                     * @param T The $T$ coordinate.
-                     * @param precomputeDoubleOnly If true, populate dblPrecmp, else set to null.
-                     * @return The group element in P3 representation.
-                     */
-                        return false ? new P3PreGroupElement(curve2, x1, y1, z1, t1) : new P3GroupElement(curve2, x1, y1, z1, t1);
-                    case P3PrecomputedDouble:
-                        final Curve curve1 = this.getCurve();
-                        final FieldElement x = this.getX().multiply(this.getT());
-                        final FieldElement y = getY().multiply(this.getZ());
-                        final FieldElement z = this.getZ().multiply(this.getT());
-                        final FieldElement t = this.getX().multiply(this.getY());
-                        /**
-                     * Creates a new group element in P3 representation.
-                     *
-                     * @param curve The curve.
-                     * @param X The $X$ coordinate.
-                     * @param Y The $Y$ coordinate.
-                     * @param Z The $Z$ coordinate.
-                     * @param T The $T$ coordinate.
-                     * @param precomputeDoubleOnly If true, populate dblPrecmp, else set to null.
-                     * @return The group element in P3 representation.
-                     */
-                        return new P3PreGroupElement(curve1, x, y, z, t);
-                    case P1P1:
-                        return p1p1(this.getCurve(), this.getX(), this.getY(), this.getZ(), this.getT());
-                    default:
-                        throw new IllegalArgumentException();
-                }
-            case PRECOMP:
-                switch (repr) {
-                    case PRECOMP:
-                        return
-                                /**
-                                 * Creates a new group element in PRECOMP representation.
-                                 *
-                                 * @param curve The curve.
-                                 * @param ypx The $y + x$ value.
-                                 * @param ymx The $y - x$ value.
-                                 * @param xy2d The $2 * d * x * y$ value.
-                                 * @return The group element in PRECOMP representation.
-                                 */new PrecompGroupElement(this.getCurve(), this.getX(), this.getY(), this.getZ());
-                    default:
-                        throw new IllegalArgumentException();
-                }
-            case CACHED:
-                switch (repr) {
-                    case CACHED:
-                        return cached(this.getCurve(), this.getX(), this.getY(), this.getZ(), this.getT());
-                    default:
-                        throw new IllegalArgumentException();
-                }
-            default:
-                throw new UnsupportedOperationException();
-        }
+        return Representation.CACHED.toRep(this);
     }
 
     /**
@@ -834,7 +710,7 @@ public class GroupElement {
         GroupElement ge = (GroupElement) obj;
         if (this.getRepr() != ge.getRepr()) {
             try {
-                ge = ge.toRep(this.getRepr());
+                ge = this.getRepr().toRep(ge);
             } catch (final RuntimeException e) {
                 return false;
             }
