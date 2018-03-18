@@ -10,10 +10,11 @@
  */
 package net.i2p.crypto.eddsa.math;
 
+import net.i2p.crypto.eddsa.math.GroupElement.*;
+
 import java.util.EnumMap;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ForkJoinPool;
-import java.util.concurrent.Future;
+import java.util.concurrent.Callable;
+import java.util.function.Function;
 
 import static net.i2p.crypto.eddsa.math.GroupElement.*;
 
@@ -26,52 +27,37 @@ import static net.i2p.crypto.eddsa.math.GroupElement.*;
 @SuppressWarnings("ThisEscapedInObjectConstruction")
 public class BaseCurve implements Curve {
 
+    final EnumMap<Representation, Callable<GroupElement>> source;
+    final EnumMap<Representation, GroupElement> facade = new EnumMap<>(Representation.class);
     private final EdDSAFiniteField edDSAFiniteField;
     private final FieldElement d;
     private final FieldElement d2;
     private final FieldElement I;
 
-    EnumMap<Representation, Future<GroupElement>> facade  ;
-    public BaseCurve(final EdDSAFiniteField edDSAFiniteField, final byte[] d, final FieldElement I) {
+    public BaseCurve(EdDSAFiniteField edDSAFiniteField, byte[] d, FieldElement I) {
         this.edDSAFiniteField = edDSAFiniteField;
         this.d = edDSAFiniteField.fromByteArray(d);
-        this.d2 = this.getD().add(this.getD());
+        d2 = getD().add(getD());
         this.I = I;
-        final FieldElement zero = edDSAFiniteField.ZERO;
-        final FieldElement one = edDSAFiniteField.ONE;
-        ForkJoinPool forkJoinPool = ForkJoinPool.commonPool();
+        FieldElement zero = edDSAFiniteField.ZERO;
+        FieldElement one = edDSAFiniteField.ONE;
         Curve c = this;
 
-        facade = new EnumMap<Representation, Future<GroupElement>>(Representation.class) {
+        //        this is cost of an array to lazy biootstrap the 4 used curves
+        source = new EnumMap<Representation, Callable<GroupElement>>(Representation.class) {
             {
-                put(Representation.P2,       forkJoinPool.submit(() -> p2(c, zero, one, one)));
-                put(Representation.P3,       forkJoinPool.submit(() -> p3(c, zero, one, one, zero, false)));
-                put(Representation.P3PrecomputedDouble,forkJoinPool.submit( () -> p3(c, zero, one, one, zero, true)));
-                put(Representation.PRECOMP, forkJoinPool.submit( () ->precomp(c, one, one, zero)));
+                put(Representation.P2, () -> p2(c, zero, one, one));
+                put(Representation.P3, () -> p3(c, zero, one, one, zero, false));
+                put(Representation.P3PrecomputedDouble, () -> p3(c, zero, one, one, zero, true));
+                put(Representation.PRECOMP, () -> precomp(c, one, one, zero));
             }
         };
-    };
-
-
-    @Override
-    public GroupElement getZero(final Representation repr) {
-        switch (repr) {
-            case P2:
-                return getZeroP2();
-            case P3:
-                return getZeroP3();
-            case P3PrecomputedDouble:
-                return getZeroP3PrecomputedDouble();
-            case PRECOMP:
-                return getZeroPrecomp();
-            default:
-                return null;
-        }
     }
 
+
     @Override
-    public GroupElement createPoint(final byte[] P, final boolean precompute) {
-        final GroupElement ge = new GroupElement(this, P, precompute);
+    public GroupElement createPoint(byte[] P, boolean precompute) {
+        GroupElement ge = new GroupElement(this, P, precompute);
         return ge;
     }
 
@@ -83,12 +69,12 @@ public class BaseCurve implements Curve {
     }
 
     @Override
-    public boolean equals(final Object o) {
+    public boolean equals(Object o) {
         if (o == this)
             return true;
         if (!(o instanceof Curve))
             return false;
-        final Curve c = (Curve) o;
+        Curve c = (Curve) o;
         return getEdDSAFiniteField().equals(c.getEdDSAFiniteField()) &&
                 getD().equals(c.getD()) &&
                 getI().equals(c.getI());
@@ -115,48 +101,38 @@ public class BaseCurve implements Curve {
     }
 
     @Override
-    public GroupElement getZeroP2() {
-        try {
-            return   facade .get( Representation.P2 ).get();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        }
-        return null;
+    public GroupElement getZeroP2() throws RuntimeException {
+        return facade.computeIfAbsent(Representation.P2, this::get);
+
     }
 
     @Override
-    public GroupElement getZeroP3() { ; try {
-            return   facade .get( Representation.P3 ).get();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        }
-        return null;
+    public GroupElement getZeroP3() {
+        return facade.computeIfAbsent(Representation.P3, this::get);
+
     }
 
     @Override
     public GroupElement getZeroP3PrecomputedDouble() {
-        ; try {
-            return   facade .get( Representation.P3PrecomputedDouble ).get();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        }
-        return null;
+        return facade.computeIfAbsent(Representation.P3PrecomputedDouble, this::get);
     }
 
     @Override
-    public GroupElement getZeroPrecomp() {    ; try {
-        return   facade .get( Representation.PRECOMP ).get();
-    } catch (InterruptedException e) {
-        e.printStackTrace();
-    } catch (ExecutionException e) {
-        e.printStackTrace();
+    public GroupElement getZeroPrecomp() {
+        return facade.computeIfAbsent(Representation.PRECOMP, this::get);
+
     }
-        return null;
+
+    public GroupElement get(Representation Representation) {
+        return facade.computeIfAbsent(Representation, new Function<Representation, GroupElement>() {
+            @Override
+            public GroupElement apply(Representation representation) {
+                try {
+                    return source.get(Representation).call();
+                } catch (Exception e) {
+                    throw new Error(e);
+                }
+            }
+        });
     }
 }

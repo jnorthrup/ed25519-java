@@ -297,7 +297,7 @@ public class GroupElementTest {
      */
     @Test
     public void testToP2() {
-        final GroupElement p3zero = curve.getZero(GroupElement.Representation.P3);
+        final GroupElement p3zero = curve.get(GroupElement.Representation.P3);
         final GroupElement t = p3zero.toP2();
         assertThat(t.getRepr(), is(GroupElement.Representation.P2));
         assertThat(t.getX(), is(p3zero.getX()));
@@ -730,7 +730,7 @@ public class GroupElementTest {
      */
     @Test
     public void testCmov() {
-        final GroupElement a = curve.getZero(GroupElement.Representation.PRECOMP);
+        final GroupElement a = curve.get(GroupElement.Representation.PRECOMP);
         final GroupElement b = GroupElement.precomp(curve, TWO, ZERO, TEN);
         assertThat(a.cmov(b, 0), is(equalTo(a)));
         assertThat(a.cmov(b, 1), is(equalTo(b)));
@@ -778,7 +778,7 @@ public class GroupElementTest {
         final GroupElement A = new GroupElement(curve, Utils.hexToBytes("d4cf8595571830644bd14af416954d09ab7159751ad9e0f7a6cbd92379e71a66"));
 
         assertThat("scalarMultiply(0) failed",
-                ed25519.groupElement.scalarMultiply(zero), is(equalTo(curve.getZero(GroupElement.Representation.P3))));
+                ed25519.groupElement.scalarMultiply(zero), is(equalTo(curve.get(GroupElement.Representation.P3))));
         assertThat("scalarMultiply(1) failed",
                 ed25519.groupElement.scalarMultiply(one), is(equalTo(ed25519.groupElement)));
         assertThat("scalarMultiply(2) failed",
@@ -797,7 +797,7 @@ public class GroupElementTest {
         final GroupElement g = basePoint.scalarMultiply(curve.getEdDSAFiniteField().ZERO.toByteArray());
 
         // Assert:
-        assertThat(curve.getZero(GroupElement.Representation.P3), IsEqual.equalTo(g));
+        assertThat(curve.get(GroupElement.Representation.P3), IsEqual.equalTo(g));
     }
 
     @Test
@@ -838,7 +838,7 @@ public class GroupElementTest {
         final byte[] a = Utils.hexToBytes("d072f8dd9c07fa7bc8d22a4b325d26301ee9202f6db89aa7c3731529e37e437c");
         final GroupElement A = new GroupElement(curve, Utils.hexToBytes("d4cf8595571830644bd14af416954d09ab7159751ad9e0f7a6cbd92379e71a66"));
         final GroupElement B = ed25519.groupElement;
-        final GroupElement geZero = curve.getZero(GroupElement.Representation.P3PrecomputedDouble);
+        final GroupElement geZero = curve.get(GroupElement.Representation.P3PrecomputedDouble);
 
         // 0 * GE(0) + 0 * GE(0) = GE(0)
         assertThat(geZero.doubleScalarMultiplyVariableTime(geZero, zero, zero),

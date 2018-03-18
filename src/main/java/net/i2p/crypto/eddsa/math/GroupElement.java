@@ -821,7 +821,7 @@ public class GroupElement {
      */
     public GroupElement negate() {
         assert Representation.P3 == this.getRepr();
-        return this.getCurve().getZero(Representation.P3).sub(toCached()).toP3PrecomputeDouble();
+        return this.getCurve().get(Representation.P3).sub(toCached()).toP3PrecomputeDouble();
     }
 
     @Override
@@ -914,7 +914,7 @@ public class GroupElement {
         final int babs = b - (((-bnegative) & b) << 1);
 
         // 16^i |r_i| B
-        final GroupElement t = this.getCurve().getZero(Representation.PRECOMP)
+        final GroupElement t = this.getCurve().get(Representation.PRECOMP)
                 .cmov(this.getPrecmp()[pos][0], Utils.equal(babs, 1))
                 .cmov(this.getPrecmp()[pos][1], Utils.equal(babs, 2))
                 .cmov(this.getPrecmp()[pos][2], Utils.equal(babs, 3))
@@ -946,7 +946,7 @@ public class GroupElement {
 
         final byte[] e = toRadix16(a);
 
-        GroupElement h = this.getCurve().getZero(Representation.P3);
+        GroupElement h = this.getCurve().get(Representation.P3);
         for (i = 1; 64 > i; i += 2) {
             t = select(i / 2, e[i]);
             h = h.madd(t).toP3();
@@ -978,7 +978,7 @@ public class GroupElement {
         final byte[] aslide = slide(a);
         final byte[] bslide = slide(b);
 
-        GroupElement r = this.getCurve().getZero(Representation.P2);
+        GroupElement r = this.getCurve().get(Representation.P2);
 
         int i;
         i = 255;

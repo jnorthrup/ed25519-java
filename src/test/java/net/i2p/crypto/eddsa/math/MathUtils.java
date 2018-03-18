@@ -303,7 +303,7 @@ public class MathUtils {
      */
     public static GroupElement scalarMultiplyGroupElement(final GroupElement g, final FieldElement f) {
         final byte[] bytes = f.toByteArray();
-        GroupElement h = curve.getZero(GroupElement.Representation.P3);
+        GroupElement h = curve.get(GroupElement.Representation.P3);
         for (int i = 254; 0 <= i; i--) {
             h = doubleGroupElement(h);
             if (1 == Utils.bit(bytes, i)) {
@@ -362,7 +362,7 @@ public class MathUtils {
             final GroupElement h = MathUtils.scalarMultiplyGroupElement(g, curve.getEdDSAFiniteField().ZERO);
 
             // Assert:
-            Assert.assertThat(curve.getZero(GroupElement.Representation.P3), IsEqual.equalTo(h));
+            Assert.assertThat(curve.get(GroupElement.Representation.P3), IsEqual.equalTo(h));
         }
     }
     // End TODO BR: Remove when finished!
