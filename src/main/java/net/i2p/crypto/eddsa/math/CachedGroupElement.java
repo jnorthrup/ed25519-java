@@ -11,7 +11,7 @@ package net.i2p.crypto.eddsa.math;
  * @return The group element in CACHED representation.
  */
 
-class CachedGroupElement extends GroupElement {
+class CachedGroupElement extends BaseGroupElement {
     public CachedGroupElement(Curve curve, FieldElement ypX, FieldElement ymX, FieldElement z, FieldElement t2d) {
         super(curve, Representation.CACHED, ypX, ymX, z, t2d, false);
     }

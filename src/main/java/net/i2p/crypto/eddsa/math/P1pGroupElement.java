@@ -10,7 +10,7 @@ package net.i2p.crypto.eddsa.math;
  * @param T     The $T$ coordinate.
  * @return The group element in P1P1 representation.
  */
-class P1pGroupElement extends GroupElement {
+class P1pGroupElement extends BaseGroupElement {
     public P1pGroupElement(Curve curve, FieldElement x, FieldElement y, FieldElement z, FieldElement t) {
         super(curve, Representation.P1P1, x, y, z, t, false);
     }

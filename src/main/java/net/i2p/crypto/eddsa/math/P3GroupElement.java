@@ -13,7 +13,7 @@ import net.i2p.crypto.eddsa.Utils;
  * @param precomputeDoubleOnly set to null.
  * @return The group element in P3 representation.
  */
-public class P3GroupElement extends GroupElement {
+public class P3GroupElement extends BaseGroupElement {
     public P3GroupElement(Curve curve, FieldElement x, FieldElement y, FieldElement z, FieldElement t,boolean precompute ) {
         super(curve, Representation.P3, x, y, z, t, precompute);
     }

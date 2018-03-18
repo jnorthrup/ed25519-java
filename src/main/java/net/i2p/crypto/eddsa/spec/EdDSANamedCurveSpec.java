@@ -11,6 +11,7 @@
  */
 package net.i2p.crypto.eddsa.spec;
 
+import net.i2p.crypto.eddsa.math.BaseGroupElement;
 import net.i2p.crypto.eddsa.math.Curve;
 import net.i2p.crypto.eddsa.math.GroupElement;
 import net.i2p.crypto.eddsa.math.ScalarOps;

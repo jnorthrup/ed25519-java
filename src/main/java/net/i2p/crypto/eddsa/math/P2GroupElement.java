@@ -10,7 +10,7 @@ package net.i2p.crypto.eddsa.math;
  * @return The group element in P2 representation.
  */
 
-class P2GroupElement extends GroupElement {
+class P2GroupElement extends BaseGroupElement {
     public P2GroupElement(Curve curve, FieldElement x, FieldElement y, FieldElement z) {
         super(curve, Representation.P2, x, y, z, null, false);
     }

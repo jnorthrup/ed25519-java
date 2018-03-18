@@ -150,7 +150,7 @@ public class MathUtils {
         while (true) {
             try {
                 random.nextBytes(bytes);
-                ret = new GroupElement(curve, bytes, precompute);
+                ret = new BaseGroupElement(curve, bytes, precompute);
                 break;
             } catch (final Throwable e) {
                 // Will fail in about 87.5%, so try again.

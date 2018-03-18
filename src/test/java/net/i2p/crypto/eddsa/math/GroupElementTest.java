@@ -150,7 +150,7 @@ public class GroupElementTest {
     }
 
     /**
-     * Test method for {@link GroupElement#p2(Curve, FieldElement, FieldElement, FieldElement)}.
+     * Test method for {@link BaseGroupElement#p2(Curve, FieldElement, FieldElement, FieldElement)}.
      */
     @Test
     public void testP2() {
@@ -164,7 +164,7 @@ public class GroupElementTest {
     }
 
     /**
-     * Test method for {@link GroupElement#p3(Curve, FieldElement, FieldElement, FieldElement, FieldElement, boolean)}.
+     * Test method for {@link BaseGroupElement#p3(Curve, FieldElement, FieldElement, FieldElement, FieldElement, boolean)}.
      */
     @Test
     public void testP3() {
@@ -189,7 +189,7 @@ public class GroupElementTest {
     }
 
     /**
-     * Test method for {@link GroupElement#p1p1(Curve, FieldElement, FieldElement, FieldElement, FieldElement)}.
+     * Test method for {@link BaseGroupElement#p1p1(Curve, FieldElement, FieldElement, FieldElement, FieldElement)}.
      */
     @Test
     public void testP1p1() {
@@ -214,7 +214,7 @@ public class GroupElementTest {
     }
 
     /**
-     * Test method for {@link GroupElement#precomp(Curve, FieldElement, FieldElement, FieldElement)}.
+     * Test method for {@link BaseGroupElement#precomp(Curve, FieldElement, FieldElement, FieldElement)}.
      */
     @Test
     public void testPrecomp() {
@@ -228,7 +228,7 @@ public class GroupElementTest {
     }
 
     /**
-     * Test method for {@link GroupElement#cached(Curve, FieldElement, FieldElement, FieldElement, FieldElement)}.
+     * Test method for {@link BaseGroupElement#cached(Curve, FieldElement, FieldElement, FieldElement, FieldElement)}.
      */
     @Test
     public void testCached() {
@@ -242,7 +242,7 @@ public class GroupElementTest {
     }
 
     /**
-     * Test method for {@link GroupElement#GroupElement(Curve, Representation, FieldElement, FieldElement, FieldElement, FieldElement, boolean)}.
+     * Test method for {@link BaseGroupElement#GroupElement(Curve, Representation, FieldElement, FieldElement, FieldElement, FieldElement, boolean)}.
      */
     @Test
     public void testGroupElementCurveRepresentationFieldElementFieldElementFieldElementFieldElement() {
@@ -256,8 +256,8 @@ public class GroupElementTest {
     }
 
     /**
-     * Tests {@link GroupElement#GroupElement(Curve, byte[])} and
-     * {@link GroupElement#toByteArray()} against valid public keys.
+     * Tests {@link BaseGroupElement#GroupElement(Curve, byte[])} and
+     * {@link BaseGroupElement#toByteArray()} against valid public keys.
      */
     @Test
     public void testToAndFromByteArray() {
@@ -271,7 +271,7 @@ public class GroupElementTest {
     }
 
     /**
-     * Test method for {@link GroupElement#GroupElement(Curve, byte[])}.
+     * Test method for {@link BaseGroupElement#GroupElement(Curve, byte[])}.
      */
     @Test
     public void testGroupElementByteArray() {
@@ -309,7 +309,7 @@ public class GroupElementTest {
     }
 
     /**
-     * Test method for {@link GroupElement#toByteArray()}.
+     * Test method for {@link BaseGroupElement#toByteArray()}.
      * <p>
      * TODO 20141001 BR: why test with points which are not on the curve?
      */
@@ -357,7 +357,7 @@ public class GroupElementTest {
     // region toX where X is the representation
 
     /**
-     * Test method for {@link GroupElement#toP2()}.
+     * Test method for {@link BaseGroupElement#toP2()}.
      */
     @Test
     public void testToP2() {
@@ -634,7 +634,7 @@ public class GroupElementTest {
     }
 
     /**
-     * Test method for {@link GroupElement#dbl()}.
+     * Test method for {@link BaseGroupElement#dbl()}.
      */
     @Test
     public void testDbl() {
@@ -720,7 +720,7 @@ public class GroupElementTest {
 
     // region hashCode / equals
     /**
-     * Test method for {@link GroupElement#equals(java.lang.Object)}.
+     * Test method for {@link BaseGroupElement#equals(java.lang.Object)}.
      */
     @Test
     public void testEqualsObject() {
@@ -775,7 +775,7 @@ public class GroupElementTest {
     private static final byte[] RADIX16_42 = Utils.hexToBytes("FA030000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000");
 
     /**
-     * Test method for {@link GroupElement#toRadix16(byte[])}.
+     * Test method for {@link BaseGroupElement#toRadix16(byte[])}.
      */
     @Test
     public void testToRadix16() {
@@ -801,7 +801,7 @@ public class GroupElementTest {
     }
 
     /**
-     * Test method for {@link GroupElement#cmov(GroupElement, int)}.
+     * Test method for {@link BaseGroupElement#cmov(GroupElement, int)}.
      */
     @Test
     public void testCmov() {
@@ -812,7 +812,7 @@ public class GroupElementTest {
     }
 
     /**
-     * Test method for {@link GroupElement#select(int, int)}.
+     * Test method for {@link BaseGroupElement#select(int, int)}.
      */
     @Test
     public void testSelect() {
@@ -837,7 +837,7 @@ public class GroupElementTest {
 
     // region scalar multiplication
     /**
-     * Test method for {@link GroupElement#scalarMultiply(byte[])}.
+     * Test method for {@link BaseGroupElement#scalarMultiply(byte[])}.
      * Test values generated with Python Ed25519 implementation.
      */
     @Test
@@ -978,7 +978,7 @@ public class GroupElementTest {
     // endregion
 
     /**
-     * Test method for {@link GroupElement#isOnCurve(Curve)}.
+     * Test method for {@link BaseGroupElement#isOnCurve(Curve)}.
      */
     @Test
     public void testIsOnCurve() {

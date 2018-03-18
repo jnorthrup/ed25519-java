@@ -12,7 +12,6 @@ package net.i2p.crypto.eddsa.math;
 
 import java.util.EnumMap;
 import java.util.concurrent.Callable;
-import java.util.function.Function;
 
 /**
  * A twisted Edwards curve.
