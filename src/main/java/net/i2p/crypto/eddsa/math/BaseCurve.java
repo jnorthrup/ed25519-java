@@ -52,8 +52,8 @@ public class BaseCurve implements Curve {
 
 
     @Override
-    public GroupElement createPoint(byte[] P, boolean precompute) {
-        GroupElement ge = new GroupElement(this, P, precompute);
+    public GroupElement createPoint(byte[] P, boolean precompute) {assert precompute;
+        GroupElement ge = new P3PreGroupElement(this, P );
         return ge;
     }
 

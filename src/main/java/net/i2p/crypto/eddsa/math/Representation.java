@@ -96,11 +96,7 @@ public enum Representation {
                 case P2:
                     throw new IllegalArgumentException();
                 case P3:
-                    if (false) {
-                        return GroupElement.cached(groupElement.getCurve(), groupElement.getY().add(groupElement.getX()), groupElement.getY().subtract(groupElement.getX()), groupElement.getZ(), groupElement.getT().multiply(groupElement.getCurve().getD2()));
-                    } else {
-                        throw new IllegalArgumentException();
-                    }
+                    throw new IllegalArgumentException();
                 case P1P1:
                     final Curve curve1 = groupElement.getCurve();
                     final FieldElement x = groupElement.getX().multiply(groupElement.getT());
@@ -134,7 +130,18 @@ public enum Representation {
     P1P1 {
         public GroupElement toRep(GroupElement groupElement) {
             if (groupElement.getRepr() == Representation.P1P1) {
-                return GroupElement.p1p1(groupElement.getCurve(), groupElement.getX(), groupElement.getY(), groupElement.getZ(), groupElement.getT());
+
+                /**
+                 * Creates a new group element in P1P1 representation.
+                 *
+                 * @param curve The curve.
+                 * @param X The $X$ coordinate.
+                 * @param Y The $Y$ coordinate.
+                 * @param Z The $Z$ coordinate.
+                 * @param T The $T$ coordinate.
+                 * @return The group element in P1P1 representation.
+                 */
+                return new P1pGroupElement(groupElement.getCurve(), groupElement.getX(), groupElement.getY(), groupElement.getZ(), groupElement.getT());
             }
             if (groupElement.getRepr() == Representation.P2 || groupElement.getRepr() == Representation.P3 || groupElement.getRepr() == Representation.PRECOMP || groupElement.getRepr() == Representation.CACHED)
                 throw new IllegalArgumentException();
@@ -170,13 +177,13 @@ public enum Representation {
         public GroupElement toRep(GroupElement groupElement) {
             switch (groupElement.getRepr()) {
                 case P3:
-                    return GroupElement.cached(groupElement.getCurve(), groupElement.getY().add(groupElement.getX()), groupElement.getY().subtract(groupElement.getX()), groupElement.getZ(), groupElement.getT().multiply(groupElement.getCurve().getD2()));
-               case P1P1:
+                    return new CachedGroupElement(groupElement.getCurve(), groupElement.getY().add(groupElement.getX()), groupElement.getY().subtract(groupElement.getX()), groupElement.getZ(), groupElement.getT().multiply(groupElement.getCurve().getD2()));
+                case P1P1:
                 case PRECOMP:
                 case P2:
                     throw new IllegalArgumentException();
                 case CACHED:
-                    return GroupElement.cached(groupElement.getCurve(), groupElement.getX(), groupElement.getY(), groupElement.getZ(), groupElement.getT());
+                    return new CachedGroupElement(groupElement.getCurve(), groupElement.getX(), groupElement.getY(), groupElement.getZ(), groupElement.getT());
                 default:
                     throw new UnsupportedOperationException();
             }

@@ -12,9 +12,9 @@ package net.i2p.crypto.eddsa.math;
  * @return The group element in P3 representation.
  */
 public
-class P3PreGroupElement extends GroupElement {
+class P3PreGroupElement extends P3GroupElement {
     public P3PreGroupElement(Curve curve, FieldElement x, FieldElement y, FieldElement z, FieldElement t) {
-        super(curve, Representation.P3, x, y, z, t, true);
+        super(curve,  x, y, z, t, true);
     }
 
     public P3PreGroupElement(Curve curve, byte[] bytes) {

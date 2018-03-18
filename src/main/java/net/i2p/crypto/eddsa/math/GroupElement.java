@@ -31,14 +31,14 @@ import java.util.Arrays;
  */
 public class GroupElement {
 
-    public final Curve curve;
-    public final Representation repr;
-    public final FieldElement X;
-    public final FieldElement Y;
-    public final FieldElement Z;
-    public final FieldElement T;
-    public final GroupElement[][] precmp;
-    public final GroupElement[] dblPrecmp;
+    public Curve curve;
+    public Representation repr;
+    public FieldElement X;
+    public FieldElement Y;
+    public FieldElement Z;
+    public FieldElement T;
+    public GroupElement[][] precmp;
+    public GroupElement[] dblPrecmp;
 
     /**
      * Creates a group element for a curve.
@@ -147,6 +147,10 @@ public class GroupElement {
         }
     }
 
+    public GroupElement() {
+
+    }
+
     /**
      * Creates a new group element in P1P1 representation.
      *
@@ -206,21 +210,327 @@ public class GroupElement {
      */
     static byte[] toRadix16(final byte[] a) {
         final byte[] e = new byte[64];
-        int i;
+
         // Radix 16 notation
-        for (i = 0; 32 > i; i++) {
-            e[2 * i + 0] = (byte) (a[i] & 15);
-            e[2 * i + 1] = (byte) ((a[i] >> 4) & 15);
-        }
+        e[2 * 0] = (byte) (a[0] & 15);
+        e[2 * 0 + 1] = (byte) ((a[0] >> 4) & 15);
+        e[2 * 1] = (byte) (a[1] & 15);
+        e[2 * 1 + 1] = (byte) ((a[1] >> 4) & 15);
+        e[2 * 2] = (byte) (a[2] & 15);
+        e[2 * 2 + 1] = (byte) ((a[2] >> 4) & 15);
+        e[2 * 3] = (byte) (a[3] & 15);
+        e[2 * 3 + 1] = (byte) ((a[3] >> 4) & 15);
+        e[2 * 4] = (byte) (a[4] & 15);
+        e[2 * 4 + 1] = (byte) ((a[4] >> 4) & 15);
+        e[2 * 5] = (byte) (a[5] & 15);
+        e[2 * 5 + 1] = (byte) ((a[5] >> 4) & 15);
+        e[2 * 6] = (byte) (a[6] & 15);
+        e[2 * 6 + 1] = (byte) ((a[6] >> 4) & 15);
+        e[2 * 7] = (byte) (a[7] & 15);
+        e[2 * 7 + 1] = (byte) ((a[7] >> 4) & 15);
+        e[2 * 8] = (byte) (a[8] & 15);
+        e[2 * 8 + 1] = (byte) ((a[8] >> 4) & 15);
+        e[2 * 9] = (byte) (a[9] & 15);
+        e[2 * 9 + 1] = (byte) ((a[9] >> 4) & 15);
+        e[2 * 10] = (byte) (a[10] & 15);
+        e[2 * 10 + 1] = (byte) ((a[10] >> 4) & 15);
+        e[2 * 11] = (byte) (a[11] & 15);
+        e[2 * 11 + 1] = (byte) ((a[11] >> 4) & 15);
+        e[2 * 12] = (byte) (a[12] & 15);
+        e[2 * 12 + 1] = (byte) ((a[12] >> 4) & 15);
+        e[2 * 13] = (byte) (a[13] & 15);
+        e[2 * 13 + 1] = (byte) ((a[13] >> 4) & 15);
+        e[2 * 14] = (byte) (a[14] & 15);
+        e[2 * 14 + 1] = (byte) ((a[14] >> 4) & 15);
+        e[2 * 15] = (byte) (a[15] & 15);
+        e[2 * 15 + 1] = (byte) ((a[15] >> 4) & 15);
+        e[2 * 16] = (byte) (a[16] & 15);
+        e[2 * 16 + 1] = (byte) ((a[16] >> 4) & 15);
+        e[2 * 17] = (byte) (a[17] & 15);
+        e[2 * 17 + 1] = (byte) ((a[17] >> 4) & 15);
+        e[2 * 18] = (byte) (a[18] & 15);
+        e[2 * 18 + 1] = (byte) ((a[18] >> 4) & 15);
+        e[2 * 19] = (byte) (a[19] & 15);
+        e[2 * 19 + 1] = (byte) ((a[19] >> 4) & 15);
+        e[2 * 20] = (byte) (a[20] & 15);
+        e[2 * 20 + 1] = (byte) ((a[20] >> 4) & 15);
+        e[2 * 21] = (byte) (a[21] & 15);
+        e[2 * 21 + 1] = (byte) ((a[21] >> 4) & 15);
+        e[2 * 22] = (byte) (a[22] & 15);
+        e[2 * 22 + 1] = (byte) ((a[22] >> 4) & 15);
+        e[2 * 23] = (byte) (a[23] & 15);
+        e[2 * 23 + 1] = (byte) ((a[23] >> 4) & 15);
+        e[2 * 24] = (byte) (a[24] & 15);
+        e[2 * 24 + 1] = (byte) ((a[24] >> 4) & 15);
+        e[2 * 25] = (byte) (a[25] & 15);
+        e[2 * 25 + 1] = (byte) ((a[25] >> 4) & 15);
+        e[2 * 26] = (byte) (a[26] & 15);
+        e[2 * 26 + 1] = (byte) ((a[26] >> 4) & 15);
+        e[2 * 27] = (byte) (a[27] & 15);
+        e[2 * 27 + 1] = (byte) ((a[27] >> 4) & 15);
+        e[2 * 28] = (byte) (a[28] & 15);
+        e[2 * 28 + 1] = (byte) ((a[28] >> 4) & 15);
+        e[2 * 29] = (byte) (a[29] & 15);
+        e[2 * 29 + 1] = (byte) ((a[29] >> 4) & 15);
+        e[2 * 30] = (byte) (a[30] & 15);
+        e[2 * 30 + 1] = (byte) ((a[30] >> 4) & 15);
+        e[2 * 31] = (byte) (a[31] & 15);
+        e[2 * 31 + 1] = (byte) ((a[31] >> 4) & 15);
         /* each e[i] is between 0 and 15 */
         /* e[63] is between 0 and 7 */
         int carry = 0;
-        for (i = 0; 63 > i; i++) {
-            e[i] = (byte) (e[i] + carry);
-            carry = e[i] + 8;
-            carry = carry >> 4;
-            e[i] = (byte) (e[i] - (carry << 4));
-        }
+        e[0] = (byte) (e[0] + carry);
+        carry = e[0] + 8;
+        carry = carry >> 4;
+        e[0] = (byte) (e[0] - (carry << 4));
+        e[1] = (byte) (e[1] + carry);
+        carry = e[1] + 8;
+        carry = carry >> 4;
+        e[1] = (byte) (e[1] - (carry << 4));
+        e[2] = (byte) (e[2] + carry);
+        carry = e[2] + 8;
+        carry = carry >> 4;
+        e[2] = (byte) (e[2] - (carry << 4));
+        e[3] = (byte) (e[3] + carry);
+        carry = e[3] + 8;
+        carry = carry >> 4;
+        e[3] = (byte) (e[3] - (carry << 4));
+        e[4] = (byte) (e[4] + carry);
+        carry = e[4] + 8;
+        carry = carry >> 4;
+        e[4] = (byte) (e[4] - (carry << 4));
+        e[5] = (byte) (e[5] + carry);
+        carry = e[5] + 8;
+        carry = carry >> 4;
+        e[5] = (byte) (e[5] - (carry << 4));
+        e[6] = (byte) (e[6] + carry);
+        carry = e[6] + 8;
+        carry = carry >> 4;
+        e[6] = (byte) (e[6] - (carry << 4));
+        e[7] = (byte) (e[7] + carry);
+        carry = e[7] + 8;
+        carry = carry >> 4;
+        e[7] = (byte) (e[7] - (carry << 4));
+        e[8] = (byte) (e[8] + carry);
+        carry = e[8] + 8;
+        carry = carry >> 4;
+        e[8] = (byte) (e[8] - (carry << 4));
+        e[9] = (byte) (e[9] + carry);
+        carry = e[9] + 8;
+        carry = carry >> 4;
+        e[9] = (byte) (e[9] - (carry << 4));
+        e[10] = (byte) (e[10] + carry);
+        carry = e[10] + 8;
+        carry = carry >> 4;
+        e[10] = (byte) (e[10] - (carry << 4));
+        e[11] = (byte) (e[11] + carry);
+        carry = e[11] + 8;
+        carry = carry >> 4;
+        e[11] = (byte) (e[11] - (carry << 4));
+        e[12] = (byte) (e[12] + carry);
+        carry = e[12] + 8;
+        carry = carry >> 4;
+        e[12] = (byte) (e[12] - (carry << 4));
+        e[13] = (byte) (e[13] + carry);
+        carry = e[13] + 8;
+        carry = carry >> 4;
+        e[13] = (byte) (e[13] - (carry << 4));
+        e[14] = (byte) (e[14] + carry);
+        carry = e[14] + 8;
+        carry = carry >> 4;
+        e[14] = (byte) (e[14] - (carry << 4));
+        e[15] = (byte) (e[15] + carry);
+        carry = e[15] + 8;
+        carry = carry >> 4;
+        e[15] = (byte) (e[15] - (carry << 4));
+        e[16] = (byte) (e[16] + carry);
+        carry = e[16] + 8;
+        carry = carry >> 4;
+        e[16] = (byte) (e[16] - (carry << 4));
+        e[17] = (byte) (e[17] + carry);
+        carry = e[17] + 8;
+        carry = carry >> 4;
+        e[17] = (byte) (e[17] - (carry << 4));
+        e[18] = (byte) (e[18] + carry);
+        carry = e[18] + 8;
+        carry = carry >> 4;
+        e[18] = (byte) (e[18] - (carry << 4));
+        e[19] = (byte) (e[19] + carry);
+        carry = e[19] + 8;
+        carry = carry >> 4;
+        e[19] = (byte) (e[19] - (carry << 4));
+        e[20] = (byte) (e[20] + carry);
+        carry = e[20] + 8;
+        carry = carry >> 4;
+        e[20] = (byte) (e[20] - (carry << 4));
+        e[21] = (byte) (e[21] + carry);
+        carry = e[21] + 8;
+        carry = carry >> 4;
+        e[21] = (byte) (e[21] - (carry << 4));
+        e[22] = (byte) (e[22] + carry);
+        carry = e[22] + 8;
+        carry = carry >> 4;
+        e[22] = (byte) (e[22] - (carry << 4));
+        e[23] = (byte) (e[23] + carry);
+        carry = e[23] + 8;
+        carry = carry >> 4;
+        e[23] = (byte) (e[23] - (carry << 4));
+        e[24] = (byte) (e[24] + carry);
+        carry = e[24] + 8;
+        carry = carry >> 4;
+        e[24] = (byte) (e[24] - (carry << 4));
+        e[25] = (byte) (e[25] + carry);
+        carry = e[25] + 8;
+        carry = carry >> 4;
+        e[25] = (byte) (e[25] - (carry << 4));
+        e[26] = (byte) (e[26] + carry);
+        carry = e[26] + 8;
+        carry = carry >> 4;
+        e[26] = (byte) (e[26] - (carry << 4));
+        e[27] = (byte) (e[27] + carry);
+        carry = e[27] + 8;
+        carry = carry >> 4;
+        e[27] = (byte) (e[27] - (carry << 4));
+        e[28] = (byte) (e[28] + carry);
+        carry = e[28] + 8;
+        carry = carry >> 4;
+        e[28] = (byte) (e[28] - (carry << 4));
+        e[29] = (byte) (e[29] + carry);
+        carry = e[29] + 8;
+        carry = carry >> 4;
+        e[29] = (byte) (e[29] - (carry << 4));
+        e[30] = (byte) (e[30] + carry);
+        carry = e[30] + 8;
+        carry = carry >> 4;
+        e[30] = (byte) (e[30] - (carry << 4));
+        e[31] = (byte) (e[31] + carry);
+        carry = e[31] + 8;
+        carry = carry >> 4;
+        e[31] = (byte) (e[31] - (carry << 4));
+        e[32] = (byte) (e[32] + carry);
+        carry = e[32] + 8;
+        carry = carry >> 4;
+        e[32] = (byte) (e[32] - (carry << 4));
+        e[33] = (byte) (e[33] + carry);
+        carry = e[33] + 8;
+        carry = carry >> 4;
+        e[33] = (byte) (e[33] - (carry << 4));
+        e[34] = (byte) (e[34] + carry);
+        carry = e[34] + 8;
+        carry = carry >> 4;
+        e[34] = (byte) (e[34] - (carry << 4));
+        e[35] = (byte) (e[35] + carry);
+        carry = e[35] + 8;
+        carry = carry >> 4;
+        e[35] = (byte) (e[35] - (carry << 4));
+        e[36] = (byte) (e[36] + carry);
+        carry = e[36] + 8;
+        carry = carry >> 4;
+        e[36] = (byte) (e[36] - (carry << 4));
+        e[37] = (byte) (e[37] + carry);
+        carry = e[37] + 8;
+        carry = carry >> 4;
+        e[37] = (byte) (e[37] - (carry << 4));
+        e[38] = (byte) (e[38] + carry);
+        carry = e[38] + 8;
+        carry = carry >> 4;
+        e[38] = (byte) (e[38] - (carry << 4));
+        e[39] = (byte) (e[39] + carry);
+        carry = e[39] + 8;
+        carry = carry >> 4;
+        e[39] = (byte) (e[39] - (carry << 4));
+        e[40] = (byte) (e[40] + carry);
+        carry = e[40] + 8;
+        carry = carry >> 4;
+        e[40] = (byte) (e[40] - (carry << 4));
+        e[41] = (byte) (e[41] + carry);
+        carry = e[41] + 8;
+        carry = carry >> 4;
+        e[41] = (byte) (e[41] - (carry << 4));
+        e[42] = (byte) (e[42] + carry);
+        carry = e[42] + 8;
+        carry = carry >> 4;
+        e[42] = (byte) (e[42] - (carry << 4));
+        e[43] = (byte) (e[43] + carry);
+        carry = e[43] + 8;
+        carry = carry >> 4;
+        e[43] = (byte) (e[43] - (carry << 4));
+        e[44] = (byte) (e[44] + carry);
+        carry = e[44] + 8;
+        carry = carry >> 4;
+        e[44] = (byte) (e[44] - (carry << 4));
+        e[45] = (byte) (e[45] + carry);
+        carry = e[45] + 8;
+        carry = carry >> 4;
+        e[45] = (byte) (e[45] - (carry << 4));
+        e[46] = (byte) (e[46] + carry);
+        carry = e[46] + 8;
+        carry = carry >> 4;
+        e[46] = (byte) (e[46] - (carry << 4));
+        e[47] = (byte) (e[47] + carry);
+        carry = e[47] + 8;
+        carry = carry >> 4;
+        e[47] = (byte) (e[47] - (carry << 4));
+        e[48] = (byte) (e[48] + carry);
+        carry = e[48] + 8;
+        carry = carry >> 4;
+        e[48] = (byte) (e[48] - (carry << 4));
+        e[49] = (byte) (e[49] + carry);
+        carry = e[49] + 8;
+        carry = carry >> 4;
+        e[49] = (byte) (e[49] - (carry << 4));
+        e[50] = (byte) (e[50] + carry);
+        carry = e[50] + 8;
+        carry = carry >> 4;
+        e[50] = (byte) (e[50] - (carry << 4));
+        e[51] = (byte) (e[51] + carry);
+        carry = e[51] + 8;
+        carry = carry >> 4;
+        e[51] = (byte) (e[51] - (carry << 4));
+        e[52] = (byte) (e[52] + carry);
+        carry = e[52] + 8;
+        carry = carry >> 4;
+        e[52] = (byte) (e[52] - (carry << 4));
+        e[53] = (byte) (e[53] + carry);
+        carry = e[53] + 8;
+        carry = carry >> 4;
+        e[53] = (byte) (e[53] - (carry << 4));
+        e[54] = (byte) (e[54] + carry);
+        carry = e[54] + 8;
+        carry = carry >> 4;
+        e[54] = (byte) (e[54] - (carry << 4));
+        e[55] = (byte) (e[55] + carry);
+        carry = e[55] + 8;
+        carry = carry >> 4;
+        e[55] = (byte) (e[55] - (carry << 4));
+        e[56] = (byte) (e[56] + carry);
+        carry = e[56] + 8;
+        carry = carry >> 4;
+        e[56] = (byte) (e[56] - (carry << 4));
+        e[57] = (byte) (e[57] + carry);
+        carry = e[57] + 8;
+        carry = carry >> 4;
+        e[57] = (byte) (e[57] - (carry << 4));
+        e[58] = (byte) (e[58] + carry);
+        carry = e[58] + 8;
+        carry = carry >> 4;
+        e[58] = (byte) (e[58] - (carry << 4));
+        e[59] = (byte) (e[59] + carry);
+        carry = e[59] + 8;
+        carry = carry >> 4;
+        e[59] = (byte) (e[59] - (carry << 4));
+        e[60] = (byte) (e[60] + carry);
+        carry = e[60] + 8;
+        carry = carry >> 4;
+        e[60] = (byte) (e[60] - (carry << 4));
+        e[61] = (byte) (e[61] + carry);
+        carry = e[61] + 8;
+        carry = carry >> 4;
+        e[61] = (byte) (e[61] - (carry << 4));
+        e[62] = (byte) (e[62] + carry);
+        carry = e[62] + 8;
+        carry = carry >> 4;
+        e[62] = (byte) (e[62] - (carry << 4));
         e[63] = (byte) (e[63] + carry);
         /* each e[i] is between -8 and 7 */
         return e;
@@ -367,44 +677,8 @@ public class GroupElement {
                 s[s.length - 1] |= (x.isNegative() ? (byte) 0x80 : (byte) 0);
                 return s;
             default:
-                return toP2().toByteArray();
+                return Representation.P2.toRep(this).toByteArray();
         }
-    }
-
-    /**
-     * Converts the group element to the P2 representation.
-     *
-     * @return The group element in the P2 representation.
-     */
-    public GroupElement toP2() {
-        return Representation.P2.toRep(this);
-    }
-
-    /**
-     * Converts the group element to the P3 representation.
-     *
-     * @return The group element in the P3 representation.
-     */
-    public GroupElement toP3() {
-        return Representation.P3.toRep(this);
-    }
-
-    /**
-     * Converts the group element to the P3 representation, with dblPrecmp populated.
-     *
-     * @return The group element in the P3 representation.
-     */
-    public GroupElement toP3PrecomputeDouble() {
-        return Representation.P3PrecomputedDouble.toRep(this);
-    }
-
-    /**
-     * Converts the group element to the CACHED representation.
-     *
-     * @return The group element in the CACHED representation.
-     */
-    public GroupElement toCached() {
-        return Representation.CACHED.toRep(this);
     }
 
     /**
@@ -422,11 +696,11 @@ public class GroupElement {
                 final FieldElement x = Bij.getX().multiply(recip);
                 final FieldElement y = Bij.getY().multiply(recip);
                 precmp[i][j] = new PrecompGroupElement(this.getCurve(), y.add(x), y.subtract(x), x.multiply(y).multiply(this.getCurve().getD2()));
-                Bij = Bij.add(Bi.toCached()).toP3();
+                Bij = Representation.P3.toRep(Bij.add(Representation.CACHED.toRep(Bi)));
             }
             // Only every second summand is precomputed (16^2 = 256)
             for (int k = 0; 8 > k; k++) {
-                Bi = Bi.add(Bi.toCached()).toP3();
+                Bi = Representation.P3.toRep(Bi.add(Representation.CACHED.toRep(Bi)));
             }
         }
         return precmp;
@@ -446,7 +720,7 @@ public class GroupElement {
             final FieldElement y = Bi.getY().multiply(recip);
             dblPrecmp[i] = new PrecompGroupElement(this.getCurve(), y.add(x), y.subtract(x), x.multiply(y).multiply(this.getCurve().getD2()));
             // Bi = edwards(B,edwards(B,Bi))
-            Bi = this.add(this.add(Bi.toCached()).toP3().toCached()).toP3();
+            Bi = Representation.P3.toRep(this.add(Representation.CACHED.toRep(Representation.P3.toRep(this.add(Representation.CACHED.toRep(Bi))))));
         }
         return dblPrecmp;
     }
@@ -502,7 +776,18 @@ public class GroupElement {
                 AA = A.square();
                 Yn = YY.add(XX);
                 Zn = YY.subtract(XX);
-                return p1p1(this.getCurve(), AA.subtract(Yn), Yn, Zn, B.subtract(Zn));
+
+                /**
+                 * Creates a new group element in P1P1 representation.
+                 *
+                 * @param curve The curve.
+                 * @param X The $X$ coordinate.
+                 * @param Y The $Y$ coordinate.
+                 * @param Z The $Z$ coordinate.
+                 * @param T The $T$ coordinate.
+                 * @return The group element in P1P1 representation.
+                 */
+                return new P1pGroupElement(this.getCurve(), AA.subtract(Yn), Yn, Zn, B.subtract(Zn));
             default:
                 throw new UnsupportedOperationException();
         }
@@ -569,7 +854,18 @@ public class GroupElement {
         B = YmX.multiply(q.getY()); // q->y-x
         C = q.getZ().multiply(this.getT()); // q->2dxy
         D = this.getZ().add(this.getZ());
-        return p1p1(this.getCurve(), A.subtract(B), A.add(B), D.add(C), D.subtract(C));
+
+        /**
+         * Creates a new group element in P1P1 representation.
+         *
+         * @param curve The curve.
+         * @param X The $X$ coordinate.
+         * @param Y The $Y$ coordinate.
+         * @param Z The $Z$ coordinate.
+         * @param T The $T$ coordinate.
+         * @return The group element in P1P1 representation.
+         */
+        return new P1pGroupElement(this.getCurve(), A.subtract(B), A.add(B), D.add(C), D.subtract(C));
     }
 
     /**
@@ -601,7 +897,18 @@ public class GroupElement {
         B = YmX.multiply(q.getX()); // q->y+x
         C = q.getZ().multiply(this.getT()); // q->2dxy
         D = this.getZ().add(this.getZ());
-        return p1p1(this.getCurve(), A.subtract(B), A.add(B), D.subtract(C), D.add(C));
+
+        /**
+         * Creates a new group element in P1P1 representation.
+         *
+         * @param curve The curve.
+         * @param X The $X$ coordinate.
+         * @param Y The $Y$ coordinate.
+         * @param Z The $Z$ coordinate.
+         * @param T The $T$ coordinate.
+         * @return The group element in P1P1 representation.
+         */
+        return new P1pGroupElement(this.getCurve(), A.subtract(B), A.add(B), D.subtract(C), D.add(C));
     }
 
     /**
@@ -648,7 +955,18 @@ public class GroupElement {
         C = q.getT().multiply(this.getT()); // q->2dT
         ZZ = this.getZ().multiply(q.getZ());
         D = ZZ.add(ZZ);
-        return p1p1(this.getCurve(), A.subtract(B), A.add(B), D.add(C), D.subtract(C));
+
+        /**
+         * Creates a new group element in P1P1 representation.
+         *
+         * @param curve The curve.
+         * @param X The $X$ coordinate.
+         * @param Y The $Y$ coordinate.
+         * @param Z The $Z$ coordinate.
+         * @param T The $T$ coordinate.
+         * @return The group element in P1P1 representation.
+         */
+        return new P1pGroupElement(this.getCurve(), A.subtract(B), A.add(B), D.add(C), D.subtract(C));
     }
 
     /**
@@ -681,7 +999,18 @@ public class GroupElement {
         C = q.getT().multiply(getT()); // q->2dT
         ZZ = getZ().multiply(q.getZ());
         D = ZZ.add(ZZ);
-        return p1p1(getCurve(), A.subtract(B), A.add(B), D.subtract(C), D.add(C));
+
+        /**
+         * Creates a new group element in P1P1 representation.
+         *
+         * @param curve The curve.
+         * @param X The $X$ coordinate.
+         * @param Y The $Y$ coordinate.
+         * @param Z The $Z$ coordinate.
+         * @param T The $T$ coordinate.
+         * @return The group element in P1P1 representation.
+         */
+        return new P1pGroupElement(getCurve(), A.subtract(B), A.add(B), D.subtract(C), D.add(C));
     }
 
     /**
@@ -693,7 +1022,7 @@ public class GroupElement {
      */
     public GroupElement negate() {
         assert Representation.P3 == this.getRepr();
-        return this.getCurve().get(Representation.P3).sub(toCached()).toP3PrecomputeDouble();
+        return Representation.P3PrecomputedDouble.toRep(this.getCurve().get(Representation.P3).sub(Representation.CACHED.toRep(this)));
     }
 
     @Override
@@ -728,7 +1057,7 @@ public class GroupElement {
                 final FieldElement y2 = ge.getY().multiply(this.getZ());
                 return x1.equals(x2) && y1.equals(y2);
             case P1P1:
-                return toP2().equals(ge);
+                return Representation.P2.toRep(this).equals(ge);
             case PRECOMP:
                 // Compare directly, PRECOMP is derived directly from x and y
                 return this.getX().equals(ge.getX()) && this.getY().equals(ge.getY()) && this.getZ().equals(ge.getZ());
@@ -831,14 +1160,14 @@ public class GroupElement {
         GroupElement h = this.getCurve().get(Representation.P3);
         for (i = 1; 64 > i; i += 2) {
             t = select(i / 2, e[i]);
-            h = h.madd(t).toP3();
+            h = Representation.P3.toRep(h.madd(t));
         }
 
-        h = h.dbl().toP2().dbl().toP2().dbl().toP2().dbl().toP3();
+        h = Representation.P3.toRep(Representation.P2.toRep(Representation.P2.toRep(Representation.P2.toRep(h.dbl()).dbl()).dbl()).dbl());
 
         for (i = 0; 64 > i; i += 2) {
             t = select(i / 2, e[i]);
-            h = h.madd(t).toP3();
+            h = Representation.P3.toRep(h.madd(t));
         }
 
         return h;
@@ -873,18 +1202,18 @@ public class GroupElement {
             GroupElement t = r.dbl();
 
             if (0 < aslide[i]) {
-                t = t.toP3().madd(A.getDblPrecmp()[aslide[i] / 2]);
+                t = Representation.P3.toRep(t).madd(A.getDblPrecmp()[aslide[i] / 2]);
             } else if (0 > aslide[i]) {
-                t = t.toP3().msub(A.getDblPrecmp()[(-aslide[i]) / 2]);
+                t = Representation.P3.toRep(t).msub(A.getDblPrecmp()[(-aslide[i]) / 2]);
             }
 
             if (0 < bslide[i]) {
-                t = t.toP3().madd(this.getDblPrecmp()[bslide[i] / 2]);
+                t = Representation.P3.toRep(t).madd(this.getDblPrecmp()[bslide[i] / 2]);
             } else if (0 > bslide[i]) {
-                t = t.toP3().msub(this.getDblPrecmp()[(-bslide[i]) / 2]);
+                t = Representation.P3.toRep(t).msub(this.getDblPrecmp()[(-bslide[i]) / 2]);
             }
 
-            r = t.toP2();
+            r = Representation.P2.toRep(t);
             --i;
         }
 
@@ -919,7 +1248,7 @@ public class GroupElement {
                 return curve.getEdDSAFiniteField().ONE.add(dxxyy).add(xx).equals(yy);
 
             default:
-                return toP2().isOnCurve(curve);
+                return Representation.P2.toRep(this).isOnCurve(curve);
         }
     }
 

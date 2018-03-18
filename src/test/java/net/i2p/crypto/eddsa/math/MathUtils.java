@@ -219,19 +219,20 @@ public class MathUtils {
                  */
                 return false ? new P3PreGroupElement(curve, x1, y1, getEdDSAFiniteField().ONE, t) : new P3GroupElement(curve, x1, y1, getEdDSAFiniteField().ONE, t);
             case P1P1:
-                return GroupElement.p1p1(
-                        curve,
-                        toFieldElement(x),
-                        toFieldElement(y),
-                        getEdDSAFiniteField().ONE,
-                        getEdDSAFiniteField().ONE);
+
+                /**
+                 * Creates a new group element in P1P1 representation.
+                 *
+                 * @param curve The curve.
+                 * @param X The $X$ coordinate.
+                 * @param Y The $Y$ coordinate.
+                 * @param Z The $Z$ coordinate.
+                 * @param T The $T$ coordinate.
+                 * @return The group element in P1P1 representation.
+                 */
+                return new P1pGroupElement(curve, toFieldElement(x), toFieldElement(y), getEdDSAFiniteField().ONE, getEdDSAFiniteField().ONE);
             case CACHED:
-                return GroupElement.cached(
-                        curve,
-                        toFieldElement(y.add(x).mod(getQ())),
-                        toFieldElement(y.subtract(x).mod(getQ())),
-                        getEdDSAFiniteField().ONE,
-                        toFieldElement(d.multiply(new BigInteger("2")).multiply(x).multiply(y).mod(getQ())));
+                return new CachedGroupElement(curve, toFieldElement(y.add(x).mod(getQ())), toFieldElement(y.subtract(x).mod(getQ())), getEdDSAFiniteField().ONE, toFieldElement(d.multiply(new BigInteger("2")).multiply(x).multiply(y).mod(getQ())));
             case PRECOMP:
                 return
                         /**
