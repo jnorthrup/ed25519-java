@@ -60,7 +60,7 @@ public class BigIntegerEdDSAFiniteFieldElementTest extends AbstractEdDSAFiniteFi
         return MathUtils.getQ();
     }
 
-    protected EdDSAFiniteField getField() {
+    protected EdDSAFiniteField getEdDSAFiniteField() {
         return ED_25519_ED_DSA_FINITE_FIELD;
     }
 
@@ -80,15 +80,15 @@ public class BigIntegerEdDSAFiniteFieldElementTest extends AbstractEdDSAFiniteFi
     @Test
     public void testToByteArray() {
         final byte[] zero = ZERO.toByteArray();
-        assertThat(zero.length, is(equalTo(BYTES_ZERO.length)));
+        assertThat(Integer.valueOf(zero.length), is(equalTo(Integer.valueOf(BYTES_ZERO.length))));
         assertThat(zero, is(equalTo(BYTES_ZERO)));
 
         final byte[] one = ONE.toByteArray();
-        assertThat(one.length, is(equalTo(BYTES_ONE.length)));
+        assertThat(Integer.valueOf(one.length), is(equalTo(Integer.valueOf(BYTES_ONE.length))));
         assertThat(one, is(equalTo(BYTES_ONE)));
 
         final byte[] ten = new BigIntegerFieldElement(ED_25519_ED_DSA_FINITE_FIELD, BigInteger.TEN).toByteArray();
-        assertThat(ten.length, is(equalTo(BYTES_TEN.length)));
+        assertThat(Integer.valueOf(ten.length), is(equalTo(Integer.valueOf(BYTES_TEN.length))));
         assertThat(ten, is(equalTo(BYTES_TEN)));
     }
 

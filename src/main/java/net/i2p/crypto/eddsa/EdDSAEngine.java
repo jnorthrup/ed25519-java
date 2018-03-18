@@ -141,7 +141,7 @@ public final class EdDSAEngine extends Signature {
     public void digestInitSign(final EdDSAPrivateKey privKey) {
         // Preparing for hash
         // r = H(h_b,...,h_2b-1,M)
-        final int b = privKey.getEdDSAParameterSpec().curve.getField().getb();
+        final int b = privKey.getEdDSAParameterSpec().curve.getEdDSAFiniteField().getb();
         digest.update(privKey.hashOfTheSeed, b/8, b/4 - b/8);
     }
 
@@ -257,7 +257,7 @@ public final class EdDSAEngine extends Signature {
         final byte[] S = sc.multiplyAndAdd(h, a, r);
 
         // R+S
-        final int b = curve.getField().getb();
+        final int b = curve.getEdDSAFiniteField().getb();
         final ByteBuffer out = ByteBuffer.allocate(b/4);
         out.put(Rbyte).put(S);
         return out.array();
@@ -274,7 +274,7 @@ public final class EdDSAEngine extends Signature {
 
     public boolean x_engineVerify(final byte[] sigBytes) {
         final Curve curve = key.getEdDSAParameterSpec().curve;
-        final int b = curve.getField().getb();
+        final int b = curve.getEdDSAFiniteField().getb();
         assert sigBytes.length == b / 4 : "signature length is wrong";
 
         // R is first b/8 bytes of sigBytes, S is second b/8 bytes

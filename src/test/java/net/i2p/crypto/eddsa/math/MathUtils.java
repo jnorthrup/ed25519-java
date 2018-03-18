@@ -45,7 +45,7 @@ public class MathUtils {
      *
      * @return The finite field.
      */
-    public static EdDSAFiniteField getField() {
+    public static EdDSAFiniteField getEdDSAFiniteField() {
         return new EdDSAFiniteField(
                 256, // b
                 Utils.hexToBytes("edffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff7f"), // q
@@ -88,7 +88,7 @@ public class MathUtils {
      * @return The field element.
      */
     public static FieldElement toFieldElement(final BigInteger b) {
-        return getField().getEncoding().decode(toByteArray(b));
+        return getEdDSAFiniteField().getEncoding().decode(toByteArray(b));
     }
 
     /**
@@ -123,7 +123,7 @@ public class MathUtils {
         for (int j = 0; 10 > j; j++) {
             t[j] = random.nextInt(1 << 25) - (1 << 24);
         }
-        return new Ed25519FieldElement(getField(), t);
+        return new Ed25519FieldElement(getEdDSAFiniteField(), t);
     }
 
     // endregion
@@ -202,27 +202,27 @@ public class MathUtils {
                         curve,
                         toFieldElement(x),
                         toFieldElement(y),
-                        getField().ONE);
+                        getEdDSAFiniteField().ONE);
             case P3:
                 return GroupElement.p3(
                         curve,
                         toFieldElement(x),
                         toFieldElement(y),
-                        getField().ONE,
+                        getEdDSAFiniteField().ONE,
                         toFieldElement(x.multiply(y).mod(getQ())), false);
             case P1P1:
                 return GroupElement.p1p1(
                         curve,
                         toFieldElement(x),
                         toFieldElement(y),
-                        getField().ONE,
-                        getField().ONE);
+                        getEdDSAFiniteField().ONE,
+                        getEdDSAFiniteField().ONE);
             case CACHED:
                 return GroupElement.cached(
                         curve,
                         toFieldElement(y.add(x).mod(getQ())),
                         toFieldElement(y.subtract(x).mod(getQ())),
-                        getField().ONE,
+                        getEdDSAFiniteField().ONE,
                         toFieldElement(d.multiply(new BigInteger("2")).multiply(x).multiply(y).mod(getQ())));
             case PRECOMP:
                 return GroupElement.precomp(
@@ -279,7 +279,7 @@ public class MathUtils {
                 .multiply(BigInteger.ONE.subtract(dx1x2y1y2).modInverse(getQ())).mod(getQ());
         final BigInteger t3 = x3.multiply(y3).mod(getQ());
 
-        return GroupElement.p3(g1.getCurve(), toFieldElement(x3), toFieldElement(y3), getField().ONE, toFieldElement(t3), false);
+        return GroupElement.p3(g1.getCurve(), toFieldElement(x3), toFieldElement(y3), getEdDSAFiniteField().ONE, toFieldElement(t3), false);
     }
 
     /**
@@ -316,7 +316,7 @@ public class MathUtils {
     // Start TODO BR: Remove when finished!
     @Test
     public void mathUtilsWorkAsExpected() {
-        final GroupElement neutral = GroupElement.p3(curve, curve.getField().ZERO, curve.getField().ONE, curve.getField().ONE, curve.getField().ZERO, false);
+        final GroupElement neutral = GroupElement.p3(curve, curve.getEdDSAFiniteField().ZERO, curve.getEdDSAFiniteField().ONE, curve.getEdDSAFiniteField().ONE, curve.getEdDSAFiniteField().ZERO, false);
         for (int i = 0; 1000 > i; i++) {
             final GroupElement g = getRandomGroupElement();
 
@@ -359,7 +359,7 @@ public class MathUtils {
             final GroupElement g = MathUtils.getRandomGroupElement();
 
             // Act:
-            final GroupElement h = MathUtils.scalarMultiplyGroupElement(g, curve.getField().ZERO);
+            final GroupElement h = MathUtils.scalarMultiplyGroupElement(g, curve.getEdDSAFiniteField().ZERO);
 
             // Assert:
             Assert.assertThat(curve.getZero(GroupElement.Representation.P3), IsEqual.equalTo(h));

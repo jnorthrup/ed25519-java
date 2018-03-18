@@ -13,7 +13,6 @@ package net.i2p.crypto.eddsa.math;
 
 import net.i2p.crypto.eddsa.Utils;
 
-import java.io.Serializable;
 import java.util.Arrays;
 
 /**
@@ -275,7 +274,7 @@ public class GroupElement  {
         final FieldElement v3;
         final FieldElement vxx;
         FieldElement check;
-        y = curve.getField().fromByteArray(s);
+        y = curve.getEdDSAFiniteField().fromByteArray(s);
         yy = y.square();
 
         // u = y^2-1
@@ -305,7 +304,7 @@ public class GroupElement  {
             x = x.multiply(curve.getI());
         }
 
-        if ((x.isNegative() ? 1 : 0) != Utils.bit(s, curve.getField().getb()-1)) {
+        if ((x.isNegative() ? 1 : 0) != Utils.bit(s, curve.getEdDSAFiniteField().getb()-1)) {
             x = x.negate();
         }
 
@@ -313,7 +312,7 @@ public class GroupElement  {
         this.repr = Representation.P3;
         this.X = x;
         this.Y = y;
-        this.Z = curve.getField().ONE;
+        this.Z = curve.getEdDSAFiniteField().ONE;
         this.T = this.X.multiply(this.Y);
         if(precomputeSingleAndDouble) {
             precmp = precomputeSingle();
@@ -395,7 +394,7 @@ public class GroupElement  {
                 final FieldElement x = X.multiply(recip);
                 final FieldElement y = Y.multiply(recip);
                 final byte[] s = y.toByteArray();
-                s[s.length-1] |= (x.isNegative() ? (byte) 0x80 : 0);
+                s[s.length-1] |= (x.isNegative() ? (byte) 0x80 : (byte) 0);
                 return s;
             default:
                 return toP2().toByteArray();
@@ -867,12 +866,12 @@ public class GroupElement  {
         /* e[63] is between 0 and 7 */
         int carry = 0;
         for (i = 0; 63 > i; i++) {
-            e[i] += carry;
+            e[i] = (byte) (e[i] + carry);
             carry = e[i] + 8;
-            carry >>= 4;
-            e[i] -= carry << 4;
+            carry = carry >> 4;
+            e[i] = (byte) (e[i] - (carry << 4));
         }
-        e[63] += carry;
+        e[63] = (byte) (e[63] + carry);
         /* each e[i] is between -8 and 7 */
         return e;
     }
@@ -989,16 +988,16 @@ public class GroupElement  {
                     // Accumulate bits if possible
                     if (0 != r[i + b]) {
                         if (15 >= r[i] + (r[i + b] << b)) {
-                            r[i] += r[i + b] << b;
-                            r[i + b] = 0;
+                            r[i] = (byte) (r[i] + (r[i + b] << b));
+                            r[i + b] = (byte) 0;
                         } else if (-15 <= r[i] - (r[i + b] << b)) {
-                            r[i] -= r[i + b] << b;
+                            r[i] = (byte) (r[i] - (r[i + b] << b));
                             for (int k = i + b; 256 > k; ++k) {
                                 if (0 == r[k]) {
-                                    r[k] = 1;
+                                    r[k] = (byte) 1;
                                     break;
                                 }
-                                r[k] = 0;
+                                r[k] = (byte) 0;
                             }
                         } else
                             break;
@@ -1080,7 +1079,7 @@ public class GroupElement  {
             final FieldElement xx = x.square();
             final FieldElement yy = y.square();
             final FieldElement dxxyy = curve.getD().multiply(xx).multiply(yy);
-            return curve.getField().ONE.add(dxxyy).add(xx).equals(yy);
+            return curve.getEdDSAFiniteField().ONE.add(dxxyy).add(xx).equals(yy);
 
         default:
             return toP2().isOnCurve(curve);

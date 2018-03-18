@@ -35,14 +35,14 @@ public class EdDSAPrivateKeySpec implements KeySpec {
      *  @throws IllegalArgumentException if seed length is wrong or hash algorithm is unsupported
      */
     public EdDSAPrivateKeySpec(final byte[] seed, final EdDSAParameterSpec spec) {
-        assert seed.length == spec.curve.getField().getb() / 8 : "seed length is wrong";
+        assert seed.length == spec.curve.getEdDSAFiniteField().getb() / 8 : "seed length is wrong";
 
         this.spec = spec;
         this.seed = seed.clone();
 
         try {
             final MessageDigest hash = MessageDigest.getInstance(spec.hashAlgo);
-            final int b = spec.curve.getField().getb();
+            final int b = spec.curve.getEdDSAFiniteField().getb();
 
             // H(k)
             hashOfTheSeed = hash.digest(seed);
@@ -74,13 +74,13 @@ public class EdDSAPrivateKeySpec implements KeySpec {
      *  @since 0.1.1
      */
     public EdDSAPrivateKeySpec(final EdDSAParameterSpec spec, final byte[] hashOfTheSeed) {
-        assert hashOfTheSeed.length == spec.curve.getField().getb() / 4 : "hash length is wrong";
+        assert hashOfTheSeed.length == spec.curve.getEdDSAFiniteField().getb() / 4 : "hash length is wrong";
 
 	this.seed = null;
         //noinspection AssignmentOrReturnOfFieldWithMutableType
         this.hashOfTheSeed = hashOfTheSeed/*.clone()*/;//TODO how is cloning the array of a hash possibly breaking a test?
 	this.spec = spec;
-        final int b = spec.curve.getField().getb();
+        final int b = spec.curve.getEdDSAFiniteField().getb();
 
         hashOfTheSeed[0] = (byte) (hashOfTheSeed[0] & 248);
         hashOfTheSeed[(b / 8) - 1] = (byte) (hashOfTheSeed[(b / 8) - 1] & 63);

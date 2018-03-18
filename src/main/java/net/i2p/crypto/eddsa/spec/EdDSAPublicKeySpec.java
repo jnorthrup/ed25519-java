@@ -30,7 +30,7 @@ public class EdDSAPublicKeySpec implements KeySpec {
      * @throws IllegalArgumentException if key length is wrong
      */
     public EdDSAPublicKeySpec(final byte[] pk, final EdDSAParameterSpec spec) {
-        assert pk.length == spec.curve.getField().getb() / 8 : "public-key length is wrong";
+        assert pk.length == spec.curve.getEdDSAFiniteField().getb() / 8 : "public-key length is wrong";
 
         this.A = new GroupElement(spec.curve, pk);
         this.spec = spec;

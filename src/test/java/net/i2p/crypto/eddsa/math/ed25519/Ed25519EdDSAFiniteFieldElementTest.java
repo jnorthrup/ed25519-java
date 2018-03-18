@@ -34,8 +34,8 @@ public class Ed25519EdDSAFiniteFieldElementTest extends AbstractEdDSAFiniteField
         return MathUtils.getQ();
     }
 
-    protected EdDSAFiniteField getField() {
-        return MathUtils.getField();
+    protected EdDSAFiniteField getEdDSAFiniteField() {
+        return MathUtils.getEdDSAFiniteField();
     }
 
     // region constructor
@@ -43,13 +43,13 @@ public class Ed25519EdDSAFiniteFieldElementTest extends AbstractEdDSAFiniteField
     @Test
     public void canConstructFieldElementFromArrayWithCorrectLength() {
         // Assert:
-        new Ed25519FieldElement(MathUtils.getField(), new int[10]);
+        new Ed25519FieldElement(MathUtils.getEdDSAFiniteField(), new int[10]);
     }
 
     @Test (expected = AssertionError.class)
     public void cannotConstructFieldElementFromArrayWithIncorrectLength() {
         // Assert:
-        new Ed25519FieldElement(MathUtils.getField(), new int[9]);
+        new Ed25519FieldElement(MathUtils.getEdDSAFiniteField(), new int[9]);
     }
 
     @Test (expected = AssertionError.class)
@@ -63,13 +63,13 @@ public class Ed25519EdDSAFiniteFieldElementTest extends AbstractEdDSAFiniteField
     // region isNonZero
 
     protected FieldElement getZeroFieldElement() {
-        return new Ed25519FieldElement(MathUtils.getField(), new int[10]);
+        return new Ed25519FieldElement(MathUtils.getEdDSAFiniteField(), new int[10]);
     }
 
     protected FieldElement getNonZeroFieldElement() {
         final int[] t = new int[10];
         t[0] = 5;
-        return new Ed25519FieldElement(MathUtils.getField(), t);
+        return new Ed25519FieldElement(MathUtils.getEdDSAFiniteField(), t);
     }
 
     // endregion
@@ -83,14 +83,14 @@ public class Ed25519EdDSAFiniteFieldElementTest extends AbstractEdDSAFiniteField
         for (int i = 0; 32 > i; i++) {
             bytes[i] = (byte)(i+1);
         }
-        final FieldElement f = MathUtils.getField().getEncoding().decode(bytes);
+        final FieldElement f = MathUtils.getEdDSAFiniteField().getEncoding().decode(bytes);
 
         // Act:
         final String fAsString = f.toString();
         final StringBuilder builder = new StringBuilder();
         builder.append("[Ed25519FieldElement val=");
         for (final byte b : bytes) {
-            builder.append(String.format("%02x", b));
+            builder.append(String.format("%02x", Byte.valueOf(b)));
         }
         builder.append("]");
 

@@ -24,7 +24,7 @@ public abstract class AbstractEdDSAFiniteFieldElementTest {
     protected abstract FieldElement getRandomFieldElement();
     protected abstract BigInteger toBigInteger(FieldElement f);
     protected abstract BigInteger getQ();
-    protected abstract EdDSAFiniteField getField();
+    protected abstract EdDSAFiniteField getEdDSAFiniteField();
 
     // region isNonZero
 
@@ -37,7 +37,7 @@ public abstract class AbstractEdDSAFiniteFieldElementTest {
         final FieldElement f = getZeroFieldElement();
 
         // Assert:
-        Assert.assertThat(f.isNonZero(), IsEqual.equalTo(false));
+        Assert.assertThat(Boolean.valueOf(f.isNonZero()), IsEqual.equalTo(Boolean.FALSE));
     }
 
     @Test
@@ -46,7 +46,7 @@ public abstract class AbstractEdDSAFiniteFieldElementTest {
         final FieldElement f = getNonZeroFieldElement();
 
         // Assert:
-        Assert.assertThat(f.isNonZero(), IsEqual.equalTo(true));
+        Assert.assertThat(Boolean.valueOf(f.isNonZero()), IsEqual.equalTo(Boolean.TRUE));
     }
 
     // endregion
@@ -212,7 +212,7 @@ public abstract class AbstractEdDSAFiniteFieldElementTest {
     public void equalsOnlyReturnsTrueForEquivalentObjects() {
         // Arrange:
         final FieldElement f1 = getRandomFieldElement();
-        final FieldElement f2 = getField().getEncoding().decode(f1.toByteArray());
+        final FieldElement f2 = getEdDSAFiniteField().getEncoding().decode(f1.toByteArray());
         final FieldElement f3 = getRandomFieldElement();
         final FieldElement f4 = getRandomFieldElement();
 
@@ -227,15 +227,15 @@ public abstract class AbstractEdDSAFiniteFieldElementTest {
     public void hashCodesAreEqualForEquivalentObjects() {
         // Arrange:
         final FieldElement f1 = getRandomFieldElement();
-        final FieldElement f2 = getField().getEncoding().decode(f1.toByteArray());
+        final FieldElement f2 = getEdDSAFiniteField().getEncoding().decode(f1.toByteArray());
         final FieldElement f3 = getRandomFieldElement();
         final FieldElement f4 = getRandomFieldElement();
 
         // Assert:
-        Assert.assertThat(f1.hashCode(), IsEqual.equalTo(f2.hashCode()));
-        Assert.assertThat(f1.hashCode(), IsNot.not(IsEqual.equalTo(f3.hashCode())));
-        Assert.assertThat(f1.hashCode(), IsNot.not(IsEqual.equalTo(f4.hashCode())));
-        Assert.assertThat(f3.hashCode(), IsNot.not(IsEqual.equalTo(f4.hashCode())));
+        Assert.assertThat(Integer.valueOf(f1.hashCode()), IsEqual.equalTo(Integer.valueOf(f2.hashCode())));
+        Assert.assertThat(Integer.valueOf(f1.hashCode()), IsNot.not(IsEqual.equalTo(Integer.valueOf(f3.hashCode()))));
+        Assert.assertThat(Integer.valueOf(f1.hashCode()), IsNot.not(IsEqual.equalTo(Integer.valueOf(f4.hashCode()))));
+        Assert.assertThat(Integer.valueOf(f3.hashCode()), IsNot.not(IsEqual.equalTo(Integer.valueOf(f4.hashCode()))));
     }
 
     // endregion

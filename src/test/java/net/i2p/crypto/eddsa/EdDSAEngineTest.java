@@ -21,6 +21,7 @@ import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.security.Signature;
 import java.security.SignatureException;
+import java.util.Iterator;
 
 import net.i2p.crypto.eddsa.spec.EdDSANamedCurveTable;
 import net.i2p.crypto.eddsa.spec.EdDSAParameterSpec;
@@ -52,7 +53,8 @@ public class EdDSAEngineTest {
         //Signature sgr = Signature.getInstance("EdDSA", "I2P");
         final Signature sgr = new EdDSAEngine(MessageDigest.getInstance(spec.hashAlgo));
 
-        for (final Ed25519TestVectors.TestTuple testCase : Ed25519TestVectors.testCases) {
+        for (Iterator<Ed25519TestVectors.TestTuple> iterator = Ed25519TestVectors.testCases.iterator(); iterator.hasNext(); ) {
+            Ed25519TestVectors.TestTuple testCase = iterator.next();
             final EdDSAPrivateKeySpec privKey = new EdDSAPrivateKeySpec(testCase.seed, spec);
             final PrivateKey sKey = new EdDSAPrivateKey(privKey);
             sgr.initSign(sKey);
@@ -69,7 +71,8 @@ public class EdDSAEngineTest {
         final EdDSAParameterSpec spec = EdDSANamedCurveTable.getByName(EdDSANamedCurveTable.ED_25519);
         //Signature sgr = Signature.getInstance("EdDSA", "I2P");
         final Signature sgr = new EdDSAEngine(MessageDigest.getInstance(spec.hashAlgo));
-        for (final Ed25519TestVectors.TestTuple testCase : Ed25519TestVectors.testCases) {
+        for (Iterator<Ed25519TestVectors.TestTuple> iterator = Ed25519TestVectors.testCases.iterator(); iterator.hasNext(); ) {
+            Ed25519TestVectors.TestTuple testCase = iterator.next();
             final EdDSAPublicKeySpec pubKey = new EdDSAPublicKeySpec(testCase.pk, spec);
             final PublicKey vKey = new EdDSAPublicKey(pubKey);
             sgr.initVerify(vKey);
@@ -77,7 +80,7 @@ public class EdDSAEngineTest {
             sgr.update(testCase.message);
 
             assertThat("Test case " + testCase.caseNum + " failed",
-                    sgr.verify(testCase.sig), is(true));
+                    Boolean.valueOf(sgr.verify(testCase.sig)), is(Boolean.TRUE));
         }
     }
 
@@ -97,7 +100,7 @@ public class EdDSAEngineTest {
 
         exception.expect(AssertionError.class);
         exception.expectMessage("signature length is wrong");
-        sgr.verify(new byte[] {0});
+        sgr.verify(new byte[] {(byte) 0});
     }
 
     @Test
@@ -109,7 +112,7 @@ public class EdDSAEngineTest {
         sgr.initSign(sKey);
 
         // First usage
-        sgr.update(new byte[] {0});
+        sgr.update(new byte[] {(byte) 0});
         sgr.sign();
 
         // Second usage
@@ -126,12 +129,12 @@ public class EdDSAEngineTest {
         sgr.initVerify(vKey);
 
         // First usage
-        sgr.update(new byte[] {0});
+        sgr.update(new byte[] {(byte) 0});
         sgr.verify(TEST_MSG_SIG);
 
         // Second usage
         sgr.update(TEST_MSG);
-        assertThat("Second verify failed", sgr.verify(TEST_MSG_SIG), is(true));
+        assertThat("Second verify failed", Boolean.valueOf(sgr.verify(TEST_MSG_SIG)), is(Boolean.TRUE));
     }
 
     @Test
@@ -159,7 +162,7 @@ public class EdDSAEngineTest {
 
         sgr.update(TEST_MSG);
 
-        assertThat("One-shot mode verify failed", sgr.verify(TEST_MSG_SIG), is(true));
+        assertThat("One-shot mode verify failed", Boolean.valueOf(sgr.verify(TEST_MSG_SIG)), is(Boolean.TRUE));
     }
 
     @Test
@@ -213,14 +216,15 @@ public class EdDSAEngineTest {
         final PublicKey vKey = new EdDSAPublicKey(pubKey);
         sgr.initVerify(vKey);
 
-        assertThat("verifyOneShot() failed", sgr.verifyOneShot(TEST_MSG, TEST_MSG_SIG), is(true));
+        assertThat("verifyOneShot() failed", Boolean.valueOf(sgr.verifyOneShot(TEST_MSG, TEST_MSG_SIG)), is(Boolean.TRUE));
     }
 
     @Test
     public void testVerifyX509PublicKeyInfo() throws Exception {
         final EdDSAParameterSpec spec = EdDSANamedCurveTable.getByName("Ed25519");
         final Signature sgr = new EdDSAEngine(MessageDigest.getInstance(spec.hashAlgo));
-        for (final Ed25519TestVectors.TestTuple testCase : Ed25519TestVectors.testCases) {
+        for (Iterator<Ed25519TestVectors.TestTuple> iterator = Ed25519TestVectors.testCases.iterator(); iterator.hasNext(); ) {
+            Ed25519TestVectors.TestTuple testCase = iterator.next();
             final EdDSAPublicKeySpec pubKey = new EdDSAPublicKeySpec(testCase.pk, spec);
             final PublicKey vKey = new EdDSAPublicKey(pubKey);
             final byte[] encoded = vKey.getEncoded();
@@ -231,7 +235,7 @@ public class EdDSAEngineTest {
             sgr.update(testCase.message);
 
             assertThat("Test case " + testCase.caseNum + " failed",
-                    sgr.verify(testCase.sig), is(true));
+                    Boolean.valueOf(sgr.verify(testCase.sig)), is(Boolean.TRUE));
         }
     }
 }

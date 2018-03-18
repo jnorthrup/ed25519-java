@@ -91,8 +91,8 @@ public class Ed25519ScalarOpsTest {
             final byte[] reduced2 = reduceModGroupOrder(bytes);
 
             // Assert:
-            Assert.assertThat(MathUtils.toBigInteger(reduced1).compareTo(getGroupOrder()), IsEqual.equalTo(-1));
-            Assert.assertThat(MathUtils.toBigInteger(reduced1).compareTo(new BigInteger("-1")), IsEqual.equalTo(1));
+            Assert.assertThat(Integer.valueOf(MathUtils.toBigInteger(reduced1).compareTo(getGroupOrder())), IsEqual.equalTo(Integer.valueOf(-1)));
+            Assert.assertThat(Integer.valueOf(MathUtils.toBigInteger(reduced1).compareTo(new BigInteger("-1"))), IsEqual.equalTo(Integer.valueOf(1)));
             Assert.assertThat(reduced1, IsEqual.equalTo(reduced2));
         }
     }
@@ -123,8 +123,8 @@ public class Ed25519ScalarOpsTest {
             final byte[] result2 = multiplyAndAddModGroupOrder(bytes1, bytes2, bytes3);
 
             // Assert:
-            Assert.assertThat(MathUtils.toBigInteger(result1).compareTo(getGroupOrder()), IsEqual.equalTo(-1));
-            Assert.assertThat(MathUtils.toBigInteger(result1).compareTo(new BigInteger("-1")), IsEqual.equalTo(1));
+            Assert.assertThat(Integer.valueOf(MathUtils.toBigInteger(result1).compareTo(getGroupOrder())), IsEqual.equalTo(Integer.valueOf(-1)));
+            Assert.assertThat(Integer.valueOf(MathUtils.toBigInteger(result1).compareTo(new BigInteger("-1"))), IsEqual.equalTo(Integer.valueOf(1)));
             Assert.assertThat(result1, IsEqual.equalTo(result2));
         }
     }

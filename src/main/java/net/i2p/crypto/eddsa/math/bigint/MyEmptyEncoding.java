@@ -8,7 +8,7 @@ import java.math.BigInteger;
 import java.util.Objects;
 
 class MyEmptyEncoding extends EmptyEncoding {
-    private BigIntegerLittleEndianEncoding bigIntegerLittleEndianEncoding;
+    private final BigIntegerLittleEndianEncoding bigIntegerLittleEndianEncoding;
 
     public MyEmptyEncoding(BigIntegerLittleEndianEncoding bigIntegerLittleEndianEncoding) {
         this.bigIntegerLittleEndianEncoding = bigIntegerLittleEndianEncoding;

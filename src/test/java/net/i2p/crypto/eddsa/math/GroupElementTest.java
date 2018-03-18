@@ -19,6 +19,7 @@ import org.junit.rules.ExpectedException;
 
 import java.math.BigInteger;
 import java.util.Arrays;
+import java.util.Iterator;
 
 import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.assertThat;
@@ -37,16 +38,16 @@ public class GroupElementTest {
     static final EdDSANamedCurveSpec ed25519 = EdDSANamedCurveTable.getByName(EdDSANamedCurveTable.ED_25519);
     static final Curve curve = ed25519.curve;
 
-    static final FieldElement ZERO = curve.getField().ZERO;
-    static final FieldElement ONE = curve.getField().ONE;
-    static final FieldElement TWO = curve.getField().TWO;
-    static final FieldElement TEN = curve.getField().fromByteArray(Utils.hexToBytes("0a00000000000000000000000000000000000000000000000000000000000000"));
+    static final FieldElement ZERO = curve.getEdDSAFiniteField().ZERO;
+    static final FieldElement ONE = curve.getEdDSAFiniteField().ONE;
+    static final FieldElement TWO = curve.getEdDSAFiniteField().TWO;
+    static final FieldElement TEN = curve.getEdDSAFiniteField().fromByteArray(Utils.hexToBytes("0a00000000000000000000000000000000000000000000000000000000000000"));
 
     static final GroupElement P2_ZERO = GroupElement.p2(curve, ZERO, ONE, ONE);
 
     static final FieldElement[] PKR = {
-        curve.getField().fromByteArray(Utils.hexToBytes("5849722e338aced7b50c7f0e9328f9a10c847b08e40af5c5b0577b0fd8984f15")),
-        curve.getField().fromByteArray(Utils.hexToBytes("3b6a27bcceb6a42d62a3a8d02a6f0d73653215771de243a63ac048a18b59da29"))
+        curve.getEdDSAFiniteField().fromByteArray(Utils.hexToBytes("5849722e338aced7b50c7f0e9328f9a10c847b08e40af5c5b0577b0fd8984f15")),
+        curve.getEdDSAFiniteField().fromByteArray(Utils.hexToBytes("3b6a27bcceb6a42d62a3a8d02a6f0d73653215771de243a63ac048a18b59da29"))
         };
     static final byte[] BYTES_PKR = Utils.hexToBytes("3b6a27bcceb6a42d62a3a8d02a6f0d73653215771de243a63ac048a18b59da29");
 
@@ -96,7 +97,7 @@ public class GroupElementTest {
      */
     public static GroupElement toGroupElement(final byte[] bytes) {
         final boolean shouldBeNegative = 0 != (bytes[31] >> 7);
-        bytes[31] &= 0x7f;
+        bytes[31] = (byte) (bytes[31] & 0x7f);
         final BigInteger y = MathUtils.toBigInteger(bytes);
 
         // x = sign(x) * sqrt((y^2 - 1) / (d * y^2 + 1))
@@ -115,7 +116,7 @@ public class GroupElementTest {
             x = x.negate().mod(MathUtils.getQ());
         }
 
-        return GroupElement.p3(MathUtils.curve, MathUtils.toFieldElement(x), MathUtils.toFieldElement(y), MathUtils.getField().ONE, MathUtils.toFieldElement(x.multiply(y).mod(MathUtils.getQ())), false);
+        return GroupElement.p3(MathUtils.curve, MathUtils.toFieldElement(x), MathUtils.toFieldElement(y), MathUtils.getEdDSAFiniteField().ONE, MathUtils.toFieldElement(x.multiply(y).mod(MathUtils.getQ())), false);
     }
 
     /**
@@ -209,7 +210,8 @@ public class GroupElementTest {
     @Test
     public void testToAndFromByteArray() {
         GroupElement t;
-        for (final Ed25519TestVectors.TestTuple testCase : Ed25519TestVectors.testCases) {
+        for (Iterator<Ed25519TestVectors.TestTuple> iterator = Ed25519TestVectors.testCases.iterator(); iterator.hasNext(); ) {
+            Ed25519TestVectors.TestTuple testCase = iterator.next();
             t = new GroupElement(curve, testCase.pk);
             assertThat("Test case " + testCase.caseNum + " failed",
                     t.toByteArray(), is(equalTo(testCase.pk)));
@@ -250,23 +252,23 @@ public class GroupElementTest {
     @Test
     public void testToByteArray() {
         final byte[] zerozero = GroupElement.p2(curve, ZERO, ZERO, ONE).toByteArray();
-        assertThat(zerozero.length, is(equalTo(BYTES_ZEROZERO.length)));
+        assertThat(Integer.valueOf(zerozero.length), is(equalTo(Integer.valueOf(BYTES_ZEROZERO.length))));
         assertThat(zerozero, is(equalTo(BYTES_ZEROZERO)));
 
         final byte[] oneone = GroupElement.p2(curve, ONE, ONE, ONE).toByteArray();
-        assertThat(oneone.length, is(equalTo(BYTES_ONEONE.length)));
+        assertThat(Integer.valueOf(oneone.length), is(equalTo(Integer.valueOf(BYTES_ONEONE.length))));
         assertThat(oneone, is(equalTo(BYTES_ONEONE)));
 
         final byte[] tenzero = GroupElement.p2(curve, TEN, ZERO, ONE).toByteArray();
-        assertThat(tenzero.length, is(equalTo(BYTES_TENZERO.length)));
+        assertThat(Integer.valueOf(tenzero.length), is(equalTo(Integer.valueOf(BYTES_TENZERO.length))));
         assertThat(tenzero, is(equalTo(BYTES_TENZERO)));
 
         final byte[] oneten = GroupElement.p2(curve, ONE, TEN, ONE).toByteArray();
-        assertThat(oneten.length, is(equalTo(BYTES_ONETEN.length)));
+        assertThat(Integer.valueOf(oneten.length), is(equalTo(Integer.valueOf(BYTES_ONETEN.length))));
         assertThat(oneten, is(equalTo(BYTES_ONETEN)));
 
         final byte[] pkr = GroupElement.p2(curve, PKR[0], PKR[1], ONE).toByteArray();
-        assertThat(pkr.length, is(equalTo(BYTES_PKR.length)));
+        assertThat(Integer.valueOf(pkr.length), is(equalTo(Integer.valueOf(BYTES_PKR.length))));
         assertThat(pkr, is(equalTo(BYTES_PKR)));
     }
 
@@ -280,11 +282,11 @@ public class GroupElementTest {
              final byte[] gBytes = g.toByteArray();
              final byte[] bytes = MathUtils.toByteArray(MathUtils.toBigInteger(g.getY()));
              if (MathUtils.toBigInteger(g.getX()).mod(new BigInteger("2")).equals(BigInteger.ONE)) {
-                 bytes[31] |= 0x80;
+                 bytes[31] = (byte) (bytes[31] | 0x80);
              }
 
              // Assert:
-             assertThat(Arrays.equals(gBytes, bytes), IsEqual.equalTo(true));
+             assertThat(Boolean.valueOf(Arrays.equals(gBytes, bytes)), IsEqual.equalTo(Boolean.TRUE));
          }
      }
 
@@ -594,7 +596,7 @@ public class GroupElementTest {
 
     @Test
     public void addingNeutralGroupElementDoesNotChangeGroupElement() {
-        final GroupElement neutral = GroupElement.p3(curve, curve.getField().ZERO, curve.getField().ONE, curve.getField().ONE, curve.getField().ZERO, false);
+        final GroupElement neutral = GroupElement.p3(curve, curve.getEdDSAFiniteField().ZERO, curve.getEdDSAFiniteField().ONE, curve.getEdDSAFiniteField().ONE, curve.getEdDSAFiniteField().ZERO, false);
         for (int i = 0; 1000 > i; i++) {
             // Arrange:
             final GroupElement g = MathUtils.getRandomGroupElement();
@@ -679,11 +681,11 @@ public class GroupElementTest {
         final GroupElement g4 = MathUtils.getRandomGroupElement();
 
         // Assert
-        assertThat(g2.hashCode(), IsEqual.equalTo(g1.hashCode()));
-        assertThat(g3.hashCode(), IsEqual.equalTo(g1.hashCode()));
-        assertThat(g1.hashCode(), IsNot.not(IsEqual.equalTo(g4.hashCode())));
-        assertThat(g2.hashCode(), IsNot.not(IsEqual.equalTo(g4.hashCode())));
-        assertThat(g3.hashCode(), IsNot.not(IsEqual.equalTo(g4.hashCode())));
+        assertThat(Integer.valueOf(g2.hashCode()), IsEqual.equalTo(Integer.valueOf(g1.hashCode())));
+        assertThat(Integer.valueOf(g3.hashCode()), IsEqual.equalTo(Integer.valueOf(g1.hashCode())));
+        assertThat(Integer.valueOf(g1.hashCode()), IsNot.not(IsEqual.equalTo(Integer.valueOf(g4.hashCode()))));
+        assertThat(Integer.valueOf(g2.hashCode()), IsNot.not(IsEqual.equalTo(Integer.valueOf(g4.hashCode()))));
+        assertThat(Integer.valueOf(g3.hashCode()), IsNot.not(IsEqual.equalTo(Integer.valueOf(g4.hashCode()))));
     }
 
     // endregion
@@ -709,17 +711,17 @@ public class GroupElementTest {
         final byte[] from1234567890 = GroupElement.toRadix16(BYTES_1234567890);
         int total = 0;
         for (int i = 0; i < from1234567890.length; i++) {
-            assertThat(from1234567890[i], is(greaterThanOrEqualTo((byte)-8)));
-            assertThat(from1234567890[i], is(lessThanOrEqualTo((byte)8)));
-            total += from1234567890[i] * StrictMath.pow(16, i);
+            assertThat(Byte.valueOf(from1234567890[i]), is(greaterThanOrEqualTo(Byte.valueOf((byte) -8))));
+            assertThat(Byte.valueOf(from1234567890[i]), is(lessThanOrEqualTo(Byte.valueOf((byte) 8))));
+            total = (int) ((double) total + from1234567890[i] * StrictMath.pow(16.0, (double) i));
         }
-        assertThat(total, is(1234567890));
+        assertThat(Integer.valueOf(total), is(Integer.valueOf(1234567890)));
 
         final byte[] pkrR16 = GroupElement.toRadix16(BYTES_PKR);
         final int bound = pkrR16.length;
         for (int i = 0; i < bound; i++) {
-            assertThat(pkrR16[i], is(greaterThanOrEqualTo((byte) -8)));
-            assertThat(pkrR16[i], is(lessThanOrEqualTo((byte) 8)));
+            assertThat(Byte.valueOf(pkrR16[i]), is(greaterThanOrEqualTo(Byte.valueOf((byte) -8))));
+            assertThat(Byte.valueOf(pkrR16[i]), is(lessThanOrEqualTo(Byte.valueOf((byte) 8))));
         }
     }
 
@@ -792,7 +794,7 @@ public class GroupElementTest {
         final GroupElement basePoint = ed25519.groupElement;
 
         // Act:
-        final GroupElement g = basePoint.scalarMultiply(curve.getField().ZERO.toByteArray());
+        final GroupElement g = basePoint.scalarMultiply(curve.getEdDSAFiniteField().ZERO.toByteArray());
 
         // Assert:
         assertThat(curve.getZero(GroupElement.Representation.P3), IsEqual.equalTo(g));
@@ -804,7 +806,7 @@ public class GroupElementTest {
         final GroupElement basePoint = ed25519.groupElement;
 
         // Act:
-        final GroupElement g = basePoint.scalarMultiply(curve.getField().ONE.toByteArray());
+        final GroupElement g = basePoint.scalarMultiply(curve.getEdDSAFiniteField().ONE.toByteArray());
 
         // Assert:
         assertThat(basePoint, IsEqual.equalTo(g));
@@ -897,18 +899,18 @@ public class GroupElementTest {
      */
     @Test
     public void testIsOnCurve() {
-        assertThat(P2_ZERO.isOnCurve(curve),
-                is(true));
-        assertThat(GroupElement.p2(curve, ZERO, ZERO, ONE).isOnCurve(curve),
-                is(false));
-        assertThat(GroupElement.p2(curve, ONE, ONE, ONE).isOnCurve(curve),
-                is(false));
-        assertThat(GroupElement.p2(curve, TEN, ZERO, ONE).isOnCurve(curve),
-                is(false));
-        assertThat(GroupElement.p2(curve, ONE, TEN, ONE).isOnCurve(curve),
-                is(false));
-        assertThat(GroupElement.p2(curve, PKR[0], PKR[1], ONE).isOnCurve(curve),
-                is(true));
+        assertThat(Boolean.valueOf(P2_ZERO.isOnCurve(curve)),
+                is(Boolean.TRUE));
+        assertThat(Boolean.valueOf(GroupElement.p2(curve, ZERO, ZERO, ONE).isOnCurve(curve)),
+                is(Boolean.FALSE));
+        assertThat(Boolean.valueOf(GroupElement.p2(curve, ONE, ONE, ONE).isOnCurve(curve)),
+                is(Boolean.FALSE));
+        assertThat(Boolean.valueOf(GroupElement.p2(curve, TEN, ZERO, ONE).isOnCurve(curve)),
+                is(Boolean.FALSE));
+        assertThat(Boolean.valueOf(GroupElement.p2(curve, ONE, TEN, ONE).isOnCurve(curve)),
+                is(Boolean.FALSE));
+        assertThat(Boolean.valueOf(GroupElement.p2(curve, PKR[0], PKR[1], ONE).isOnCurve(curve)),
+                is(Boolean.TRUE));
     }
 
     @Test
@@ -918,7 +920,7 @@ public class GroupElementTest {
             final GroupElement g = MathUtils.getRandomGroupElement();
 
             // Assert:
-            assertThat(g.isOnCurve(), IsEqual.equalTo(true));
+            assertThat(Boolean.valueOf(g.isOnCurve()), IsEqual.equalTo(Boolean.TRUE));
         }
     }
 
@@ -927,10 +929,10 @@ public class GroupElementTest {
         for (int i = 0; 100 > i; i++) {
             // Arrange:
             final GroupElement g = MathUtils.getRandomGroupElement();
-            final GroupElement h = GroupElement.p2(curve, g.getX(), g.getY(), g.getZ().multiply(curve.getField().TWO));
+            final GroupElement h = GroupElement.p2(curve, g.getX(), g.getY(), g.getZ().multiply(curve.getEdDSAFiniteField().TWO));
 
             // Assert (can only fail for 5*Z^2=1):
-            assertThat(h.isOnCurve(), IsEqual.equalTo(false));
+            assertThat(Boolean.valueOf(h.isOnCurve()), IsEqual.equalTo(Boolean.FALSE));
         }
     }
 }

@@ -34,19 +34,19 @@ public class ConstantsTest {
     static final EdDSANamedCurveSpec ed25519 = EdDSANamedCurveTable.getByName(EdDSANamedCurveTable.ED_25519);
     static final Curve curve = ed25519.curve;
 
-    static final FieldElement ZERO = curve.getField().ZERO;
-    static final FieldElement ONE = curve.getField().ONE;
-    static final FieldElement TWO = curve.getField().TWO;
+    static final FieldElement ZERO = curve.getEdDSAFiniteField().ZERO;
+    static final FieldElement ONE = curve.getEdDSAFiniteField().ONE;
+    static final FieldElement TWO = curve.getEdDSAFiniteField().TWO;
 
     static final GroupElement P3_ZERO = GroupElement.p3(curve, ZERO, ONE, ONE, ZERO, false);
 
     @Test
     public void testb() {
-        final int b = curve.getField().getb();
-        assertThat(b, is(greaterThanOrEqualTo(10)));
+        final int b = curve.getEdDSAFiniteField().getb();
+        assertThat(Integer.valueOf(b), is(greaterThanOrEqualTo(Integer.valueOf(10))));
         try {
             final MessageDigest h = MessageDigest.getInstance(ed25519.hashAlgo);
-            assertThat(8 * h.getDigestLength(), is(equalTo(2 * b)));
+            assertThat(Integer.valueOf(8 * h.getDigestLength()), is(equalTo(Integer.valueOf(2 * b))));
         } catch (final NoSuchAlgorithmException e) {
             fail(e.getMessage());
         }
@@ -54,14 +54,14 @@ public class ConstantsTest {
 
     /*@Test
     public void testq() {
-        FieldElement q = curve.getField().getQ();
+        FieldElement q = curve.getEdDSAFiniteField().getQ();
         assertThat(TWO.modPow(q.subtractOne(), q), is(equalTo(ONE)));
-        assertThat(q.mod(curve.getField().FOUR), is(equalTo(ONE)));
+        assertThat(q.mod(curve.getEdDSAFiniteField().FOUR), is(equalTo(ONE)));
     }
 
     @Test
     public void testl() {
-        int b = curve.getField().getb();
+        int b = curve.getEdDSAFiniteField().getb();
         BigInteger l = ed25519.getL();
         assertThat(TWO.modPow(l.subtract(BigInteger.ONE), l), is(equalTo(ONE)));
         assertThat(l, is(greaterThanOrEqualTo(BigInteger.valueOf(2).pow(b-4))));
@@ -70,21 +70,21 @@ public class ConstantsTest {
 
     @Test
     public void testd() {
-        FieldElement q = curve.getField().getQ();
+        FieldElement q = curve.getEdDSAFiniteField().getQ();
         FieldElement qm1 = q.subtractOne();
-        assertThat(curve.getD().modPow(qm1.divide(curve.getField().TWO), q), is(equalTo(qm1)));
+        assertThat(curve.getD().modPow(qm1.divide(curve.getEdDSAFiniteField().TWO), q), is(equalTo(qm1)));
     }
 
     @Test
     public void testI() {
-        FieldElement q = curve.getField().getQ();
-        assertThat(curve.getI().modPow(curve.getField().TWO, q), is(equalTo(q.subtractOne())));
+        FieldElement q = curve.getEdDSAFiniteField().getQ();
+        assertThat(curve.getI().modPow(curve.getEdDSAFiniteField().TWO, q), is(equalTo(q.subtractOne())));
     }*/
 
     @Test
     public void testB() {
         final GroupElement B = ed25519.groupElement;
-        assertThat(B.isOnCurve(curve), is(true));
-        //assertThat(B.scalarMultiply(new BigIntegerLittleEndianEncoding().encode(ed25519.getL(), curve.getField().getb()/8)), is(equalTo(P3_ZERO)));
+        assertThat(Boolean.valueOf(B.isOnCurve(curve)), is(Boolean.TRUE));
+        //assertThat(B.scalarMultiply(new BigIntegerLittleEndianEncoding().encode(ed25519.getL(), curve.getEdDSAFiniteField().getb()/8)), is(equalTo(P3_ZERO)));
     }
 }

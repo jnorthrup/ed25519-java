@@ -19,7 +19,6 @@ import net.i2p.crypto.eddsa.math.Curve;
 import net.i2p.crypto.eddsa.math.GroupElement;
 import net.i2p.crypto.eddsa.math.ScalarOps;
 
-import java.io.Serializable;
 import java.util.Objects;
 
 /**
@@ -46,7 +45,7 @@ public class EdDSAParameterSpec implements AlgorithmParameterSpec  {
         try {
             final MessageDigest hash = MessageDigest.getInstance(hashAlgo);
             // EdDSA hash function must produce 2b-bit output
-            assert curve.getField().getb() / 4 == hash.getDigestLength() : "Hash output is not 2b-bit";
+            assert curve.getEdDSAFiniteField().getb() / 4 == hash.getDigestLength() : "Hash output is not 2b-bit";
         } catch (final NoSuchAlgorithmException e) {
             throw new IllegalArgumentException("Unsupported hash algorithm");
         }

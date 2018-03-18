@@ -41,11 +41,11 @@ public final class KeyPairGenerator extends KeyPairGeneratorSpi {
     static {
         edParameters = new Hashtable<>();
 
-        edParameters.put(256, new EdDSAGenParameterSpec(EdDSANamedCurveTable.ED_25519));
+        edParameters.put(Integer.valueOf(256), new EdDSAGenParameterSpec(EdDSANamedCurveTable.ED_25519));
     }
 
     public void initialize(final int keysize, final SecureRandom random) {
-        final AlgorithmParameterSpec edParams = edParameters.get(keysize);
+        final AlgorithmParameterSpec edParams = edParameters.get(Integer.valueOf(keysize));
         Objects.requireNonNull(edParams);
         try {
             initialize(edParams, random);
@@ -71,7 +71,7 @@ public final class KeyPairGenerator extends KeyPairGeneratorSpi {
         if (!initialized)
             initialize(DEFAULT_KEYSIZE, new SecureRandom());
 
-        final byte[] seed = new byte[edParams.curve.getField().getb()/8];
+        final byte[] seed = new byte[edParams.curve.getEdDSAFiniteField().getb()/8];
         random.nextBytes(seed);
 
         final EdDSAPrivateKeySpec privKey = new EdDSAPrivateKeySpec(seed, edParams);

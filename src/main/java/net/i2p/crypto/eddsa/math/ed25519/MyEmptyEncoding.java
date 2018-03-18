@@ -4,7 +4,7 @@ import net.i2p.crypto.eddsa.math.EmptyEncoding;
 import net.i2p.crypto.eddsa.math.FieldElement;
 
 class MyEmptyEncoding extends EmptyEncoding {
-    private Ed25519LittleEndianEncoding ed25519LittleEndianEncoding;
+    private final Ed25519LittleEndianEncoding ed25519LittleEndianEncoding;
 
     public MyEmptyEncoding(Ed25519LittleEndianEncoding ed25519LittleEndianEncoding) {
         this.ed25519LittleEndianEncoding = ed25519LittleEndianEncoding;

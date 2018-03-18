@@ -44,7 +44,7 @@ public class Curve  {
         zeroPrecomp = GroupElement.precomp(this, one, one, zero);
     }
 
-    public EdDSAFiniteField getField() {
+    public EdDSAFiniteField getEdDSAFiniteField() {
         return edDSAFiniteField;
     }
 
@@ -94,7 +94,7 @@ public class Curve  {
         if (!(o instanceof Curve))
             return false;
         final Curve c = (Curve) o;
-        return edDSAFiniteField.equals(c.getField()) &&
+        return edDSAFiniteField.equals(c.getEdDSAFiniteField()) &&
                d.equals(c.getD()) &&
                I.equals(c.getI());
     }

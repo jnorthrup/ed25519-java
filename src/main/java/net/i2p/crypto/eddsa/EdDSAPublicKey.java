@@ -88,17 +88,20 @@ public class EdDSAPublicKey implements EdDSAKey, PublicKey {
             int totlen = 44;
             int idlen = 5;
             final int doid = d[OID_BYTE];
-            if (OID_OLD == doid) {
-                totlen = 47;
-                idlen = 8;
-            } else if (OID_ED25519 == doid) {
-                // Detect parameter value of NULL
-                if (7 == d[IDLEN_BYTE]) {
-                    totlen = 46;
-                    idlen = 7;
-                }
-            } else {
-                throw new InvalidKeySpecException("unsupported key spec");
+            switch (doid) {
+                case OID_OLD:
+                    totlen = 47;
+                    idlen = 8;
+                    break;
+                case OID_ED25519:
+                    // Detect parameter value of NULL
+                    if (7 == d[IDLEN_BYTE]) {
+                        totlen = 46;
+                        idlen = 7;
+                    }
+                    break;
+                default:
+                    throw new InvalidKeySpecException("unsupported key spec");
             }
 
             //
