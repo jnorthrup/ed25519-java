@@ -25,7 +25,7 @@ import java.util.Arrays;
  * <p>
  * Reviewed/commented by Bloody Rookie (nemproject@gmx.de)
  */
-public class Ed25519FieldElement extends FieldElement {
+public class Ed25519FieldElement extends BaseFieldElement {
     /**
      * Variable is package private for encoding.
      */
@@ -86,7 +86,7 @@ public class Ed25519FieldElement extends FieldElement {
         h[7] = t[7] + g[7];
         h[8] = t[8] + g[8];
         h[9] = t[9] + g[9];
-        return new Ed25519FieldElement(f, h);
+        return new Ed25519FieldElement(getEdDSAFiniteField(), h);
     }
 
     /**
@@ -122,7 +122,7 @@ public class Ed25519FieldElement extends FieldElement {
         h[7] = t[7] - g[7];
         h[8] = t[8] - g[8];
         h[9] = t[9] - g[9];
-        return new Ed25519FieldElement(f, h);
+        return new Ed25519FieldElement(getEdDSAFiniteField(), h);
     }
 
     /**
@@ -153,7 +153,7 @@ public class Ed25519FieldElement extends FieldElement {
         h[7] = -t[7];
         h[8] = -t[8];
         h[9] = -t[9];
-        return new Ed25519FieldElement(f, h);
+        return new Ed25519FieldElement(getEdDSAFiniteField(), h);
     }
 
     /**
@@ -404,7 +404,7 @@ public class Ed25519FieldElement extends FieldElement {
         h[7] = (int) h7;
         h[8] = (int) h8;
         h[9] = (int) h9;
-        return new Ed25519FieldElement(f, h);
+        return new Ed25519FieldElement(getEdDSAFiniteField(), h);
     }
 
     /**
@@ -560,7 +560,7 @@ public class Ed25519FieldElement extends FieldElement {
         h[7] = (int) h7;
         h[8] = (int) h8;
         h[9] = (int) h9;
-        return new Ed25519FieldElement(f, h);
+        return new Ed25519FieldElement(getEdDSAFiniteField(), h);
     }
 
     /**
@@ -722,7 +722,7 @@ public class Ed25519FieldElement extends FieldElement {
         h[7] = (int) h7;
         h[8] = (int) h8;
         h[9] = (int) h9;
-        return new Ed25519FieldElement(f, h);
+        return new Ed25519FieldElement(getEdDSAFiniteField(), h);
     }
 
     /**
@@ -975,13 +975,13 @@ public class Ed25519FieldElement extends FieldElement {
      * Logic is inspired by the SUPERCOP implementation at:
      *   https://github.com/floodyberry/supercop/blob/master/crypto_sign/ed25519/ref10/fe_cmov.c
      *
-     * @param val the other field element.
+     * @param fieldElement the other field element.
      * @param b must be 0 or 1, otherwise results are undefined.
      * @return a copy of this if $b == 0$, or a copy of val if $b == 1$.
      */
     @Override
-    public FieldElement cmov(final FieldElement val, int b) {
-        final Ed25519FieldElement that = (Ed25519FieldElement) val;
+    public FieldElement cmov(final FieldElement fieldElement, int b) {
+        final Ed25519FieldElement that = (Ed25519FieldElement) fieldElement;
         int b1 = -b;
         final int[] result = new int[10];
         for (int i = 0; 10 > i; i++) {
@@ -990,7 +990,7 @@ public class Ed25519FieldElement extends FieldElement {
             x &= b1;
             result[i] ^= x;
         }
-        return new Ed25519FieldElement(this.f, result);
+        return new Ed25519FieldElement(this.getEdDSAFiniteField(), result);
     }
 
     @Override

@@ -29,7 +29,7 @@ public class MathUtils {
     public static final int[] exponents = {0, 26, 26 + 25, 2 * 26 + 25, 2 * 26 + 2 * 25, 3 * 26 + 2 * 25, 3 * 26 + 3 * 25, 4 * 26 + 3 * 25, 4 * 26 + 4 * 25, 5 * 26 + 4 * 25};
     public static final SecureRandom random = new SecureRandom();
     private static final EdDSANamedCurveSpec ed25519 = EdDSANamedCurveTable.getByName(EdDSANamedCurveTable.ED_25519);
-    public static final BaseCurve curve = ed25519.curve;
+    public static final Curve curve = ed25519.curve;
     public static final BigInteger d = new BigInteger("-121665").multiply(new BigInteger("121666").modInverse(getQ()));
     public static final BigInteger groupOrder = BigInteger.ONE.shiftLeft(252).add(new BigInteger("27742317777372353535851937790883648493"));
 

@@ -20,9 +20,9 @@ package net.i2p.crypto.eddsa.math;
 public class BaseCurve implements Curve {
 
     private final EdDSAFiniteField   edDSAFiniteField;
-    private final FieldElement       d;
+    private final FieldElement d;
     private final FieldElement       d2;
-    private final FieldElement       I;
+    private final FieldElement I;
     private final GroupElement       zeroP2;
     private final GroupElement       zeroP3;
     private final GroupElement       zeroP3PrecomputedDouble;
@@ -74,9 +74,9 @@ public class BaseCurve implements Curve {
     public boolean equals(final Object o) {
         if (o == this)
             return true;
-        if (!(o instanceof BaseCurve))
+        if (!(o instanceof Curve))
             return false;
-        final BaseCurve c = (BaseCurve) o;
+        final Curve c = (Curve) o;
         return getEdDSAFiniteField().equals(c.getEdDSAFiniteField()) &&
                 getD().equals(c.getD()) &&
                 getI().equals(c.getI());

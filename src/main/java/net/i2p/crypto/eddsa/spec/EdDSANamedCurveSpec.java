@@ -11,7 +11,7 @@
  */
 package net.i2p.crypto.eddsa.spec;
 
-import net.i2p.crypto.eddsa.math.BaseCurve;
+import net.i2p.crypto.eddsa.math.Curve;
 import net.i2p.crypto.eddsa.math.GroupElement;
 import net.i2p.crypto.eddsa.math.ScalarOps;
 
@@ -23,7 +23,7 @@ import net.i2p.crypto.eddsa.math.ScalarOps;
 public class EdDSANamedCurveSpec extends EdDSAParameterSpec {
     private final String name;
 
-    public EdDSANamedCurveSpec(final String name, final BaseCurve curve,
+    public EdDSANamedCurveSpec(final String name, final Curve curve,
                                final String hashAlgo, final ScalarOps sc, final GroupElement B) {
         super(curve, hashAlgo, sc, B);
         this.name = name;

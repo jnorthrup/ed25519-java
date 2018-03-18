@@ -19,10 +19,7 @@ import java.security.SecureRandom;
 import java.util.Random;
 
 import net.i2p.crypto.eddsa.Utils;
-import net.i2p.crypto.eddsa.math.EdDSAFiniteField;
-import net.i2p.crypto.eddsa.math.FieldElement;
-import net.i2p.crypto.eddsa.math.MathUtils;
-import net.i2p.crypto.eddsa.math.AbstractEdDSAFiniteFieldElementTest;
+import net.i2p.crypto.eddsa.math.*;
 import org.junit.Test;
 
 /**
@@ -75,7 +72,7 @@ public class BigIntegerEdDSAFiniteFieldElementTest extends AbstractEdDSAFiniteFi
     }
 
     /**
-     * Test method for {@link FieldElement#toByteArray()}.
+     * Test method for {@link BaseFieldElement#toByteArray()}.
      */
     @Test
     public void testToByteArray() {
@@ -105,7 +102,7 @@ public class BigIntegerEdDSAFiniteFieldElementTest extends AbstractEdDSAFiniteFi
     // endregion
 
     /**
-     * Test method for {@link FieldElement#equals(java.lang.Object)}.
+     * Test method for {@link BaseFieldElement#equals(java.lang.Object)}.
      */
     @Test
     public void testEqualsObject() {

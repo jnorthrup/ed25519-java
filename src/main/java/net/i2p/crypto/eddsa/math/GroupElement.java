@@ -34,6 +34,61 @@ public class GroupElement  {
 
 
     /**
+     * Variable is package public only so that tests run.
+     */
+    public Representation getRepr() {
+        return repr;
+    }
+
+    /**
+     * Variable is package public only so that tests run.
+     */
+    public FieldElement getX() {
+        return X;
+    }
+
+    /**
+     * Variable is package public only so that tests run.
+     */
+    public FieldElement getY() {
+        return Y;
+    }
+
+    /**
+     * Variable is package public only so that tests run.
+     */
+    public FieldElement getZ() {
+        return Z;
+    }
+
+    /**
+     * Variable is package public only so that tests run.
+     */
+    public FieldElement getT() {
+        return T;
+    }
+
+    /**
+     * Precomputed table for {@link #scalarMultiply(byte[])},
+     * filled if necessary.
+     * <p>
+     * Variable is package public only so that tests run.
+     */
+    public GroupElement[][] getPrecmp() {
+        return precmp;
+    }
+
+    /**
+     * Precomputed table for {@link #doubleScalarMultiplyVariableTime(GroupElement, byte[], byte[])},
+     * filled if necessary.
+     * <p>
+     * Variable is package public only so that tests run.
+     */
+    public GroupElement[] getDblPrecmp() {
+        return dblPrecmp;
+    }
+
+    /**
      * Available representations for a group element.
      * <ul>
      * <li>P2: Projective representation $(X:Y:Z)$ satisfying $x=X/Z, y=Y/Z$.
@@ -69,7 +124,7 @@ public class GroupElement  {
      * @return The group element in P2 representation.
      */
     public static GroupElement p2(
-            final BaseCurve curve,
+            final Curve curve,
             final FieldElement X,
             final FieldElement Y,
             final FieldElement Z) {
@@ -88,10 +143,10 @@ public class GroupElement  {
      * @return The group element in P3 representation.
      */
     public static GroupElement p3(
-            final BaseCurve curve,
+            final  Curve curve,
             final FieldElement X,
-            final FieldElement Y,
-            final FieldElement Z,
+            final  FieldElement Y,
+            final  FieldElement Z,
             final FieldElement T,
             final boolean precomputeDoubleOnly) {
         return new GroupElement(curve, Representation.P3, X, Y, Z, T, precomputeDoubleOnly);
@@ -108,7 +163,7 @@ public class GroupElement  {
      * @return The group element in P1P1 representation.
      */
     public static GroupElement p1p1(
-            final BaseCurve curve,
+            final Curve curve,
             final FieldElement X,
             final FieldElement Y,
             final FieldElement Z,
@@ -126,7 +181,7 @@ public class GroupElement  {
      * @return The group element in PRECOMP representation.
      */
     public static GroupElement precomp(
-            final BaseCurve curve,
+            final Curve curve,
             final FieldElement ypx,
             final FieldElement ymx,
             final FieldElement xy2d) {
@@ -144,7 +199,7 @@ public class GroupElement  {
      * @return The group element in CACHED representation.
      */
     public static GroupElement cached(
-            final BaseCurve curve,
+            final Curve curve,
             final FieldElement YpX,
             final FieldElement YmX,
             final FieldElement Z,
@@ -152,56 +207,25 @@ public class GroupElement  {
         return new GroupElement(curve, Representation.CACHED, YpX, YmX, Z, T2d, false);
     }
 
-    /**
-     * Variable is package private only so that tests run.
-     */
-    final BaseCurve curve;
+    private final Curve curve;
 
-    /**
-     * Variable is package private only so that tests run.
-     */
-    final Representation repr;
+    private final Representation repr;
 
-    /**
-     * Variable is package private only so that tests run.
-     */
-    final FieldElement X;
+    private final FieldElement X;
 
-    /**
-     * Variable is package private only so that tests run.
-     */
-    final FieldElement Y;
+    private final FieldElement Y;
 
-    /**
-     * Variable is package private only so that tests run.
-     */
-    final FieldElement Z;
+    private final FieldElement Z;
 
-    /**
-     * Variable is package private only so that tests run.
-     */
-    final FieldElement T;
+    private final FieldElement T;
 
-    /**
-     * Precomputed table for {@link #scalarMultiply(byte[])},
-     * filled if necessary.
-     * <p>
-     * Variable is package private only so that tests run.
-     */
-    final GroupElement[][] precmp;
+    private final GroupElement[][] precmp;
 
-    /**
-     * Precomputed table for {@link #doubleScalarMultiplyVariableTime(GroupElement, byte[], byte[])},
-     * filled if necessary.
-     * <p>
-     * Variable is package private only so that tests run.
-     */
-    final GroupElement[] dblPrecmp;
+    private final GroupElement[] dblPrecmp;
 
     /**
      * Creates a group element for a curve.
-     *
-     * @param curve The curve.
+     *  @param curve The curve.
      * @param repr The representation used to represent the group element.
      * @param X The $X$ coordinate.
      * @param Y The $Y$ coordinate.
@@ -210,7 +234,7 @@ public class GroupElement  {
      * @param precomputeDouble If true, populate dblPrecmp, else set to null.
      */
     public GroupElement(
-            final BaseCurve curve,
+            final Curve curve,
             final Representation repr,
             final FieldElement X,
             final FieldElement Y,
@@ -243,7 +267,7 @@ public class GroupElement  {
      * @param curve The curve.
      * @param s The encoded point.
      */
-    public GroupElement(final BaseCurve curve, final byte[] s) {
+    public GroupElement(final Curve curve, final byte[] s) {
         this(curve, s, false);
     }
 
@@ -265,7 +289,7 @@ public class GroupElement  {
      * @param precomputeSingleAndDouble If true, populate both precmp and dblPrecmp, else set both to null.
      */
     // TODO
-    public GroupElement(final BaseCurve curve, final byte[] s, final boolean precomputeSingleAndDouble) {
+    public GroupElement(final Curve curve, final byte[] s, final boolean precomputeSingleAndDouble) {
         FieldElement x;
         final FieldElement y;
         final FieldElement yy;
@@ -313,7 +337,7 @@ public class GroupElement  {
         this.X = x;
         this.Y = y;
         this.Z = curve.getEdDSAFiniteField().ONE;
-        this.T = this.X.multiply(this.Y);
+        this.T = this.getX().multiply(this.getY());
         if(precomputeSingleAndDouble) {
             precmp = precomputeSingle();
             dblPrecmp = precomputeDouble();
@@ -324,11 +348,13 @@ public class GroupElement  {
     }
 
     /**
+     * Variable is package public only so that tests run.
+     */ /**
      * Gets the curve of the group element.
      *
      * @return The curve.
      */
-    public BaseCurve getCurve() {
+    public Curve getCurve() {
         return this.curve;
     }
 
@@ -338,47 +364,7 @@ public class GroupElement  {
      * @return The representation.
      */
     public Representation getRepresentation() {
-        return this.repr;
-    }
-
-    /**
-     * Gets the $X$ value of the group element.
-     * This is for most representation the projective $X$ coordinate.
-     *
-     * @return The $X$ value.
-     */
-    public FieldElement getX() {
-        return this.X;
-    }
-
-    /**
-     * Gets the $Y$ value of the group element.
-     * This is for most representation the projective $Y$ coordinate.
-     *
-     * @return The $Y$ value.
-     */
-    public FieldElement getY() {
-        return this.Y;
-    }
-
-    /**
-     * Gets the $Z$ value of the group element.
-     * This is for most representation the projective $Z$ coordinate.
-     *
-     * @return The $Z$ value.
-     */
-    public FieldElement getZ() {
-        return this.Z;
-    }
-
-    /**
-     * Gets the $T$ value of the group element.
-     * This is for most representation the projective $T$ coordinate.
-     *
-     * @return The $T$ value.
-     */
-    public FieldElement getT() {
-        return this.T;
+        return this.getRepr();
     }
 
     /**
@@ -387,12 +373,12 @@ public class GroupElement  {
      * @return The encoded point as byte array.
      */
     public byte[] toByteArray() {
-        switch (this.repr) {
+        switch (this.getRepr()) {
             case P2:
             case P3:
-                final FieldElement recip = Z.invert();
-                final FieldElement x = X.multiply(recip);
-                final FieldElement y = Y.multiply(recip);
+                final FieldElement recip = getZ().invert();
+                final FieldElement x = getX().multiply(recip);
+                final FieldElement y = getY().multiply(recip);
                 final byte[] s = y.toByteArray();
                 s[s.length-1] |= (x.isNegative() ? (byte) 0x80 : (byte) 0);
                 return s;
@@ -424,7 +410,7 @@ public class GroupElement  {
      *
      * @return The group element in the P3 representation.
      */
-    private GroupElement toP3PrecomputeDouble() {
+    public GroupElement toP3PrecomputeDouble() {
         return toRep(Representation.P3PrecomputedDouble);
     }
 
@@ -452,50 +438,50 @@ public class GroupElement  {
      * @param repr The representation to convert to.
      * @return A new group element in the given representation.
      */
-    private GroupElement toRep(final Representation repr) {
-        switch (this.repr) {
+    public GroupElement toRep(final Representation repr) {
+        switch (this.getRepr()) {
             case P2:
                 switch (repr) {
                     case P2:
-                        return p2(this.curve, this.X, this.Y, this.Z);
+                        return p2(this.getCurve(), this.getX(), this.getY(), this.getZ());
                     default:
                         throw new IllegalArgumentException();
                 }
             case P3:
                 switch (repr) {
                     case P2:
-                        return p2(this.curve, this.X, this.Y, this.Z);
+                        return p2(this.getCurve(), this.getX(), this.getY(), this.getZ());
                     case P3:
-                        return p3(this.curve, this.X, this.Y, this.Z, this.T, false);
+                        return p3(this.getCurve(), this.getX(), this.getY(), this.getZ(), this.getT(), false);
                     case CACHED:
-                        return cached(this.curve, this.Y.add(this.X), this.Y.subtract(this.X), this.Z, this.T.multiply(this.curve.getD2()));
+                        return cached(this.getCurve(), this.getY().add(this.getX()), this.getY().subtract(this.getX()), this.getZ(), this.getT().multiply(this.getCurve().getD2()));
                     default:
                         throw new IllegalArgumentException();
                 }
             case P1P1:
                 switch (repr) {
                     case P2:
-                        return p2(this.curve, this.X.multiply(this.T), Y.multiply(this.Z), this.Z.multiply(this.T));
+                        return p2(this.getCurve(), this.getX().multiply(this.getT()), getY().multiply(this.getZ()), this.getZ().multiply(this.getT()));
                     case P3:
-                        return p3(this.curve, this.X.multiply(this.T), Y.multiply(this.Z), this.Z.multiply(this.T), this.X.multiply(this.Y), false);
+                        return p3(this.getCurve(), this.getX().multiply(this.getT()), getY().multiply(this.getZ()), this.getZ().multiply(this.getT()), this.getX().multiply(this.getY()), false);
                     case P3PrecomputedDouble:
-                        return p3(this.curve, this.X.multiply(this.T), Y.multiply(this.Z), this.Z.multiply(this.T), this.X.multiply(this.Y), true);
+                        return p3(this.getCurve(), this.getX().multiply(this.getT()), getY().multiply(this.getZ()), this.getZ().multiply(this.getT()), this.getX().multiply(this.getY()), true);
                     case P1P1:
-                        return p1p1(this.curve, this.X, this.Y, this.Z, this.T);
+                        return p1p1(this.getCurve(), this.getX(), this.getY(), this.getZ(), this.getT());
                     default:
                         throw new IllegalArgumentException();
                 }
             case PRECOMP:
                 switch (repr) {
                     case PRECOMP:
-                        return precomp(this.curve, this.X, this.Y, this.Z);
+                        return precomp(this.getCurve(), this.getX(), this.getY(), this.getZ());
                     default:
                         throw new IllegalArgumentException();
                 }
             case CACHED:
                 switch (repr) {
                     case CACHED:
-                        return cached(this.curve, this.X, this.Y, this.Z, this.T);
+                        return cached(this.getCurve(), this.getX(), this.getY(), this.getZ(), this.getT());
                     default:
                         throw new IllegalArgumentException();
                 }
@@ -507,7 +493,7 @@ public class GroupElement  {
     /**
      * Precomputes table for {@link #scalarMultiply(byte[])}.
      */
-    private GroupElement[][] precomputeSingle() {
+    public GroupElement[][] precomputeSingle() {
         // Precomputation for single scalar multiplication.
         final GroupElement[][] precmp = new GroupElement[32][8];
         // TODO-CR BR: check that this == base point when the method is called.
@@ -515,10 +501,10 @@ public class GroupElement  {
         for (int i = 0; 32 > i; i++) {
             GroupElement Bij = Bi;
             for (int j = 0; 8 > j; j++) {
-                final FieldElement recip = Bij.Z.invert();
-                final FieldElement x = Bij.X.multiply(recip);
-                final FieldElement y = Bij.Y.multiply(recip);
-                precmp[i][j] = precomp(this.curve, y.add(x), y.subtract(x), x.multiply(y).multiply(this.curve.getD2()));
+                final FieldElement recip = Bij.getZ().invert();
+                final FieldElement x = Bij.getX().multiply(recip);
+                final FieldElement y = Bij.getY().multiply(recip);
+                precmp[i][j] = precomp(this.getCurve(), y.add(x), y.subtract(x), x.multiply(y).multiply(this.getCurve().getD2()));
                 Bij = Bij.add(Bi.toCached()).toP3();
             }
             // Only every second summand is precomputed (16^2 = 256)
@@ -532,16 +518,16 @@ public class GroupElement  {
     /**
      * Precomputes table for {@link #doubleScalarMultiplyVariableTime(GroupElement, byte[], byte[])}.
      */
-    private GroupElement[] precomputeDouble() {
+    public GroupElement[] precomputeDouble() {
         // Precomputation for double scalar multiplication.
         // P,3P,5P,7P,9P,11P,13P,15P
         final GroupElement[] dblPrecmp = new GroupElement[8];
         GroupElement Bi = this;
         for (int i = 0; 8 > i; i++) {
-            final FieldElement recip = Bi.Z.invert();
-            final FieldElement x = Bi.X.multiply(recip);
-            final FieldElement y = Bi.Y.multiply(recip);
-            dblPrecmp[i] = precomp(this.curve, y.add(x), y.subtract(x), x.multiply(y).multiply(this.curve.getD2()));
+            final FieldElement recip = Bi.getZ().invert();
+            final FieldElement x = Bi.getX().multiply(recip);
+            final FieldElement y = Bi.getY().multiply(recip);
+            dblPrecmp[i] = precomp(this.getCurve(), y.add(x), y.subtract(x), x.multiply(y).multiply(this.getCurve().getD2()));
             // Bi = edwards(B,edwards(B,Bi))
             Bi = this.add(this.add(Bi.toCached()).toP3().toCached()).toP3();
         }
@@ -582,7 +568,7 @@ public class GroupElement  {
      * @return The P1P1 representation
      */
     public GroupElement dbl() {
-        switch (this.repr) {
+        switch (this.getRepr()) {
         case P2:
         case P3: // Ignore T for P3 representation
             final FieldElement XX;
@@ -592,14 +578,14 @@ public class GroupElement  {
             final FieldElement AA;
             final FieldElement Yn;
             final FieldElement Zn;
-            XX = this.X.square();
-            YY = this.Y.square();
-            B = this.Z.squareAndDouble();
-            A = this.X.add(this.Y);
+            XX = this.getX().square();
+            YY = this.getY().square();
+            B = this.getZ().squareAndDouble();
+            A = this.getX().add(this.getY());
             AA = A.square();
             Yn = YY.add(XX);
             Zn = YY.subtract(XX);
-            return p1p1(this.curve, AA.subtract(Yn), Yn, Zn, B.subtract(Zn));
+            return p1p1(this.getCurve(), AA.subtract(Yn), Yn, Zn, B.subtract(Zn));
         default:
             throw new UnsupportedOperationException();
         }
@@ -650,9 +636,9 @@ public class GroupElement  {
      * @param q the PRECOMP representation of the GroupElement to add.
      * @return the P1P1 representation of the result.
      */
-    private GroupElement madd(final GroupElement q) {
-        assert Representation.P3 == this.repr;
-        assert Representation.PRECOMP == q.repr;
+    public GroupElement madd(final GroupElement q) {
+        assert Representation.P3 == this.getRepr();
+        assert Representation.PRECOMP == q.getRepr();
 
         final FieldElement YpX;
         final FieldElement YmX;
@@ -660,13 +646,13 @@ public class GroupElement  {
         final FieldElement B;
         final FieldElement C;
         final FieldElement D;
-        YpX = this.Y.add(this.X);
-        YmX = this.Y.subtract(this.X);
-        A = YpX.multiply(q.X); // q->y+x
-        B = YmX.multiply(q.Y); // q->y-x
-        C = q.Z.multiply(this.T); // q->2dxy
-        D = this.Z.add(this.Z);
-        return p1p1(this.curve, A.subtract(B), A.add(B), D.add(C), D.subtract(C));
+        YpX = this.getY().add(this.getX());
+        YmX = this.getY().subtract(this.getX());
+        A = YpX.multiply(q.getX()); // q->y+x
+        B = YmX.multiply(q.getY()); // q->y-x
+        C = q.getZ().multiply(this.getT()); // q->2dxy
+        D = this.getZ().add(this.getZ());
+        return p1p1(this.getCurve(), A.subtract(B), A.add(B), D.add(C), D.subtract(C));
     }
 
     /**
@@ -682,9 +668,9 @@ public class GroupElement  {
      * @param q the PRECOMP representation of the GroupElement to subtract.
      * @return the P1P1 representation of the result.
      */
-    private GroupElement msub(final GroupElement q) {
-        assert Representation.P3 == this.repr;
-        assert Representation.PRECOMP == q.repr;
+    public GroupElement msub(final GroupElement q) {
+        assert Representation.P3 == this.getRepr();
+        assert Representation.PRECOMP == q.getRepr();
 
         final FieldElement YpX;
         final FieldElement YmX;
@@ -692,13 +678,13 @@ public class GroupElement  {
         final FieldElement B;
         final FieldElement C;
         final FieldElement D;
-        YpX = this.Y.add(this.X);
-        YmX = this.Y.subtract(this.X);
-        A = YpX.multiply(q.Y); // q->y-x
-        B = YmX.multiply(q.X); // q->y+x
-        C = q.Z.multiply(this.T); // q->2dxy
-        D = this.Z.add(this.Z);
-        return p1p1(this.curve, A.subtract(B), A.add(B), D.subtract(C), D.add(C));
+        YpX = this.getY().add(this.getX());
+        YmX = this.getY().subtract(this.getX());
+        A = YpX.multiply(q.getY()); // q->y-x
+        B = YmX.multiply(q.getX()); // q->y+x
+        C = q.getZ().multiply(this.getT()); // q->2dxy
+        D = this.getZ().add(this.getZ());
+        return p1p1(this.getCurve(), A.subtract(B), A.add(B), D.subtract(C), D.add(C));
     }
 
     /**
@@ -728,8 +714,8 @@ public class GroupElement  {
      * @return the P1P1 representation of the result.
      */
     public GroupElement add(final GroupElement q) {
-        assert Representation.P3 == this.repr;
-        assert Representation.CACHED == q.repr;
+        assert Representation.P3 == this.getRepr();
+        assert Representation.CACHED == q.getRepr();
 
         final FieldElement YpX;
         final FieldElement YmX;
@@ -738,14 +724,14 @@ public class GroupElement  {
         final FieldElement C;
         final FieldElement ZZ;
         final FieldElement D;
-        YpX = this.Y.add(this.X);
-        YmX = this.Y.subtract(this.X);
-        A = YpX.multiply(q.X); // q->Y+X
-        B = YmX.multiply(q.Y); // q->Y-X
-        C = q.T.multiply(this.T); // q->2dT
-        ZZ = this.Z.multiply(q.Z);
+        YpX = this.getY().add(this.getX());
+        YmX = this.getY().subtract(this.getX());
+        A = YpX.multiply(q.getX()); // q->Y+X
+        B = YmX.multiply(q.getY()); // q->Y-X
+        C = q.getT().multiply(this.getT()); // q->2dT
+        ZZ = this.getZ().multiply(q.getZ());
         D = ZZ.add(ZZ);
-        return p1p1(this.curve, A.subtract(B), A.add(B), D.add(C), D.subtract(C));
+        return p1p1(this.getCurve(), A.subtract(B), A.add(B), D.add(C), D.subtract(C));
     }
 
     /**
@@ -761,8 +747,8 @@ public class GroupElement  {
      * @return the P1P1 representation of the result.
      */
     public GroupElement sub(final GroupElement q) {
-        assert Representation.P3 == this.repr;
-        assert Representation.CACHED == q.repr;
+        assert Representation.P3 == this.getRepr();
+        assert Representation.CACHED == q.getRepr();
 
         final FieldElement YpX;
         final FieldElement YmX;
@@ -771,14 +757,14 @@ public class GroupElement  {
         final FieldElement C;
         final FieldElement ZZ;
         final FieldElement D;
-        YpX = Y.add(X);
-        YmX = Y.subtract(X);
-        A = YpX.multiply(q.Y); // q->Y-X
-        B = YmX.multiply(q.X); // q->Y+X
-        C = q.T.multiply(T); // q->2dT
-        ZZ = Z.multiply(q.Z);
+        YpX = getY().add(getX());
+        YmX = getY().subtract(getX());
+        A = YpX.multiply(q.getY()); // q->Y-X
+        B = YmX.multiply(q.getX()); // q->Y+X
+        C = q.getT().multiply(getT()); // q->2dT
+        ZZ = getZ().multiply(q.getZ());
         D = ZZ.add(ZZ);
-        return p1p1(curve, A.subtract(B), A.add(B), D.subtract(C), D.add(C));
+        return p1p1(getCurve(), A.subtract(B), A.add(B), D.subtract(C), D.add(C));
     }
 
     /**
@@ -789,8 +775,8 @@ public class GroupElement  {
      * @return The negative of this group element.
      */
     public GroupElement negate() {
-        assert Representation.P3 == this.repr;
-        return this.curve.getZero(Representation.P3).sub(toCached()).toP3PrecomputeDouble();
+        assert Representation.P3 == this.getRepr();
+        return this.getCurve().getZero(Representation.P3).sub(toCached()).toP3PrecomputeDouble();
     }
 
     @Override
@@ -805,41 +791,41 @@ public class GroupElement  {
         if (!(obj instanceof GroupElement))
             return false;
         GroupElement ge = (GroupElement) obj;
-        if (this.repr != ge.repr) {
+        if (this.getRepr() != ge.getRepr()) {
             try {
-                ge = ge.toRep(this.repr);
+                ge = ge.toRep(this.getRepr());
             } catch (final RuntimeException e) {
                 return false;
             }
         }
-        switch (this.repr) {
+        switch (this.getRepr()) {
             case P2:
             case P3:
                 // Try easy way first
-                if (this.Z.equals(ge.Z))
-                    return this.X.equals(ge.X) && this.Y.equals(ge.Y);
+                if (this.getZ().equals(ge.getZ()))
+                    return this.getX().equals(ge.getX()) && this.getY().equals(ge.getY());
                 // X1/Z1 = X2/Z2 --> X1*Z2 = X2*Z1
-                final FieldElement x1 = this.X.multiply(ge.Z);
-                final FieldElement y1 = this.Y.multiply(ge.Z);
-                final FieldElement x2 = ge.X.multiply(this.Z);
-                final FieldElement y2 = ge.Y.multiply(this.Z);
+                final  FieldElement x1 = this.getX().multiply(ge.getZ());
+                final  FieldElement y1 = this.getY().multiply(ge.getZ());
+                final FieldElement x2 = ge.getX().multiply(this.getZ());
+                final FieldElement y2 = ge.getY().multiply(this.getZ());
                 return x1.equals(x2) && y1.equals(y2);
             case P1P1:
                 return toP2().equals(ge);
             case PRECOMP:
                 // Compare directly, PRECOMP is derived directly from x and y
-                return this.X.equals(ge.X) && this.Y.equals(ge.Y) && this.Z.equals(ge.Z);
+                return this.getX().equals(ge.getX()) && this.getY().equals(ge.getY()) && this.getZ().equals(ge.getZ());
             case CACHED:
                 // Try easy way first
-                if (this.Z.equals(ge.Z))
-                    return this.X.equals(ge.X) && this.Y.equals(ge.Y) && this.T.equals(ge.T);
+                if (this.getZ().equals(ge.getZ()))
+                    return this.getX().equals(ge.getX()) && this.getY().equals(ge.getY()) && this.getT().equals(ge.getT());
                 // (Y+X)/Z = y+x etc.
-                final FieldElement x3 = this.X.multiply(ge.Z);
-                final FieldElement y3 = this.Y.multiply(ge.Z);
-                final FieldElement t3 = this.T.multiply(ge.Z);
-                final FieldElement x4 = ge.X.multiply(this.Z);
-                final FieldElement y4 = ge.Y.multiply(this.Z);
-                final FieldElement t4 = ge.T.multiply(this.Z);
+                final  FieldElement x3 = this.getX().multiply(ge.getZ());
+                final  FieldElement y3 = this.getY().multiply(ge.getZ());
+                final  FieldElement t3 = this.getT().multiply(ge.getZ());
+                final FieldElement x4 = ge.getX().multiply(this.getZ());
+                final FieldElement y4 = ge.getY().multiply(this.getZ());
+                final FieldElement t4 = ge.getT().multiply(this.getZ());
                 return x3.equals(x4) && y3.equals(y4) && t3.equals(t4);
             default:
                 return false;
@@ -849,7 +835,7 @@ public class GroupElement  {
     /**
      * Convert a to radix 16.
      * <p>
-     * Method is package private only so that tests run.
+     * Method is package public only so that tests run.
      *
      * @param a $= a[0]+256*a[1]+...+256^{31} a[31]$
      * @return 64 bytes, each between -8 and 7
@@ -882,14 +868,14 @@ public class GroupElement  {
      * Replaces this with $u$ if $b == 1$.<br>
      * Replaces this with this if $b == 0$.
      * <p>
-     * Method is package private only so that tests run.
+     * Method is package public only so that tests run.
      *
      * @param u The group element to return if $b == 1$.
      * @param b in $\{0, 1\}$
      * @return $u$ if $b == 1$; this if $b == 0$. Results undefined if $b$ is not in $\{0, 1\}$.
      */
     GroupElement cmov(final GroupElement u, final int b) {
-        return precomp(curve, X.cmov(u.X, b), Y.cmov(u.Y, b), Z.cmov(u.Z, b));
+        return precomp(getCurve(), getX().cmov(u.getX(), b), getY().cmov(u.getY(), b), getZ().cmov(u.getZ(), b));
     }
 
     /**
@@ -900,7 +886,7 @@ public class GroupElement  {
      * <p>
      * Must have previously precomputed.
      * <p>
-     * Method is package private only so that tests run.
+     * Method is package public only so that tests run.
      *
      * @param pos $= i/2$ for $i$ in $\{0, 2, 4,..., 62\}$
      * @param b $= r_i$
@@ -913,17 +899,17 @@ public class GroupElement  {
         final int babs = b - (((-bnegative) & b) << 1);
 
         // 16^i |r_i| B
-        final GroupElement t = this.curve.getZero(Representation.PRECOMP)
-                .cmov(this.precmp[pos][0], Utils.equal(babs, 1))
-                .cmov(this.precmp[pos][1], Utils.equal(babs, 2))
-                .cmov(this.precmp[pos][2], Utils.equal(babs, 3))
-                .cmov(this.precmp[pos][3], Utils.equal(babs, 4))
-                .cmov(this.precmp[pos][4], Utils.equal(babs, 5))
-                .cmov(this.precmp[pos][5], Utils.equal(babs, 6))
-                .cmov(this.precmp[pos][6], Utils.equal(babs, 7))
-                .cmov(this.precmp[pos][7], Utils.equal(babs, 8));
+        final GroupElement t = this.getCurve().getZero(Representation.PRECOMP)
+                .cmov(this.getPrecmp()[pos][0], Utils.equal(babs, 1))
+                .cmov(this.getPrecmp()[pos][1], Utils.equal(babs, 2))
+                .cmov(this.getPrecmp()[pos][2], Utils.equal(babs, 3))
+                .cmov(this.getPrecmp()[pos][3], Utils.equal(babs, 4))
+                .cmov(this.getPrecmp()[pos][4], Utils.equal(babs, 5))
+                .cmov(this.getPrecmp()[pos][5], Utils.equal(babs, 6))
+                .cmov(this.getPrecmp()[pos][6], Utils.equal(babs, 7))
+                .cmov(this.getPrecmp()[pos][7], Utils.equal(babs, 8));
         // -16^i |r_i| B
-        final GroupElement tminus = precomp(curve, t.Y, t.X, t.Z.negate());
+        final GroupElement tminus = precomp(getCurve(), t.getY(), t.getX(), t.getZ().negate());
         // 16^i r_i B
         return t.cmov(tminus, bnegative);
     }
@@ -945,7 +931,7 @@ public class GroupElement  {
 
         final byte[] e = toRadix16(a);
 
-        GroupElement h = this.curve.getZero(Representation.P3);
+        GroupElement h = this.getCurve().getZero(Representation.P3);
         for (i = 1; 64 > i; i += 2) {
             t = select(i/2, e[i]);
             h = h.madd(t).toP3();
@@ -968,12 +954,12 @@ public class GroupElement  {
      * Output: $r$ which satisfies
      * $a = r0 * 2^0 + r1 * 2^1 + \dots + r255 * 2^{255}$ with $ri$ in $\{-15, -13, -11, -9, -7, -5, -3, -1, 0, 1, 3, 5, 7, 9, 11, 13, 15\}$
      * <p>
-     * Method is package private only so that tests run.
+     * Method is package public only so that tests run.
      *
      * @param a $= a[0]+256*a[1]+\dots+256^{31} a[31]$.
      * @return The byte array $r$ in the above described form.
      */
-    private static byte[] slide(final byte[] a) {
+    public static byte[] slide(final byte[] a) {
         final byte[] r = new byte[256];
 
         // Put each bit of 'a' into a separate byte, 0 or 1
@@ -1025,7 +1011,7 @@ public class GroupElement  {
         final byte[] aslide = slide(a);
         final byte[] bslide = slide(b);
 
-        GroupElement r = this.curve.getZero(Representation.P2);
+        GroupElement r = this.getCurve().getZero(Representation.P2);
 
         int i;
         i = 255;
@@ -1038,15 +1024,15 @@ public class GroupElement  {
             GroupElement t = r.dbl();
 
                 if (0 < aslide[i]) {
-                    t = t.toP3().madd(A.dblPrecmp[aslide[i]/2]);
+                    t = t.toP3().madd(A.getDblPrecmp()[aslide[i]/2]);
                 } else if(0 > aslide[i]) {
-                    t = t.toP3().msub(A.dblPrecmp[(-aslide[i])/2]);
+                    t = t.toP3().msub(A.getDblPrecmp()[(-aslide[i])/2]);
                 }
 
                 if (0 < bslide[i]) {
-                    t = t.toP3().madd(this.dblPrecmp[bslide[i]/2]);
+                    t = t.toP3().madd(this.getDblPrecmp()[bslide[i]/2]);
                 } else if(0 > bslide[i]) {
-                    t = t.toP3().msub(this.dblPrecmp[(-bslide[i])/2]);
+                    t = t.toP3().msub(this.getDblPrecmp()[(-bslide[i])/2]);
                 }
 
             r = t.toP2();
@@ -1061,7 +1047,7 @@ public class GroupElement  {
      * @return true if the point lies on its curve.
      */
     public boolean isOnCurve() {
-        return isOnCurve(curve);
+        return isOnCurve(getCurve());
     }
 
     /**
@@ -1069,13 +1055,13 @@ public class GroupElement  {
      * @param curve The curve to check.
      * @return true if the point lies on the curve.
      */
-    public boolean isOnCurve(final BaseCurve curve) {
-        switch (repr) {
+    public boolean isOnCurve(final Curve curve) {
+        switch (getRepr()) {
         case P2:
         case P3:
-            final FieldElement recip = Z.invert();
-            final FieldElement x = X.multiply(recip);
-            final FieldElement y = Y.multiply(recip);
+            final FieldElement recip = getZ().invert();
+            final FieldElement x = getX().multiply(recip);
+            final FieldElement y = getY().multiply(recip);
             final FieldElement xx = x.square();
             final FieldElement yy = y.square();
             final FieldElement dxxyy = curve.getD().multiply(xx).multiply(yy);
@@ -1088,6 +1074,6 @@ public class GroupElement  {
 
     @Override
     public String toString() {
-        return "[GroupElement\nX="+X+"\nY="+Y+"\nZ="+Z+"\nT="+T+"\n]";
+        return "[GroupElement\nX="+ getX() +"\nY="+ getY() +"\nZ="+ getZ() +"\nT="+ getT() +"\n]";
     }
 }

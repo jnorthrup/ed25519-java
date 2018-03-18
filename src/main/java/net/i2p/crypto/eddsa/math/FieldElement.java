@@ -1,74 +1,37 @@
-/**
- * EdDSA-Java by str4d
- *
- * To the extent possible under law, the person who associated CC0 with
- * EdDSA-Java has waived all copyright and related or neighboring rights
- * to EdDSA-Java.
- *
- * You should have received a copy of the CC0 legalcode along with this
- * work. If not, see <https://creativecommons.org/publicdomain/zero/1.0/>.
- *
- */
 package net.i2p.crypto.eddsa.math;
 
-import java.io.Serializable;
-import java.util.Objects;
-
-/**
- * Note: concrete subclasses must implement hashCode() and equals()
- */
-public abstract class FieldElement  {
-
-    protected final EdDSAFiniteField f;
-
-    protected FieldElement(final EdDSAFiniteField f) {
-        assert null != f : "field cannot be null";
-        this.f = f;
-    }
-
+public interface FieldElement {
     /**
      * Encode a FieldElement in its $(b-1)$-bit encoding.
      * @return the $(b-1)$-bit encoding of this FieldElement.
      */
-    public byte[] toByteArray() {
-        return f.getEncoding().encode(this);
-    }
+    byte[] toByteArray();
 
-    public abstract boolean isNonZero();
+    boolean isNonZero();
 
-    public boolean isNegative() {
-        return f.getEncoding().isNegative(this);
-    }
+    boolean isNegative();
 
-    public abstract FieldElement add(FieldElement val);
+    FieldElement add(FieldElement val);
 
-    public FieldElement addOne() {
-        return add(f.ONE);
-    }
+    FieldElement addOne();
 
-    public abstract FieldElement subtract(FieldElement val);
+    FieldElement subtract(FieldElement val);
 
-    public FieldElement subtractOne() {
-        return subtract(f.ONE);
-    }
+    FieldElement subtractOne();
 
-    public abstract FieldElement negate();
+    FieldElement negate();
 
-    public FieldElement divide(final FieldElement val) {
-        return multiply(val.invert());
-    }
+    FieldElement divide(FieldElement val);
 
-    public abstract FieldElement multiply(FieldElement val);
+    FieldElement multiply(FieldElement val);
 
-    public abstract FieldElement square();
+    FieldElement square();
 
-    public abstract FieldElement squareAndDouble();
+    FieldElement squareAndDouble();
 
-    public abstract FieldElement invert();
+    FieldElement invert();
 
-    public abstract FieldElement pow22523();
+    FieldElement pow22523();
 
-    public abstract FieldElement cmov(FieldElement val, final int b);
-
-    // Note: concrete subclasses must implement hashCode() and equals()
+    FieldElement cmov(FieldElement fieldElement, int b);
 }

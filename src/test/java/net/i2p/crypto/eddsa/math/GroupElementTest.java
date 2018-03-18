@@ -36,7 +36,7 @@ public class GroupElementTest {
     private static final byte[] BYTES_ONETEN = Utils.hexToBytes("0a00000000000000000000000000000000000000000000000000000000000080");
 
     private static final EdDSANamedCurveSpec ed25519 = EdDSANamedCurveTable.getByName(EdDSANamedCurveTable.ED_25519);
-    private static final BaseCurve curve = ed25519.curve;
+    private static final Curve curve = ed25519.curve;
 
     private static final FieldElement ZERO = curve.getEdDSAFiniteField().ZERO;
     private static final FieldElement ONE = curve.getEdDSAFiniteField().ONE;
@@ -125,12 +125,12 @@ public class GroupElementTest {
     @Test
     public void testP2() {
         final GroupElement t = GroupElement.p2(curve, ZERO, ONE, ONE);
-        assertThat(t.curve, is(equalTo(curve)));
-        assertThat(t.repr, is(GroupElement.Representation.P2));
-        assertThat(t.X, is(ZERO));
-        assertThat(t.Y, is(ONE));
-        assertThat(t.Z, is(ONE));
-        assertThat(t.T, is((FieldElement) null));
+        assertThat(t.getCurve(), is(equalTo(curve)));
+        assertThat(t.getRepr(), is(GroupElement.Representation.P2));
+        assertThat(t.getX(), is(ZERO));
+        assertThat(t.getY(), is(ONE));
+        assertThat(t.getZ(), is(ONE));
+        assertThat(t.getT(), is((FieldElement) null));
     }
 
     /**
@@ -139,12 +139,12 @@ public class GroupElementTest {
     @Test
     public void testP3() {
         final GroupElement t = GroupElement.p3(curve, ZERO, ONE, ONE, ZERO, false);
-        assertThat(t.curve, is(equalTo(curve)));
-        assertThat(t.repr, is(GroupElement.Representation.P3));
-        assertThat(t.X, is(ZERO));
-        assertThat(t.Y, is(ONE));
-        assertThat(t.Z, is(ONE));
-        assertThat(t.T, is(ZERO));
+        assertThat(t.getCurve(), is(equalTo(curve)));
+        assertThat(t.getRepr(), is(GroupElement.Representation.P3));
+        assertThat(t.getX(), is(ZERO));
+        assertThat(t.getY(), is(ONE));
+        assertThat(t.getZ(), is(ONE));
+        assertThat(t.getT(), is(ZERO));
     }
 
     /**
@@ -153,12 +153,12 @@ public class GroupElementTest {
     @Test
     public void testP1p1() {
         final GroupElement t = GroupElement.p1p1(curve, ZERO, ONE, ONE, ONE);
-        assertThat(t.curve, is(equalTo(curve)));
-        assertThat(t.repr, is(GroupElement.Representation.P1P1));
-        assertThat(t.X, is(ZERO));
-        assertThat(t.Y, is(ONE));
-        assertThat(t.Z, is(ONE));
-        assertThat(t.T, is(ONE));
+        assertThat(t.getCurve(), is(equalTo(curve)));
+        assertThat(t.getRepr(), is(GroupElement.Representation.P1P1));
+        assertThat(t.getX(), is(ZERO));
+        assertThat(t.getY(), is(ONE));
+        assertThat(t.getZ(), is(ONE));
+        assertThat(t.getT(), is(ONE));
     }
 
     /**
@@ -167,12 +167,12 @@ public class GroupElementTest {
     @Test
     public void testPrecomp() {
         final GroupElement t = GroupElement.precomp(curve, ONE, ONE, ZERO);
-        assertThat(t.curve, is(equalTo(curve)));
-        assertThat(t.repr, is(GroupElement.Representation.PRECOMP));
-        assertThat(t.X, is(ONE));
-        assertThat(t.Y, is(ONE));
-        assertThat(t.Z, is(ZERO));
-        assertThat(t.T, is((FieldElement) null));
+        assertThat(t.getCurve(), is(equalTo(curve)));
+        assertThat(t.getRepr(), is(GroupElement.Representation.PRECOMP));
+        assertThat(t.getX(), is(ONE));
+        assertThat(t.getY(), is(ONE));
+        assertThat(t.getZ(), is(ZERO));
+        assertThat(t.getT(), is((FieldElement) null));
     }
 
     /**
@@ -181,12 +181,12 @@ public class GroupElementTest {
     @Test
     public void testCached() {
         final GroupElement t = GroupElement.cached(curve, ONE, ONE, ONE, ZERO);
-        assertThat(t.curve, is(equalTo(curve)));
-        assertThat(t.repr, is(GroupElement.Representation.CACHED));
-        assertThat(t.X, is(ONE));
-        assertThat(t.Y, is(ONE));
-        assertThat(t.Z, is(ONE));
-        assertThat(t.T, is(ZERO));
+        assertThat(t.getCurve(), is(equalTo(curve)));
+        assertThat(t.getRepr(), is(GroupElement.Representation.CACHED));
+        assertThat(t.getX(), is(ONE));
+        assertThat(t.getY(), is(ONE));
+        assertThat(t.getZ(), is(ONE));
+        assertThat(t.getT(), is(ZERO));
     }
 
     /**
@@ -195,12 +195,12 @@ public class GroupElementTest {
     @Test
     public void testGroupElementCurveRepresentationFieldElementFieldElementFieldElementFieldElement() {
         final GroupElement t = new GroupElement(curve, GroupElement.Representation.P3, ZERO, ONE, ONE, ZERO, false);
-        assertThat(t.curve, is(equalTo(curve)));
-        assertThat(t.repr, is(GroupElement.Representation.P3));
-        assertThat(t.X, is(ZERO));
-        assertThat(t.Y, is(ONE));
-        assertThat(t.Z, is(ONE));
-        assertThat(t.T, is(ZERO));
+        assertThat(t.getCurve(), is(equalTo(curve)));
+        assertThat(t.getRepr(), is(GroupElement.Representation.P3));
+        assertThat(t.getX(), is(ZERO));
+        assertThat(t.getY(), is(ONE));
+        assertThat(t.getZ(), is(ONE));
+        assertThat(t.getT(), is(ZERO));
     }
 
     /**
@@ -299,19 +299,19 @@ public class GroupElementTest {
     public void testToP2() {
         final GroupElement p3zero = curve.getZero(GroupElement.Representation.P3);
         final GroupElement t = p3zero.toP2();
-        assertThat(t.repr, is(GroupElement.Representation.P2));
-        assertThat(t.X, is(p3zero.X));
-        assertThat(t.Y, is(p3zero.Y));
-        assertThat(t.Z, is(p3zero.Z));
-        assertThat(t.T, is((FieldElement) null));
+        assertThat(t.getRepr(), is(GroupElement.Representation.P2));
+        assertThat(t.getX(), is(p3zero.getX()));
+        assertThat(t.getY(), is(p3zero.getY()));
+        assertThat(t.getZ(), is(p3zero.getZ()));
+        assertThat(t.getT(), is((FieldElement) null));
 
         final GroupElement B = ed25519.groupElement;
         final GroupElement t2 = B.toP2();
-        assertThat(t2.repr, is(GroupElement.Representation.P2));
-        assertThat(t2.X, is(B.X));
-        assertThat(t2.Y, is(B.Y));
-        assertThat(t2.Z, is(B.Z));
-        assertThat(t2.T, is((FieldElement) null));
+        assertThat(t2.getRepr(), is(GroupElement.Representation.P2));
+        assertThat(t2.getX(), is(B.getX()));
+        assertThat(t2.getY(), is(B.getY()));
+        assertThat(t2.getZ(), is(B.getZ()));
+        assertThat(t2.getT(), is((FieldElement) null));
     }
 
     @Test (expected = IllegalArgumentException.class)
@@ -534,8 +534,8 @@ public class GroupElementTest {
     @Test
     public void testPrecompute() {
         final GroupElement B = ed25519.groupElement;
-        assertThat(B.precmp, is(equalTo(PrecomputationTestVectors.testPrecmp)));
-        assertThat(B.dblPrecmp, is(equalTo(PrecomputationTestVectors.testDblPrecmp)));
+        assertThat(B.getPrecmp(), is(equalTo(PrecomputationTestVectors.testPrecmp)));
+        assertThat(B.getDblPrecmp(), is(equalTo(PrecomputationTestVectors.testDblPrecmp)));
     }
 
     @Test
@@ -547,7 +547,7 @@ public class GroupElementTest {
         for (int i = 0; 32 > i; i++) {
             GroupElement h = g;
             for (int j = 0; 8 > j; j++) {
-                assertThat(MathUtils.toRepresentation(h, GroupElement.Representation.PRECOMP), IsEqual.equalTo(ed25519.groupElement.precmp[i][j]));
+                assertThat(MathUtils.toRepresentation(h, GroupElement.Representation.PRECOMP), IsEqual.equalTo(ed25519.groupElement.getPrecmp()[i][j]));
                 h = MathUtils.addGroupElements(h, g);
             }
             for (int k = 0; 8 > k; k++) {
@@ -564,7 +564,7 @@ public class GroupElementTest {
 
         // Act + Assert:
         for (int i = 0; 8 > i; i++) {
-            assertThat(MathUtils.toRepresentation(g, GroupElement.Representation.PRECOMP), IsEqual.equalTo(ed25519.groupElement.dblPrecmp[i]));
+            assertThat(MathUtils.toRepresentation(g, GroupElement.Representation.PRECOMP), IsEqual.equalTo(ed25519.groupElement.getDblPrecmp()[i]));
             g = MathUtils.addGroupElements(g, h);
         }
     }
@@ -750,13 +750,13 @@ public class GroupElementTest {
                 // 16^i r_i B
                 GroupElement t = B.select(i, j);
                 assertThat(i + "," + j,
-                        t, is(equalTo(B.precmp[i][j-1])));
+                        t, is(equalTo(B.getPrecmp()[i][j-1])));
                 // -16^i r_i B
                 final GroupElement t3 = B.select(i, -j);
                 final GroupElement neg = GroupElement.precomp(curve,
-                        B.precmp[i][j-1].Y,
-                        B.precmp[i][j-1].X,
-                        B.precmp[i][j-1].Z.negate());
+                        B.getPrecmp()[i][j - 1].getY(),
+                        B.getPrecmp()[i][j - 1].getX(),
+                        B.getPrecmp()[i][j - 1].getZ().negate());
                 assertThat(i + "," + -j,
                         t3, is(equalTo(neg)));
             }
