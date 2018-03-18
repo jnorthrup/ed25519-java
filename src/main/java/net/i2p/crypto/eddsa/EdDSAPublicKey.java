@@ -40,10 +40,10 @@ import java.util.Arrays;
 public class EdDSAPublicKey implements EdDSAKey, PublicKey {
 
     // OID 1.3.101.xxx
-    public static final int OID_OLD = 100;
-    public static final int OID_ED25519 = 112;
-    public static final int OID_BYTE = 8;
-    public static final int IDLEN_BYTE = 3;
+    private static final int OID_OLD = 100;
+    private static final int OID_ED25519 = 112;
+    private static final int OID_BYTE = 8;
+    private static final int IDLEN_BYTE = 3;
     public final GroupElement A;
     public final GroupElement aNeg;
     public final byte[] abyte;
@@ -80,7 +80,7 @@ public class EdDSAPublicKey implements EdDSAKey, PublicKey {
      *
      * @return 32 bytes for Ed25519, throws for other curves
      */
-    public static byte[] decode(final byte[] d) throws InvalidKeySpecException {
+    private static byte[] decode(final byte[] d) throws InvalidKeySpecException {
         try {
             //
             // Setup and OID check

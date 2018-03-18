@@ -44,14 +44,14 @@ public class EdDSAPrivateKey implements EdDSAKey, PrivateKey {
     public final byte[] hashOfTheSeed;
     public final byte[] privateKey;
     public final GroupElement groupElement;
-    public final byte[] aByte;
-    public final EdDSAParameterSpec edDSAParameterSpec;
+    private final byte[] aByte;
+    private final EdDSAParameterSpec edDSAParameterSpec;
 
     // OID 1.3.101.xxx
-    public static final int OID_OLD = 100;
-    public static final int OID_ED25519 = 112;
-    public static final int OID_BYTE = 11;
-    public static final int IDLEN_BYTE = 6;
+    private static final int OID_OLD = 100;
+    private static final int OID_ED25519 = 112;
+    private static final int OID_BYTE = 11;
+    private static final int IDLEN_BYTE = 6;
 
     public EdDSAPrivateKey(final EdDSAPrivateKeySpec spec) {
         seed = spec.seed;
@@ -193,7 +193,7 @@ public class EdDSAPrivateKey implements EdDSAKey, PrivateKey {
      *
      * @return 32 bytes for Ed25519, throws for other curves
      */
-    public static byte[] decode(final byte[] d) throws InvalidKeySpecException {
+    private static byte[] decode(final byte[] d) throws InvalidKeySpecException {
         try {
             //
             // Setup and OID check

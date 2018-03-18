@@ -21,9 +21,9 @@ import java.security.Security;
  *
  * @author str4d
  */
-public class EdDSASecurityProvider extends Provider {
+class EdDSASecurityProvider extends Provider {
 
-    public static final String PROVIDER_NAME = "EdDSA";
+    private static final String PROVIDER_NAME = "EdDSA";
 
     public EdDSASecurityProvider() {
         super(PROVIDER_NAME, 0.2 /* should match POM major.minor version */, "str4d " + PROVIDER_NAME + " security provider wrapper");
@@ -37,7 +37,7 @@ public class EdDSASecurityProvider extends Provider {
         });
     }
 
-    protected void setup() {
+    private void setup() {
         // See https://docs.oracle.com/javase/8/docs/technotes/guides/security/crypto/HowToImplAProvider.html
         put("KeyFactory." + EdDSAKey.KEY_ALGORITHM, "net.i2p.crypto.eddsa.KeyFactory");
         put("KeyPairGenerator." + EdDSAKey.KEY_ALGORITHM, "net.i2p.crypto.eddsa.KeyPairGenerator");

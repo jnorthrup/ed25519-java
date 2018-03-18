@@ -21,7 +21,7 @@ public abstract class FieldElement  {
 
     protected final EdDSAFiniteField f;
 
-    public FieldElement(final EdDSAFiniteField f) {
+    protected FieldElement(final EdDSAFiniteField f) {
         assert null != f : "field cannot be null";
         this.f = f;
     }

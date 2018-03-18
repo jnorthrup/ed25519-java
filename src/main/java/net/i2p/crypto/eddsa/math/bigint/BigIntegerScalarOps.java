@@ -17,8 +17,8 @@ import net.i2p.crypto.eddsa.math.EdDSAFiniteField;
 import net.i2p.crypto.eddsa.math.ScalarOps;
 
 public class BigIntegerScalarOps implements ScalarOps {
-    public final BigInteger l;
-    public final BigIntegerLittleEndianEncoding enc;
+    private final BigInteger l;
+    private final BigIntegerLittleEndianEncoding enc;
 
     public BigIntegerScalarOps(final EdDSAFiniteField f, final BigInteger l) {
         this.l = l;

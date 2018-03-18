@@ -30,18 +30,18 @@ import org.junit.Test;
  *
  */
 public class BigIntegerEdDSAFiniteFieldElementTest extends AbstractEdDSAFiniteFieldElementTest {
-    static final byte[] BYTES_ZERO = Utils.hexToBytes("0000000000000000000000000000000000000000000000000000000000000000");
-    static final byte[] BYTES_ONE = Utils.hexToBytes("0100000000000000000000000000000000000000000000000000000000000000");
-    static final byte[] BYTES_TEN = Utils.hexToBytes("0a00000000000000000000000000000000000000000000000000000000000000");
+    private static final byte[] BYTES_ZERO = Utils.hexToBytes("0000000000000000000000000000000000000000000000000000000000000000");
+    private static final byte[] BYTES_ONE = Utils.hexToBytes("0100000000000000000000000000000000000000000000000000000000000000");
+    private static final byte[] BYTES_TEN = Utils.hexToBytes("0a00000000000000000000000000000000000000000000000000000000000000");
 
-    static final EdDSAFiniteField ED_25519_ED_DSA_FINITE_FIELD = new EdDSAFiniteField(
+    private static final EdDSAFiniteField ED_25519_ED_DSA_FINITE_FIELD = new EdDSAFiniteField(
             256, // b
             Utils.hexToBytes("edffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff7f"), // q
             new BigIntegerLittleEndianEncoding().getEmptyEncoding());
 
-    static final FieldElement ZERO = new BigIntegerFieldElement(ED_25519_ED_DSA_FINITE_FIELD, BigInteger.ZERO);
-    static final FieldElement ONE = new BigIntegerFieldElement(ED_25519_ED_DSA_FINITE_FIELD, BigInteger.ONE);
-    static final FieldElement TWO = new BigIntegerFieldElement(ED_25519_ED_DSA_FINITE_FIELD, BigInteger.valueOf(2L));
+    private static final FieldElement ZERO = new BigIntegerFieldElement(ED_25519_ED_DSA_FINITE_FIELD, BigInteger.ZERO);
+    private static final FieldElement ONE = new BigIntegerFieldElement(ED_25519_ED_DSA_FINITE_FIELD, BigInteger.ONE);
+    private static final FieldElement TWO = new BigIntegerFieldElement(ED_25519_ED_DSA_FINITE_FIELD, BigInteger.valueOf(2L));
 
     protected FieldElement getRandomFieldElement() {
         BigInteger r;

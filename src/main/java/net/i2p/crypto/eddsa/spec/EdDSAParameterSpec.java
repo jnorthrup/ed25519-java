@@ -40,8 +40,8 @@ public class EdDSAParameterSpec implements AlgorithmParameterSpec  {
      * @param groupElement the parameter B
      * @throws IllegalArgumentException if hash algorithm is unsupported or length is wrong
      */
-    public EdDSAParameterSpec(final Curve curve, final String hashAlgo,
-                              final ScalarOps scalarOps, final GroupElement groupElement) {
+    EdDSAParameterSpec(final Curve curve, final String hashAlgo,
+                       final ScalarOps scalarOps, final GroupElement groupElement) {
         try {
             final MessageDigest hash = MessageDigest.getInstance(hashAlgo);
             // EdDSA hash function must produce 2b-bit output

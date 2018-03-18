@@ -43,7 +43,7 @@ public class Ed25519FieldElement extends FieldElement {
         this.t = t.clone();
     }
 
-    public static final byte[] ZERO = new byte[32];
+    private static final byte[] ZERO = new byte[32];
 
     /**
      * Gets a value indicating whether or not the field element is non-zero.

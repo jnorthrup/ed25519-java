@@ -424,7 +424,7 @@ public class GroupElement  {
      *
      * @return The group element in the P3 representation.
      */
-    public GroupElement toP3PrecomputeDouble() {
+    private GroupElement toP3PrecomputeDouble() {
         return toRep(Representation.P3PrecomputedDouble);
     }
 
@@ -452,7 +452,7 @@ public class GroupElement  {
      * @param repr The representation to convert to.
      * @return A new group element in the given representation.
      */
-    public GroupElement toRep(final Representation repr) {
+    private GroupElement toRep(final Representation repr) {
         switch (this.repr) {
             case P2:
                 switch (repr) {
@@ -507,7 +507,7 @@ public class GroupElement  {
     /**
      * Precomputes table for {@link #scalarMultiply(byte[])}.
      */
-    public GroupElement[][] precomputeSingle() {
+    private GroupElement[][] precomputeSingle() {
         // Precomputation for single scalar multiplication.
         final GroupElement[][] precmp = new GroupElement[32][8];
         // TODO-CR BR: check that this == base point when the method is called.
@@ -532,7 +532,7 @@ public class GroupElement  {
     /**
      * Precomputes table for {@link #doubleScalarMultiplyVariableTime(GroupElement, byte[], byte[])}.
      */
-    public GroupElement[] precomputeDouble() {
+    private GroupElement[] precomputeDouble() {
         // Precomputation for double scalar multiplication.
         // P,3P,5P,7P,9P,11P,13P,15P
         final GroupElement[] dblPrecmp = new GroupElement[8];
@@ -650,7 +650,7 @@ public class GroupElement  {
      * @param q the PRECOMP representation of the GroupElement to add.
      * @return the P1P1 representation of the result.
      */
-    public GroupElement madd(final GroupElement q) {
+    private GroupElement madd(final GroupElement q) {
         assert Representation.P3 == this.repr;
         assert Representation.PRECOMP == q.repr;
 
@@ -682,7 +682,7 @@ public class GroupElement  {
      * @param q the PRECOMP representation of the GroupElement to subtract.
      * @return the P1P1 representation of the result.
      */
-    public GroupElement msub(final GroupElement q) {
+    private GroupElement msub(final GroupElement q) {
         assert Representation.P3 == this.repr;
         assert Representation.PRECOMP == q.repr;
 
@@ -973,7 +973,7 @@ public class GroupElement  {
      * @param a $= a[0]+256*a[1]+\dots+256^{31} a[31]$.
      * @return The byte array $r$ in the above described form.
      */
-    static byte[] slide(final byte[] a) {
+    private static byte[] slide(final byte[] a) {
         final byte[] r = new byte[256];
 
         // Put each bit of 'a' into a separate byte, 0 or 1

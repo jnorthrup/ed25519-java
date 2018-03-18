@@ -65,7 +65,7 @@ public class BigIntegerFieldElement extends FieldElement  {
         return divide(((BigIntegerFieldElement)val).bi);
     }
 
-    public FieldElement divide(final BigInteger val) {
+    private FieldElement divide(final BigInteger val) {
         return new BigIntegerFieldElement(f, bi.divide(val)).mod(f.getQ());
     }
 
@@ -88,15 +88,15 @@ public class BigIntegerFieldElement extends FieldElement  {
         return new BigIntegerFieldElement(f, bi.modInverse(((BigIntegerFieldElement)f.getQ()).bi));
     }
 
-    public FieldElement mod(final FieldElement m) {
+    private FieldElement mod(final FieldElement m) {
         return new BigIntegerFieldElement(f, bi.mod(((BigIntegerFieldElement)m).bi));
     }
 
-    public FieldElement modPow(final FieldElement e, final FieldElement m) {
+    private FieldElement modPow(final FieldElement e, final FieldElement m) {
         return new BigIntegerFieldElement(f, bi.modPow(((BigIntegerFieldElement)e).bi, ((BigIntegerFieldElement)m).bi));
     }
 
-    public FieldElement pow(final FieldElement e){
+    private FieldElement pow(final FieldElement e){
         return modPow(e, f.getQ());
     }
 

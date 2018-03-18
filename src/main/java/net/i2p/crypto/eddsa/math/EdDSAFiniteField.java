@@ -22,21 +22,21 @@ public class EdDSAFiniteField  {
     public final FieldElement ZERO;
     public final FieldElement ONE;
     public final FieldElement TWO;
-    public final FieldElement FOUR;
-    public final FieldElement FIVE;
-    public final FieldElement EIGHT;
+    private final FieldElement FOUR;
+    private final FieldElement FIVE;
+    private final FieldElement EIGHT;
 
-    public final int b;
-    public final FieldElement q;
+    private final int b;
+    private final FieldElement q;
     /**
      * q-2
      */
-    public final FieldElement qm2;
+    private final FieldElement qm2;
     /**
      * (q-5) / 8
      */
-    public final FieldElement qm5d8;
-    public final EmptyEncoding enc;
+    private final FieldElement qm5d8;
+    private final EmptyEncoding enc;
 
     public EdDSAFiniteField(final int b, final byte[] q, final EmptyEncoding enc) {
         this.b = b;

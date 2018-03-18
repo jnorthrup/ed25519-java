@@ -30,8 +30,8 @@ import org.junit.Test;
  */
 public class BigIntegerScalarOpsTest {
 
-    static final EdDSANamedCurveSpec ed25519 = EdDSANamedCurveTable.getByName(EdDSANamedCurveTable.ED_25519);
-    static final EdDSAFiniteField ED_25519_ED_DSA_FINITE_FIELD = ed25519.curve.getEdDSAFiniteField();
+    private static final EdDSANamedCurveSpec ed25519 = EdDSANamedCurveTable.getByName(EdDSANamedCurveTable.ED_25519);
+    private static final EdDSAFiniteField ED_25519_ED_DSA_FINITE_FIELD = ed25519.curve.getEdDSAFiniteField();
 
     /**
      * Test method for {@link net.i2p.crypto.eddsa.math.bigint.BigIntegerScalarOps#reduce(byte[])}.

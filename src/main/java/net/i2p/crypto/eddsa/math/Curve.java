@@ -20,15 +20,15 @@ package net.i2p.crypto.eddsa.math;
 @SuppressWarnings("ThisEscapedInObjectConstruction")
 public class Curve  {
 
-    public final EdDSAFiniteField edDSAFiniteField;
-    public final FieldElement d;
-    public final FieldElement d2;
-    public final FieldElement I;
+    private final EdDSAFiniteField edDSAFiniteField;
+    private final FieldElement d;
+    private final FieldElement d2;
+    private final FieldElement I;
 
-    public final GroupElement zeroP2;
-    public final GroupElement zeroP3;
-    public final GroupElement zeroP3PrecomputedDouble;
-    public final GroupElement zeroPrecomp;
+    private final GroupElement zeroP2;
+    private final GroupElement zeroP3;
+    private final GroupElement zeroP3PrecomputedDouble;
+    private final GroupElement zeroPrecomp;
 
     public Curve(final EdDSAFiniteField edDSAFiniteField, final byte[] d, final FieldElement I) {
         this.edDSAFiniteField = edDSAFiniteField;

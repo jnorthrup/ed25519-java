@@ -20,13 +20,13 @@ import net.i2p.crypto.eddsa.Utils;
 import net.i2p.crypto.eddsa.spec.EdDSANamedCurveSpec;
 import net.i2p.crypto.eddsa.spec.EdDSANamedCurveTable;
 
-public class PrecomputationTestVectors {
+class PrecomputationTestVectors {
     // Test files were generated using base.py and base2.py from ref10
     // (by printing hex(x%q) instead of the radix-255 representation).
     static final GroupElement[][] testPrecmp = getPrecomputation("basePrecmp");
     static final GroupElement[] testDblPrecmp = getDoublePrecomputation("baseDblPrecmp");
 
-    public static GroupElement[][] getPrecomputation(final String fileName) {
+    private static GroupElement[][] getPrecomputation(final String fileName) {
         final EdDSANamedCurveSpec ed25519 = EdDSANamedCurveTable.getByName(EdDSANamedCurveTable.ED_25519);
         final Curve curve = ed25519.curve;
         final EdDSAFiniteField edDSAFiniteField = curve.getEdDSAFiniteField();
@@ -78,7 +78,7 @@ public class PrecomputationTestVectors {
         return precmp;
     }
 
-    public static GroupElement[] getDoublePrecomputation(final String fileName) {
+    private static GroupElement[] getDoublePrecomputation(final String fileName) {
         final EdDSANamedCurveSpec ed25519 = EdDSANamedCurveTable.getByName(EdDSANamedCurveTable.ED_25519);
         final Curve curve = ed25519.curve;
         final EdDSAFiniteField edDSAFiniteField = curve.getEdDSAFiniteField();

@@ -70,7 +70,7 @@ public class BigIntegerLittleEndianEncoding {
         emptyEncoding.setEdDSAFiniteField(f);
     }
 
-    public EdDSAFiniteField getEdDSAFiniteField() {
+    private EdDSAFiniteField getEdDSAFiniteField() {
         return emptyEncoding.getEdDSAFiniteField();
     }
 

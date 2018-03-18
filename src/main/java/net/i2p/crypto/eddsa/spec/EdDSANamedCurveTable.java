@@ -29,26 +29,26 @@ import net.i2p.crypto.eddsa.math.ed25519.Ed25519ScalarOps;
 public class EdDSANamedCurveTable {
     public static final String ED_25519 = "Ed25519";
 
-    public static final EdDSAFiniteField ED_25519_ED_DSA_FINITE_FIELD = new EdDSAFiniteField(
+    private static final EdDSAFiniteField ED_25519_ED_DSA_FINITE_FIELD = new EdDSAFiniteField(
                     256, // b
                     Utils.hexToBytes("edffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff7f"), // q
             new Ed25519LittleEndianEncoding().getEmptyEncoding());
 
-    public static final Curve ed25519curve = new Curve(ED_25519_ED_DSA_FINITE_FIELD,
+    private static final Curve ed25519curve = new Curve(ED_25519_ED_DSA_FINITE_FIELD,
             Utils.hexToBytes("a3785913ca4deb75abd841414d0a700098e879777940c78c73fe6f2bee6c0352"), // d
             ED_25519_ED_DSA_FINITE_FIELD.fromByteArray(Utils.hexToBytes("b0a00e4a271beec478e42fad0618432fa7d7fb3d99004d2b0bdfc14f8024832b"))); // I
 
 //    public static final EdDSANamedCurveSpec ED_25519 = ; // Precompute tables for B
 
-    public static volatile HashMap<String, EdDSANamedCurveSpec> curves = new HashMap<>();
+    private static volatile HashMap<String, EdDSANamedCurveSpec> curves = new HashMap<>();
 
-    public static synchronized void putCurve(final String name, final EdDSANamedCurveSpec curve) {
+    private static synchronized void putCurve(final String name, final EdDSANamedCurveSpec curve) {
         final HashMap<String, EdDSANamedCurveSpec> newCurves = new HashMap<>(curves);
         newCurves.put(name, curve);
         curves = newCurves;
     }
 
-    public static void defineCurve(final EdDSANamedCurveSpec curve) {
+    private static void defineCurve(final EdDSANamedCurveSpec curve) {
         putCurve(curve.getName().toLowerCase(Locale.ENGLISH), curve);
     }
 
