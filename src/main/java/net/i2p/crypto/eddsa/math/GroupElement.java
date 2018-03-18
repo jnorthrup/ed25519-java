@@ -152,55 +152,6 @@ public class GroupElement {
     }
 
     /**
-     * Creates a new group element in P1P1 representation.
-     *
-     * @param curve The curve.
-     * @param X     The $X$ coordinate.
-     * @param Y     The $Y$ coordinate.
-     * @param Z     The $Z$ coordinate.
-     * @param T     The $T$ coordinate.
-     * @return The group element in P1P1 representation.
-     */
-    public static GroupElement p1p1(
-            final Curve curve,
-            final FieldElement X,
-            final FieldElement Y,
-            final FieldElement Z,
-            final FieldElement T) {
-
-        /**
-         * Creates a new group element in P1P1 representation.
-         *
-         * @param curve The curve.
-         * @param X The $X$ coordinate.
-         * @param Y The $Y$ coordinate.
-         * @param Z The $Z$ coordinate.
-         * @param T The $T$ coordinate.
-         * @return The group element in P1P1 representation.
-         */
-        return new P1pGroupElement(curve, X, Y, Z, T);
-    }
-
-    /**
-     * Creates a new group element in CACHED representation.
-     *
-     * @param curve The curve.
-     * @param YpX   The $Y + X$ value.
-     * @param YmX   The $Y - X$ value.
-     * @param Z     The $Z$ coordinate.
-     * @param T2d   The $2 * d * T$ value.
-     * @return The group element in CACHED representation.
-     */
-    public static GroupElement cached(
-            final Curve curve,
-            final FieldElement YpX,
-            final FieldElement YmX,
-            final FieldElement Z,
-            final FieldElement T2d) {
-        return new CachedGroupElement(curve, YpX, YmX, Z, T2d);
-    }
-
-    /**
      * Convert a to radix 16.
      *
      * Method is package public only so that tests run.
