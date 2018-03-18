@@ -56,8 +56,7 @@ class PrecomputationTestVectors {
                                 final String xy2dStr = s3.substring(4, s3.lastIndexOf(' '));
                                 final FieldElement xy2d = edDSAFiniteField.fromByteArray(
                                         Utils.hexToBytes(xy2dStr));
-                                precmp[row][col] = GroupElement.precomp(curve,
-                                        ypx, ymx, xy2d);
+                                precmp[row][col] = new PrecompGroupElement(curve, ypx, ymx, xy2d);
                             }
                         } else {
                             col = 0;
@@ -106,8 +105,7 @@ class PrecomputationTestVectors {
                             final String xy2dStr = s4.substring(4, s4.lastIndexOf(' '));
                             final FieldElement xy2d = edDSAFiniteField.fromByteArray(
                                     Utils.hexToBytes(xy2dStr));
-                            dblPrecmp[row] = GroupElement.precomp(curve,
-                                    ypx, ymx, xy2d);
+                            dblPrecmp[row] = new PrecompGroupElement(curve, ypx, ymx, xy2d);
                         }
                     } else {
                         row += 1;

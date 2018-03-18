@@ -198,18 +198,23 @@ public class MathUtils {
         // Now back to the desired representation.
         switch (repr) {
             case P2:
-                return GroupElement.p2(
-                        curve,
-                        toFieldElement(x),
-                        toFieldElement(y),
-                        getEdDSAFiniteField().ONE);
+                return new P2GroupElement(curve, toFieldElement(x), toFieldElement(y), getEdDSAFiniteField().ONE);
             case P3:
-                return GroupElement.p3(
-                        curve,
-                        toFieldElement(x),
-                        toFieldElement(y),
-                        getEdDSAFiniteField().ONE,
-                        toFieldElement(x.multiply(y).mod(getQ())), false);
+                final FieldElement x1 = toFieldElement(x);
+                final FieldElement y1 = toFieldElement(y);
+                final FieldElement t = toFieldElement(x.multiply(y).mod(getQ()));
+                /**
+             * Creates a new group element in P3 representation.
+             *
+             * @param curve The curve.
+             * @param X The $X$ coordinate.
+             * @param Y The $Y$ coordinate.
+             * @param Z The $Z$ coordinate.
+             * @param T The $T$ coordinate.
+             * @param precomputeDoubleOnly If true, populate dblPrecmp, else set to null.
+             * @return The group element in P3 representation.
+             */
+                return false ? new P3PreGroupElement(curve, x1, y1, getEdDSAFiniteField().ONE, t) : new P3GroupElement(curve, x1, y1, getEdDSAFiniteField().ONE, t);
             case P1P1:
                 return GroupElement.p1p1(
                         curve,
@@ -225,11 +230,16 @@ public class MathUtils {
                         getEdDSAFiniteField().ONE,
                         toFieldElement(d.multiply(new BigInteger("2")).multiply(x).multiply(y).mod(getQ())));
             case PRECOMP:
-                return GroupElement.precomp(
-                        curve,
-                        toFieldElement(y.add(x).mod(getQ())),
-                        toFieldElement(y.subtract(x).mod(getQ())),
-                        toFieldElement(d.multiply(new BigInteger("2")).multiply(x).multiply(y).mod(getQ())));
+                return
+                        /**
+                         * Creates a new group element in PRECOMP representation.
+                         *
+                         * @param curve The curve.
+                         * @param ypx The $y + x$ value.
+                         * @param ymx The $y - x$ value.
+                         * @param xy2d The $2 * d * x * y$ value.
+                         * @return The group element in PRECOMP representation.
+                         */new PrecompGroupElement(curve, toFieldElement(y.add(x).mod(getQ())), toFieldElement(y.subtract(x).mod(getQ())), toFieldElement(d.multiply(new BigInteger("2")).multiply(x).multiply(y).mod(getQ())));
             default:
                 throw new UnsupportedOperationException();
         }
@@ -279,7 +289,22 @@ public class MathUtils {
                 .multiply(BigInteger.ONE.subtract(dx1x2y1y2).modInverse(getQ())).mod(getQ());
         final BigInteger t3 = x3.multiply(y3).mod(getQ());
 
-        return GroupElement.p3(g1.getCurve(), toFieldElement(x3), toFieldElement(y3), getEdDSAFiniteField().ONE, toFieldElement(t3), false);
+        final Curve curve1 = g1.getCurve();
+        final FieldElement x = toFieldElement(x3);
+        final FieldElement y = toFieldElement(y3);
+        final FieldElement t = toFieldElement(t3);
+        /**
+     * Creates a new group element in P3 representation.
+     *
+     * @param curve The curve.
+     * @param X The $X$ coordinate.
+     * @param Y The $Y$ coordinate.
+     * @param Z The $Z$ coordinate.
+     * @param T The $T$ coordinate.
+     * @param precomputeDoubleOnly If true, populate dblPrecmp, else set to null.
+     * @return The group element in P3 representation.
+     */
+        return false ? new P3PreGroupElement(curve1, x, y, getEdDSAFiniteField().ONE, t) : new P3GroupElement(curve1, x, y, getEdDSAFiniteField().ONE, t);
     }
 
     /**
@@ -316,7 +341,18 @@ public class MathUtils {
     // Start TODO BR: Remove when finished!
     @Test
     public void mathUtilsWorkAsExpected() {
-        final GroupElement neutral = GroupElement.p3(curve, curve.getEdDSAFiniteField().ZERO, curve.getEdDSAFiniteField().ONE, curve.getEdDSAFiniteField().ONE, curve.getEdDSAFiniteField().ZERO, false);
+        /**
+     * Creates a new group element in P3 representation.
+     *
+     * @param curve The curve.
+     * @param X The $X$ coordinate.
+     * @param Y The $Y$ coordinate.
+     * @param Z The $Z$ coordinate.
+     * @param T The $T$ coordinate.
+     * @param precomputeDoubleOnly If true, populate dblPrecmp, else set to null.
+     * @return The group element in P3 representation.
+     */
+        final GroupElement neutral = false ? new P3PreGroupElement(curve, curve.getEdDSAFiniteField().ZERO, curve.getEdDSAFiniteField().ONE, curve.getEdDSAFiniteField().ONE, curve.getEdDSAFiniteField().ZERO) : new P3GroupElement(curve, curve.getEdDSAFiniteField().ZERO, curve.getEdDSAFiniteField().ONE, curve.getEdDSAFiniteField().ONE, curve.getEdDSAFiniteField().ZERO);
         for (int i = 0; 1000 > i; i++) {
             final GroupElement g = getRandomGroupElement();
 

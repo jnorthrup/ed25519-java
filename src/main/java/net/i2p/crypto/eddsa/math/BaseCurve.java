@@ -14,8 +14,6 @@ import java.util.EnumMap;
 import java.util.concurrent.Callable;
 import java.util.function.Function;
 
-import static net.i2p.crypto.eddsa.math.GroupElement.*;
-
 /**
  * A twisted Edwards curve.
  * Points on the curve satisfy $-x^2 + y^2 = 1 + d x^2y^2$
@@ -25,7 +23,7 @@ import static net.i2p.crypto.eddsa.math.GroupElement.*;
 @SuppressWarnings("ThisEscapedInObjectConstruction")
 public class BaseCurve implements Curve {
 
-    final EnumMap<Representation, Callable<GroupElement>> source;
+    final EnumMap<Representation, Callable<? extends GroupElement>> source;
     final EnumMap<Representation, GroupElement> facade = new EnumMap<>(Representation.class);
     private final EdDSAFiniteField edDSAFiniteField;
     private final FieldElement d;
@@ -42,12 +40,12 @@ public class BaseCurve implements Curve {
         Curve c = this;
 
         //        this is cost of an array to lazy biootstrap the 4 used curves
-        source = new EnumMap<Representation, Callable<GroupElement>>(Representation.class) {
+        source = new EnumMap<Representation, Callable<?extends GroupElement>>(Representation.class) {
             {
-                put(Representation.P2, () -> p2(c, zero, one, one));
-                put(Representation.P3, () -> p3(c, zero, one, one, zero, false));
-                put(Representation.P3PrecomputedDouble, () -> p3(c, zero, one, one, zero, true));
-                put(Representation.PRECOMP, () -> precomp(c, one, one, zero));
+                put(Representation.P2, () -> new P2GroupElement(c, zero, one, one));
+                put(Representation.P3, () -> new P3GroupElement(c, zero, one, one, zero));
+                put(Representation.P3PrecomputedDouble, () -> new P3PrecomputedDoubleGroupElement(c, zero, one));
+                put(Representation.PRECOMP, () -> new PrecompGroupElement(c, one, one, zero));
             }
         };
     }
@@ -122,15 +120,13 @@ public class BaseCurve implements Curve {
     }
 
     public GroupElement get(Representation Representation) {
-        return facade.computeIfAbsent(Representation, new Function<Representation, GroupElement>() {
-            @Override
-            public GroupElement apply(Representation representation) {
-                try {
-                    return source.get(Representation).call();
-                } catch (Exception e) {
-                    throw new Error(e);
-                }
+        return facade.computeIfAbsent(Representation, representation -> {
+            try {
+                return source.get(Representation).call();
+            } catch (Exception e) {
+                throw new Error(e);
             }
         });
     }
+
 }

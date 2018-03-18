@@ -38,7 +38,7 @@ public class ConstantsTest {
     private static final FieldElement ONE = curve.getEdDSAFiniteField().ONE;
     static final FieldElement TWO = curve.getEdDSAFiniteField().TWO;
 
-    static final GroupElement P3_ZERO = GroupElement.p3(curve, ZERO, ONE, ONE, ZERO, false);
+    static final GroupElement P3_ZERO = false ? new P3PreGroupElement(curve, ZERO, ONE, ONE, ZERO) : new P3GroupElement(curve, ZERO, ONE, ONE, ZERO);
 
     @Test
     public void testb() {

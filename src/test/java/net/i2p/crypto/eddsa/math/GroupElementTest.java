@@ -43,7 +43,7 @@ public class GroupElementTest {
     private static final FieldElement TWO = curve.getEdDSAFiniteField().TWO;
     private static final FieldElement TEN = curve.getEdDSAFiniteField().fromByteArray(Utils.hexToBytes("0a00000000000000000000000000000000000000000000000000000000000000"));
 
-    private static final GroupElement P2_ZERO = GroupElement.p2(curve, ZERO, ONE, ONE);
+    private static final GroupElement P2_ZERO = new P2GroupElement(curve, ZERO, ONE, ONE);
 
     private static final FieldElement[] PKR = {
         curve.getEdDSAFiniteField().fromByteArray(Utils.hexToBytes("5849722e338aced7b50c7f0e9328f9a10c847b08e40af5c5b0577b0fd8984f15")),
@@ -65,7 +65,23 @@ public class GroupElementTest {
             throw new IllegalArgumentException("g must have representation P3");
         }
 
-        return GroupElement.p3(g.getCurve(), g.getX().negate(), g.getY(), g.getZ(), g.getT().negate(), false);
+        final Curve curve1 = g.getCurve();
+        final FieldElement x = g.getX().negate();
+        final FieldElement y = g.getY();
+        final FieldElement z = g.getZ();
+        final FieldElement t = g.getT().negate();
+        /**
+     * Creates a new group element in P3 representation.
+     *
+     * @param curve The curve.
+     * @param X The $X$ coordinate.
+     * @param Y The $Y$ coordinate.
+     * @param Z The $Z$ coordinate.
+     * @param T The $T$ coordinate.
+     * @param precomputeDoubleOnly If true, populate dblPrecmp, else set to null.
+     * @return The group element in P3 representation.
+     */
+        return false ? new P3PreGroupElement(curve1, x, y, z, t) : new P3GroupElement(curve1, x, y, z, t);
     }
 
     /**
@@ -116,7 +132,21 @@ public class GroupElementTest {
             x = x.negate().mod(MathUtils.getQ());
         }
 
-        return GroupElement.p3(MathUtils.curve, MathUtils.toFieldElement(x), MathUtils.toFieldElement(y), MathUtils.getEdDSAFiniteField().ONE, MathUtils.toFieldElement(x.multiply(y).mod(MathUtils.getQ())), false);
+        final FieldElement x1 = MathUtils.toFieldElement(x);
+        final FieldElement y1 = MathUtils.toFieldElement(y);
+        final FieldElement t = MathUtils.toFieldElement(x.multiply(y).mod(MathUtils.getQ()));
+        /**
+     * Creates a new group element in P3 representation.
+     *
+     * @param curve The curve.
+     * @param X The $X$ coordinate.
+     * @param Y The $Y$ coordinate.
+     * @param Z The $Z$ coordinate.
+     * @param T The $T$ coordinate.
+     * @param precomputeDoubleOnly If true, populate dblPrecmp, else set to null.
+     * @return The group element in P3 representation.
+     */
+        return false ? new P3PreGroupElement(MathUtils.curve, x1, y1, MathUtils.getEdDSAFiniteField().ONE, t) : new P3GroupElement(MathUtils.curve, x1, y1, MathUtils.getEdDSAFiniteField().ONE, t);
     }
 
     /**
@@ -124,7 +154,7 @@ public class GroupElementTest {
      */
     @Test
     public void testP2() {
-        final GroupElement t = GroupElement.p2(curve, ZERO, ONE, ONE);
+        final GroupElement t = new P2GroupElement(curve, ZERO, ONE, ONE);
         assertThat(t.getCurve(), is(equalTo(curve)));
         assertThat(t.getRepr(), is(Representation.P2));
         assertThat(t.getX(), is(ZERO));
@@ -138,7 +168,18 @@ public class GroupElementTest {
      */
     @Test
     public void testP3() {
-        final GroupElement t = GroupElement.p3(curve, ZERO, ONE, ONE, ZERO, false);
+        /**
+     * Creates a new group element in P3 representation.
+     *
+     * @param curve The curve.
+     * @param X The $X$ coordinate.
+     * @param Y The $Y$ coordinate.
+     * @param Z The $Z$ coordinate.
+     * @param T The $T$ coordinate.
+     * @param precomputeDoubleOnly If true, populate dblPrecmp, else set to null.
+     * @return The group element in P3 representation.
+     */
+        final GroupElement t = false ? new P3PreGroupElement(curve, ZERO, ONE, ONE, ZERO) : new P3GroupElement(curve, ZERO, ONE, ONE, ZERO);
         assertThat(t.getCurve(), is(equalTo(curve)));
         assertThat(t.getRepr(), is(Representation.P3));
         assertThat(t.getX(), is(ZERO));
@@ -166,7 +207,7 @@ public class GroupElementTest {
      */
     @Test
     public void testPrecomp() {
-        final GroupElement t = GroupElement.precomp(curve, ONE, ONE, ZERO);
+        final GroupElement t = new PrecompGroupElement(curve, ONE, ONE, ZERO);
         assertThat(t.getCurve(), is(equalTo(curve)));
         assertThat(t.getRepr(), is(Representation.PRECOMP));
         assertThat(t.getX(), is(ONE));
@@ -224,7 +265,19 @@ public class GroupElementTest {
     @Test
     public void testGroupElementByteArray() {
         final GroupElement t = new GroupElement(curve, BYTES_PKR);
-        final GroupElement s = GroupElement.p3(curve, PKR[0], PKR[1], ONE, PKR[0].multiply(PKR[1]),false);
+        final FieldElement t1 = PKR[0].multiply(PKR[1]);
+        /**
+     * Creates a new group element in P3 representation.
+     *
+     * @param curve The curve.
+     * @param X The $X$ coordinate.
+     * @param Y The $Y$ coordinate.
+     * @param Z The $Z$ coordinate.
+     * @param T The $T$ coordinate.
+     * @param precomputeDoubleOnly If true, populate dblPrecmp, else set to null.
+     * @return The group element in P3 representation.
+     */
+        final GroupElement s = false ? new P3PreGroupElement(curve, PKR[0], PKR[1], ONE, t1) : new P3GroupElement(curve, PKR[0], PKR[1], ONE, t1);
         assertThat(t, is(equalTo(s)));
     }
 
@@ -251,23 +304,23 @@ public class GroupElementTest {
      */
     @Test
     public void testToByteArray() {
-        final byte[] zerozero = GroupElement.p2(curve, ZERO, ZERO, ONE).toByteArray();
+        final byte[] zerozero = new P2GroupElement(curve, ZERO, ZERO, ONE).toByteArray();
         assertThat(Integer.valueOf(zerozero.length), is(equalTo(Integer.valueOf(BYTES_ZEROZERO.length))));
         assertThat(zerozero, is(equalTo(BYTES_ZEROZERO)));
 
-        final byte[] oneone = GroupElement.p2(curve, ONE, ONE, ONE).toByteArray();
+        final byte[] oneone = new P2GroupElement(curve, ONE, ONE, ONE).toByteArray();
         assertThat(Integer.valueOf(oneone.length), is(equalTo(Integer.valueOf(BYTES_ONEONE.length))));
         assertThat(oneone, is(equalTo(BYTES_ONEONE)));
 
-        final byte[] tenzero = GroupElement.p2(curve, TEN, ZERO, ONE).toByteArray();
+        final byte[] tenzero = new P2GroupElement(curve, TEN, ZERO, ONE).toByteArray();
         assertThat(Integer.valueOf(tenzero.length), is(equalTo(Integer.valueOf(BYTES_TENZERO.length))));
         assertThat(tenzero, is(equalTo(BYTES_TENZERO)));
 
-        final byte[] oneten = GroupElement.p2(curve, ONE, TEN, ONE).toByteArray();
+        final byte[] oneten = new P2GroupElement(curve, ONE, TEN, ONE).toByteArray();
         assertThat(Integer.valueOf(oneten.length), is(equalTo(Integer.valueOf(BYTES_ONETEN.length))));
         assertThat(oneten, is(equalTo(BYTES_ONETEN)));
 
-        final byte[] pkr = GroupElement.p2(curve, PKR[0], PKR[1], ONE).toByteArray();
+        final byte[] pkr = new P2GroupElement(curve, PKR[0], PKR[1], ONE).toByteArray();
         assertThat(Integer.valueOf(pkr.length), is(equalTo(Integer.valueOf(BYTES_PKR.length))));
         assertThat(pkr, is(equalTo(BYTES_PKR)));
     }
@@ -596,7 +649,18 @@ public class GroupElementTest {
 
     @Test
     public void addingNeutralGroupElementDoesNotChangeGroupElement() {
-        final GroupElement neutral = GroupElement.p3(curve, curve.getEdDSAFiniteField().ZERO, curve.getEdDSAFiniteField().ONE, curve.getEdDSAFiniteField().ONE, curve.getEdDSAFiniteField().ZERO, false);
+        /**
+     * Creates a new group element in P3 representation.
+     *
+     * @param curve The curve.
+     * @param X The $X$ coordinate.
+     * @param Y The $Y$ coordinate.
+     * @param Z The $Z$ coordinate.
+     * @param T The $T$ coordinate.
+     * @param precomputeDoubleOnly If true, populate dblPrecmp, else set to null.
+     * @return The group element in P3 representation.
+     */
+        final GroupElement neutral = false ? new P3PreGroupElement(curve, curve.getEdDSAFiniteField().ZERO, curve.getEdDSAFiniteField().ONE, curve.getEdDSAFiniteField().ONE, curve.getEdDSAFiniteField().ZERO) : new P3GroupElement(curve, curve.getEdDSAFiniteField().ZERO, curve.getEdDSAFiniteField().ONE, curve.getEdDSAFiniteField().ONE, curve.getEdDSAFiniteField().ZERO);
         for (int i = 0; 1000 > i; i++) {
             // Arrange:
             final GroupElement g = MathUtils.getRandomGroupElement();
@@ -649,7 +713,7 @@ public class GroupElementTest {
      */
     @Test
     public void testEqualsObject() {
-        assertThat(GroupElement.p2(curve, ZERO, ONE, ONE),
+        assertThat(new P2GroupElement(curve, ZERO, ONE, ONE),
                 is(equalTo(P2_ZERO)));
     }
 
@@ -731,7 +795,7 @@ public class GroupElementTest {
     @Test
     public void testCmov() {
         final GroupElement a = curve.get(Representation.PRECOMP);
-        final GroupElement b = GroupElement.precomp(curve, TWO, ZERO, TEN);
+        final GroupElement b = new PrecompGroupElement(curve, TWO, ZERO, TEN);
         assertThat(a.cmov(b, 0), is(equalTo(a)));
         assertThat(a.cmov(b, 1), is(equalTo(b)));
     }
@@ -745,7 +809,7 @@ public class GroupElementTest {
         for (int i = 0; 32 > i; i++) {
             // 16^i 0 B
             assertThat(i + ",0", B.select(i, 0),
-                    is(equalTo(GroupElement.precomp(curve, ONE, ONE, ZERO))));
+                    is(equalTo(new PrecompGroupElement(curve, ONE, ONE, ZERO))));
             for (int j = 1; 8 > j; j++) {
                 // 16^i r_i B
                 GroupElement t = B.select(i, j);
@@ -753,10 +817,7 @@ public class GroupElementTest {
                         t, is(equalTo(B.getPrecmp()[i][j-1])));
                 // -16^i r_i B
                 final GroupElement t3 = B.select(i, -j);
-                final GroupElement neg = GroupElement.precomp(curve,
-                        B.getPrecmp()[i][j - 1].getY(),
-                        B.getPrecmp()[i][j - 1].getX(),
-                        B.getPrecmp()[i][j - 1].getZ().negate());
+                final GroupElement neg = new PrecompGroupElement(curve, B.getPrecmp()[i][j - 1].getY(), B.getPrecmp()[i][j - 1].getX(), B.getPrecmp()[i][j - 1].getZ().negate());
                 assertThat(i + "," + -j,
                         t3, is(equalTo(neg)));
             }
@@ -901,15 +962,15 @@ public class GroupElementTest {
     public void testIsOnCurve() {
         assertThat(Boolean.valueOf(P2_ZERO.isOnCurve(curve)),
                 is(Boolean.TRUE));
-        assertThat(Boolean.valueOf(GroupElement.p2(curve, ZERO, ZERO, ONE).isOnCurve(curve)),
+        assertThat(Boolean.valueOf(new P2GroupElement(curve, ZERO, ZERO, ONE).isOnCurve(curve)),
                 is(Boolean.FALSE));
-        assertThat(Boolean.valueOf(GroupElement.p2(curve, ONE, ONE, ONE).isOnCurve(curve)),
+        assertThat(Boolean.valueOf(new P2GroupElement(curve, ONE, ONE, ONE).isOnCurve(curve)),
                 is(Boolean.FALSE));
-        assertThat(Boolean.valueOf(GroupElement.p2(curve, TEN, ZERO, ONE).isOnCurve(curve)),
+        assertThat(Boolean.valueOf(new P2GroupElement(curve, TEN, ZERO, ONE).isOnCurve(curve)),
                 is(Boolean.FALSE));
-        assertThat(Boolean.valueOf(GroupElement.p2(curve, ONE, TEN, ONE).isOnCurve(curve)),
+        assertThat(Boolean.valueOf(new P2GroupElement(curve, ONE, TEN, ONE).isOnCurve(curve)),
                 is(Boolean.FALSE));
-        assertThat(Boolean.valueOf(GroupElement.p2(curve, PKR[0], PKR[1], ONE).isOnCurve(curve)),
+        assertThat(Boolean.valueOf(new P2GroupElement(curve, PKR[0], PKR[1], ONE).isOnCurve(curve)),
                 is(Boolean.TRUE));
     }
 
@@ -929,7 +990,7 @@ public class GroupElementTest {
         for (int i = 0; 100 > i; i++) {
             // Arrange:
             final GroupElement g = MathUtils.getRandomGroupElement();
-            final GroupElement h = GroupElement.p2(curve, g.getX(), g.getY(), g.getZ().multiply(curve.getEdDSAFiniteField().TWO));
+            final GroupElement h = new P2GroupElement(curve, g.getX(), g.getY(), g.getZ().multiply(curve.getEdDSAFiniteField().TWO));
 
             // Assert (can only fail for 5*Z^2=1):
             assertThat(Boolean.valueOf(h.isOnCurve()), IsEqual.equalTo(Boolean.FALSE));
