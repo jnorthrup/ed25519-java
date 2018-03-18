@@ -10,24 +10,28 @@
  */
 package net.i2p.crypto.eddsa.math;
 
+import java.util.EnumMap;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ForkJoinPool;
+import java.util.concurrent.Future;
+
+import static net.i2p.crypto.eddsa.math.GroupElement.*;
+
 /**
  * A twisted Edwards curve.
  * Points on the curve satisfy $-x^2 + y^2 = 1 + d x^2y^2$
- * @author str4d
  *
+ * @author str4d
  */
 @SuppressWarnings("ThisEscapedInObjectConstruction")
 public class BaseCurve implements Curve {
 
-    private final EdDSAFiniteField   edDSAFiniteField;
+    private final EdDSAFiniteField edDSAFiniteField;
     private final FieldElement d;
-    private final FieldElement       d2;
+    private final FieldElement d2;
     private final FieldElement I;
-    private final GroupElement       zeroP2;
-    private final GroupElement       zeroP3;
-    private final GroupElement       zeroP3PrecomputedDouble;
-    private final GroupElement       zeroPrecomp;
 
+    EnumMap<Representation, Future<GroupElement>> facade  ;
     public BaseCurve(final EdDSAFiniteField edDSAFiniteField, final byte[] d, final FieldElement I) {
         this.edDSAFiniteField = edDSAFiniteField;
         this.d = edDSAFiniteField.fromByteArray(d);
@@ -35,14 +39,22 @@ public class BaseCurve implements Curve {
         this.I = I;
         final FieldElement zero = edDSAFiniteField.ZERO;
         final FieldElement one = edDSAFiniteField.ONE;
-        zeroP2 = GroupElement.p2(this, zero, one, one);
-        zeroP3 = GroupElement.p3(this, zero, one, one, zero, false);
-        zeroP3PrecomputedDouble = GroupElement.p3(this, zero, one, one, zero, true);
-        zeroPrecomp = GroupElement.precomp(this, one, one, zero);
-    }
+        ForkJoinPool forkJoinPool = ForkJoinPool.commonPool();
+        Curve c = this;
+
+        facade = new EnumMap<Representation, Future<GroupElement>>(Representation.class) {
+            {
+                put(Representation.P2,       forkJoinPool.submit(() -> p2(c, zero, one, one)));
+                put(Representation.P3,       forkJoinPool.submit(() -> p3(c, zero, one, one, zero, false)));
+                put(Representation.P3PrecomputedDouble,forkJoinPool.submit( () -> p3(c, zero, one, one, zero, true)));
+                put(Representation.PRECOMP, forkJoinPool.submit( () ->precomp(c, one, one, zero)));
+            }
+        };
+    };
+
 
     @Override
-    public GroupElement getZero(final GroupElement.Representation repr) {
+    public GroupElement getZero(final Representation repr) {
         switch (repr) {
             case P2:
                 return getZeroP2();
@@ -104,21 +116,47 @@ public class BaseCurve implements Curve {
 
     @Override
     public GroupElement getZeroP2() {
-        return zeroP2;
+        try {
+            return   facade .get( Representation.P2 ).get();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     @Override
-    public GroupElement getZeroP3() {
-        return zeroP3;
+    public GroupElement getZeroP3() { ; try {
+            return   facade .get( Representation.P3 ).get();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     @Override
     public GroupElement getZeroP3PrecomputedDouble() {
-        return zeroP3PrecomputedDouble;
+        ; try {
+            return   facade .get( Representation.P3PrecomputedDouble ).get();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     @Override
-    public GroupElement getZeroPrecomp() {
-        return zeroPrecomp;
+    public GroupElement getZeroPrecomp() {    ; try {
+        return   facade .get( Representation.PRECOMP ).get();
+    } catch (InterruptedException e) {
+        e.printStackTrace();
+    } catch (ExecutionException e) {
+        e.printStackTrace();
+    }
+        return null;
     }
 }
