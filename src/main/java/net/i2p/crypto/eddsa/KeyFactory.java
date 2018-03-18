@@ -52,11 +52,11 @@ public final class KeyFactory extends KeyFactorySpi {
         if (!keySpec.isAssignableFrom(EdDSAPublicKeySpec.class) || !(key instanceof EdDSAPublicKey)) {
             assert keySpec.isAssignableFrom(EdDSAPrivateKeySpec.class) && key instanceof EdDSAPrivateKey : "not implemented yet " + key + " " + keySpec;
             final EdDSAPrivateKey k = (EdDSAPrivateKey) key;
-            ret=(T) new EdDSAPrivateKeySpec(k.seed, k.hashOfTheSeed, k.privateKey, k.groupElement, k.getEdDSAParameterSpec());
+            ret=(T) new EdDSAPrivateKeySpec(k.getSeed(), k.getHashOfTheSeed(), k.getPrivateKey(), k.getGroupElement(), k.getEdDSAParameterSpec());
         } else {
             final EdDSAPublicKey k = (EdDSAPublicKey) key;
             Objects.requireNonNull(k.getEdDSAParameterSpec());
-            ret=(T) new EdDSAPublicKeySpec(k.A, k.getEdDSAParameterSpec());
+            ret=(T) new EdDSAPublicKeySpec(k.getA(), k.getEdDSAParameterSpec());
         }
         return ret;
     }

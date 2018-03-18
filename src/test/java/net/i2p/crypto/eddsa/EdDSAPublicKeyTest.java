@@ -42,7 +42,7 @@ public class EdDSAPublicKeyTest {
 
         // Encode
         final EdDSAPublicKeySpec decoded = new EdDSAPublicKeySpec(
-                keyIn.A,
+                keyIn.getA(),
                 keyIn.getEdDSAParameterSpec());
         final EdDSAPublicKey keyOut = new EdDSAPublicKey(decoded);
 
@@ -58,7 +58,7 @@ public class EdDSAPublicKeyTest {
 
         // Encode
         final EdDSAPublicKeySpec decoded = new EdDSAPublicKeySpec(
-                keyIn.A,
+                keyIn.getA(),
                 keyIn.getEdDSAParameterSpec());
         final EdDSAPublicKey keyOut = new EdDSAPublicKey(decoded);
 
@@ -74,7 +74,7 @@ public class EdDSAPublicKeyTest {
 
         // Encode
         final EdDSAPublicKeySpec decoded = new EdDSAPublicKeySpec(
-                keyIn.A,
+                keyIn.getA(),
                 keyIn.getEdDSAParameterSpec());
         final EdDSAPublicKey keyOut = new EdDSAPublicKey(decoded);
 

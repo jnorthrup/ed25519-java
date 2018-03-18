@@ -17,11 +17,11 @@ class MyEmptyEncoding extends EmptyEncoding {
     @Override
     public synchronized void setEdDSAFiniteField(final EdDSAFiniteField f) {
         super.setEdDSAFiniteField(f);
-        bigIntegerLittleEndianEncoding.mask = BigInteger.ONE.shiftLeft(f.getb()-1).subtract(BigInteger.ONE);
+        bigIntegerLittleEndianEncoding.setMask(BigInteger.ONE.shiftLeft(f.getb()-1).subtract(BigInteger.ONE));
     }
 
     public byte[] encode(final FieldElement x) {
-        return bigIntegerLittleEndianEncoding.convertBigIntegerToLittleEndian(((BigIntegerFieldElement)x).bi.and(bigIntegerLittleEndianEncoding.mask));
+        return bigIntegerLittleEndianEncoding.convertBigIntegerToLittleEndian(((BigIntegerFieldElement)x).bi.and(bigIntegerLittleEndianEncoding.getMask()));
     }
 
     /**
@@ -36,7 +36,7 @@ class MyEmptyEncoding extends EmptyEncoding {
     public FieldElement decode(final byte[] in) {
         Objects.requireNonNull(getEdDSAFiniteField(),"field not set");
         assert in.length == getEdDSAFiniteField().getb() / 8 : "Not a valid encoding";
-        return new BigIntegerFieldElement(getEdDSAFiniteField(), bigIntegerLittleEndianEncoding.toBigInteger(in).and(bigIntegerLittleEndianEncoding.mask));
+        return new BigIntegerFieldElement(getEdDSAFiniteField(), bigIntegerLittleEndianEncoding.toBigInteger(in).and(bigIntegerLittleEndianEncoding.getMask()));
     }
 
     /**

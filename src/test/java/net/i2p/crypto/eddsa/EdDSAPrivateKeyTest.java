@@ -42,10 +42,10 @@ public class EdDSAPrivateKeyTest {
 
         // Encode
         final EdDSAPrivateKeySpec decoded = new EdDSAPrivateKeySpec(
-                keyIn.seed,
-                keyIn.hashOfTheSeed,
-                keyIn.privateKey,
-                keyIn.groupElement,
+                keyIn.getSeed(),
+                keyIn.getHashOfTheSeed(),
+                keyIn.getPrivateKey(),
+                keyIn.getGroupElement(),
                 keyIn.getEdDSAParameterSpec());
         final EdDSAPrivateKey keyOut = new EdDSAPrivateKey(decoded);
 
@@ -61,10 +61,10 @@ public class EdDSAPrivateKeyTest {
 
         // Encode
         final EdDSAPrivateKeySpec decoded = new EdDSAPrivateKeySpec(
-                keyIn.seed,
-                keyIn.hashOfTheSeed,
-                keyIn.privateKey,
-                keyIn.groupElement,
+                keyIn.getSeed(),
+                keyIn.getHashOfTheSeed(),
+                keyIn.getPrivateKey(),
+                keyIn.getGroupElement(),
                 keyIn.getEdDSAParameterSpec());
         final EdDSAPrivateKey keyOut = new EdDSAPrivateKey(decoded);
 
@@ -80,10 +80,10 @@ public class EdDSAPrivateKeyTest {
 
         // Encode
         final EdDSAPrivateKeySpec decoded = new EdDSAPrivateKeySpec(
-                keyIn.seed,
-                keyIn.hashOfTheSeed,
-                keyIn.privateKey,
-                keyIn.groupElement,
+                keyIn.getSeed(),
+                keyIn.getHashOfTheSeed(),
+                keyIn.getPrivateKey(),
+                keyIn.getGroupElement(),
                 keyIn.getEdDSAParameterSpec());
         final EdDSAPrivateKey keyOut = new EdDSAPrivateKey(decoded);
 

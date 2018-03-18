@@ -142,7 +142,7 @@ public final class EdDSAEngine extends Signature {
         // Preparing for hash
         // r = H(h_b,...,h_2b-1,M)
         final int b = privKey.getEdDSAParameterSpec().curve.getEdDSAFiniteField().getb();
-        digest.update(privKey.hashOfTheSeed, b/8, b/4 - b/8);
+        digest.update(privKey.getHashOfTheSeed(), b/8, b/4 - b/8);
     }
 
     @Override
@@ -221,7 +221,7 @@ public final class EdDSAEngine extends Signature {
     public byte[] x_engineSign() {
         final Curve curve = key.getEdDSAParameterSpec().curve;
         final ScalarOps sc = key.getEdDSAParameterSpec().scalarOps;
-        final byte[] a = ((EdDSAPrivateKey) key).privateKey;
+        final byte[] a = ((EdDSAPrivateKey) key).getPrivateKey();
 
         final byte[] message;
         final int offset;
@@ -279,7 +279,7 @@ public final class EdDSAEngine extends Signature {
 
         // R is first b/8 bytes of sigBytes, S is second b/8 bytes
         digest.update(sigBytes, 0, b/8);
-        digest.update(((EdDSAPublicKey) key).abyte);
+        digest.update(((EdDSAPublicKey) key).getaByte());
         // h = H(Rbar,Abar,M)
         final byte[] message;
         final int offset;
@@ -303,7 +303,7 @@ public final class EdDSAEngine extends Signature {
         final byte[] Sbyte = Arrays.copyOfRange(sigBytes, b/8, b/4);
         // R = SB - H(Rbar,Abar,M)A
         final GroupElement R = key.getEdDSAParameterSpec().groupElement.doubleScalarMultiplyVariableTime(
-                ((EdDSAPublicKey) key).aNeg, h, Sbyte);
+                ((EdDSAPublicKey) key).getaNeg(), h, Sbyte);
 
         // Variable time. This should be okay, because there are no secret
         // values used anywhere in verification.

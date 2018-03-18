@@ -40,10 +40,10 @@ import net.i2p.crypto.eddsa.spec.EdDSAPrivateKeySpec;
  */
 public class EdDSAPrivateKey implements EdDSAKey, PrivateKey {
 
-    public final byte[] seed;
-    public final byte[] hashOfTheSeed;
-    public final byte[] privateKey;
-    public final GroupElement groupElement;
+    private final byte[] seed;
+    private final byte[] hashOfTheSeed;
+    private final byte[] privateKey;
+    private final GroupElement groupElement;
     private final byte[] aByte;
     private final EdDSAParameterSpec edDSAParameterSpec;
 
@@ -58,7 +58,7 @@ public class EdDSAPrivateKey implements EdDSAKey, PrivateKey {
         hashOfTheSeed = spec.hashOfTheSeed;
         privateKey = spec.privateKey;
         groupElement = spec.groupElement;
-        aByte = groupElement.toByteArray();
+        aByte = getGroupElement().toByteArray();
         edDSAParameterSpec = spec.getParams();
     }
 
@@ -137,11 +137,11 @@ public class EdDSAPrivateKey implements EdDSAKey, PrivateKey {
      */
     @Override
     public byte[] getEncoded() {
-        if (!edDSAParameterSpec.equals(EdDSANamedCurveTable.getByName(EdDSANamedCurveTable.ED_25519)))
+        if (!getEdDSAParameterSpec().equals(EdDSANamedCurveTable.getByName(EdDSANamedCurveTable.ED_25519)))
             return null;
-        if (null == seed)
+        if (null == getSeed())
             return null;
-        final int totlen = 16 + seed.length;
+        final int totlen = 16 + getSeed().length;
         final byte[] encoded = new byte[totlen];
         int idx = 0;
         // sequence
@@ -166,12 +166,12 @@ public class EdDSAPrivateKey implements EdDSAKey, PrivateKey {
         // params - absent
         // PrivateKey
         encoded[idx++] = (byte) 0x04;  // octet string
-        encoded[idx++] = (byte) (2 + seed.length);
+        encoded[idx++] = (byte) (2 + getSeed().length);
         // CurvePrivateKey
         encoded[idx++] = (byte) 0x04;  // octet string
-        encoded[idx++] = (byte) seed.length;
+        encoded[idx++] = (byte) getSeed().length;
         // the key
-        System.arraycopy(seed, 0, encoded, idx, seed.length);
+        System.arraycopy(getSeed(), 0, encoded, idx, getSeed().length);
         return  encoded;
     }
 
@@ -291,11 +291,27 @@ public class EdDSAPrivateKey implements EdDSAKey, PrivateKey {
 
     @Override
     public int hashCode() {
-        return Arrays.hashCode(seed);
+        return Arrays.hashCode(getSeed());
     }
 
     @Override
     public boolean equals(final Object o) {
-        return o == this || (o instanceof EdDSAPrivateKey) && Arrays.equals(seed, ((EdDSAPrivateKey) o).seed) && Objects.equals(edDSAParameterSpec, ((EdDSAPrivateKey) o).getEdDSAParameterSpec());
+        return o == this || (o instanceof EdDSAPrivateKey) && Arrays.equals(getSeed(), ((EdDSAPrivateKey) o).getSeed()) && Objects.equals(getEdDSAParameterSpec(), ((EdDSAPrivateKey) o).getEdDSAParameterSpec());
+    }
+
+    public byte[] getSeed() {
+        return seed;
+    }
+
+    public byte[] getHashOfTheSeed() {
+        return hashOfTheSeed;
+    }
+
+    public byte[] getPrivateKey() {
+        return privateKey;
+    }
+
+    public GroupElement getGroupElement() {
+        return groupElement;
     }
 }

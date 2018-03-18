@@ -20,10 +20,7 @@ import net.i2p.crypto.eddsa.math.EdDSAFiniteField;
 class BigIntegerLittleEndianEncoding {
 
     private final MyEmptyEncoding emptyEncoding = new MyEmptyEncoding(this);
-    /**
-     * Mask where only the first b-1 bits are set.
-     */
-    public BigInteger mask;
+    private BigInteger mask;
 
     /**
      *  Convert $x$ to little endian.
@@ -74,4 +71,14 @@ class BigIntegerLittleEndianEncoding {
         return emptyEncoding.getEdDSAFiniteField();
     }
 
+    /**
+     * Mask where only the first b-1 bits are set.
+     */
+    public BigInteger getMask() {
+        return mask;
+    }
+
+    public void setMask(BigInteger mask) {
+        this.mask = mask;
+    }
 }

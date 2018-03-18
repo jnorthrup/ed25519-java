@@ -44,15 +44,15 @@ public class EdDSAPublicKey implements EdDSAKey, PublicKey {
     private static final int OID_ED25519 = 112;
     private static final int OID_BYTE = 8;
     private static final int IDLEN_BYTE = 3;
-    public final GroupElement A;
-    public final GroupElement aNeg;
-    public final byte[] abyte;
+    private final GroupElement A;
+    private final GroupElement aNeg;
+    private final byte[] aByte;
     private final EdDSAParameterSpec edDSAParameterSpec;
 
     public EdDSAPublicKey(final EdDSAPublicKeySpec spec) {
         this.A = spec.A;
         this.aNeg = spec.getNegativeA();
-        this.abyte = this.A.toByteArray();
+        this.aByte = this.getA().toByteArray();
         this.edDSAParameterSpec = spec.getParams();
     }
 
@@ -206,7 +206,7 @@ public class EdDSAPublicKey implements EdDSAKey, PublicKey {
     public byte[] getEncoded() {
         if (getEdDSAParameterSpec() instanceof EdDSANamedCurveSpec && ((EdDSANamedCurveSpec) getEdDSAParameterSpec()).getName().equals(EdDSANamedCurveTable.ED_25519)) {
 
-            final int totlen = 12 + abyte.length;
+            final int totlen = 12 + getaByte().length;
             final byte[] rv = new byte[totlen];
             int idx = 0;
             // sequence
@@ -226,9 +226,9 @@ public class EdDSAPublicKey implements EdDSAKey, PublicKey {
             // params - absent
             // the key
             rv[idx++] = (byte) 0x03; // bit string
-            rv[idx++] = (byte) (1 + abyte.length);
+            rv[idx++] = (byte) (1 + getaByte().length);
             rv[idx++] = (byte) 0; // number of trailing unused bits
-            System.arraycopy(abyte, 0, rv, idx, abyte.length);
+            System.arraycopy(getaByte(), 0, rv, idx, getaByte().length);
             return rv;
         }
         return null;
@@ -236,7 +236,7 @@ public class EdDSAPublicKey implements EdDSAKey, PublicKey {
 
     @Override
     public int hashCode() {
-        return Arrays.hashCode(abyte);
+        return Arrays.hashCode(getaByte());
     }
 
     @Override
@@ -246,12 +246,24 @@ public class EdDSAPublicKey implements EdDSAKey, PublicKey {
         if (!(o instanceof EdDSAPublicKey))
             return false;
         final EdDSAPublicKey pk = (EdDSAPublicKey) o;
-        return Arrays.equals(abyte, pk.abyte) &&
+        return Arrays.equals(getaByte(), pk.getaByte()) &&
                 getEdDSAParameterSpec().equals(pk.getEdDSAParameterSpec());
     }
 
     @Override
     public EdDSAParameterSpec getEdDSAParameterSpec() {
         return edDSAParameterSpec;
+    }
+
+    public GroupElement getA() {
+        return A;
+    }
+
+    public GroupElement getaNeg() {
+        return aNeg;
+    }
+
+    public byte[] getaByte() {
+        return aByte;
     }
 }
