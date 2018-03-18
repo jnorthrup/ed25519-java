@@ -72,9 +72,9 @@ public final class EdDSAEngine extends Signature {
     public static final String SIGNATURE_ALGORITHM = "NONEwithEdDSA";
     public static final byte[] EMPTY = new byte[0];
 
-    public MessageDigest digest;
-    public ByteArrayOutputStream baos;
-    public EdDSAKey key;
+    private MessageDigest digest;
+    private ByteArrayOutputStream baos;
+    private EdDSAKey key;
     public boolean oneShotMode;
     public byte[] oneShotBytes;
     public int oneShotOffset;

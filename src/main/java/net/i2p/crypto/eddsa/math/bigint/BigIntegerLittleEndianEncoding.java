@@ -17,7 +17,7 @@ import java.util.Objects;
 import net.i2p.crypto.eddsa.math.EmptyEncoding;
 import net.i2p.crypto.eddsa.math.EdDSAFiniteField;
 
-public class BigIntegerLittleEndianEncoding {
+class BigIntegerLittleEndianEncoding {
 
     private final MyEmptyEncoding emptyEncoding = new MyEmptyEncoding(this);
     /**
