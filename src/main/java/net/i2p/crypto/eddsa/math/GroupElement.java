@@ -51,7 +51,7 @@ public class GroupElement {
      * @param T                The $T$ coordinate.
      * @param precomputeDouble If true, populate dblPrecmp, else set to null.
      */
-    public GroupElement(
+    protected GroupElement(
             final Curve curve,
             final Representation repr,
             final FieldElement X,
@@ -89,7 +89,7 @@ public class GroupElement {
      * @param precomputeSingleAndDouble If true, populate both precmp and dblPrecmp, else set both to null.
      */
     // TODO
-    public GroupElement(final Curve curve, final byte[] s, final boolean precomputeSingleAndDouble) {
+    protected GroupElement(final Curve curve, final byte[] s, final boolean precomputeSingleAndDouble) {
         FieldElement x;
         final FieldElement y;
         final FieldElement yy;
@@ -497,7 +497,7 @@ public class GroupElement {
                      * @param precomputeDoubleOnly If true, populate dblPrecmp, else set to null.
                      * @return The group element in P3 representation.
                      */
-                        return true ? new P3PreGroupElement(curve1, x, y, z, t) : new P3GroupElement(curve1, x, y, z, t);
+                        return new P3PreGroupElement(curve1, x, y, z, t);
                     case P1P1:
                         return p1p1(this.getCurve(), this.getX(), this.getY(), this.getZ(), this.getT());
                     default:

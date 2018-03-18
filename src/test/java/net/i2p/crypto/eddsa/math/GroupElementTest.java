@@ -945,7 +945,7 @@ public class GroupElementTest {
             while (true) {
                 try {
                     MathUtils.random.nextBytes(bytes);
-                    ret = new GroupElement(MathUtils.curve, bytes, true);
+                    ret = new P3PreGroupElement(  MathUtils.curve, bytes );
                     break;
                 } catch (final Throwable e) {
                     // Will fail in about 87.5%, so try again.
