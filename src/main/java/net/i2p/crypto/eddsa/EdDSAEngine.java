@@ -28,7 +28,7 @@ import java.util.Arrays;
 import java.util.Objects;
 import java.util.stream.IntStream;
 
-import net.i2p.crypto.eddsa.math.Curve;
+import net.i2p.crypto.eddsa.math.BaseCurve;
 import net.i2p.crypto.eddsa.math.GroupElement;
 import net.i2p.crypto.eddsa.math.ScalarOps;
 import sun.security.x509.X509Key;
@@ -219,7 +219,7 @@ public final class EdDSAEngine extends Signature {
     }
 
     public byte[] x_engineSign() {
-        final Curve curve = key.getEdDSAParameterSpec().curve;
+        final BaseCurve curve = key.getEdDSAParameterSpec().curve;
         final ScalarOps sc = key.getEdDSAParameterSpec().scalarOps;
         final byte[] a = ((EdDSAPrivateKey) key).getPrivateKey();
 
@@ -273,7 +273,7 @@ public final class EdDSAEngine extends Signature {
     }
 
     public boolean x_engineVerify(final byte[] sigBytes) {
-        final Curve curve = key.getEdDSAParameterSpec().curve;
+        final BaseCurve curve = key.getEdDSAParameterSpec().curve;
         final int b = curve.getEdDSAFiniteField().getb();
         assert sigBytes.length == b / 4 : "signature length is wrong";
 

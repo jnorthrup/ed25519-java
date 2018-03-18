@@ -32,7 +32,7 @@ import org.junit.Test;
  */
 public class ConstantsTest {
     private static final EdDSANamedCurveSpec ed25519 = EdDSANamedCurveTable.getByName(EdDSANamedCurveTable.ED_25519);
-    private static final Curve curve = ed25519.curve;
+    private static final BaseCurve curve = ed25519.curve;
 
     private static final FieldElement ZERO = curve.getEdDSAFiniteField().ZERO;
     private static final FieldElement ONE = curve.getEdDSAFiniteField().ONE;

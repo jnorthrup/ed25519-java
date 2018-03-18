@@ -15,7 +15,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.AlgorithmParameterSpec;
 
-import net.i2p.crypto.eddsa.math.Curve;
+import net.i2p.crypto.eddsa.math.BaseCurve;
 import net.i2p.crypto.eddsa.math.GroupElement;
 import net.i2p.crypto.eddsa.math.ScalarOps;
 
@@ -28,7 +28,7 @@ import java.util.Objects;
  */
 public class EdDSAParameterSpec implements AlgorithmParameterSpec  {
 
-    public final Curve curve;
+    public final BaseCurve curve;
     public final String hashAlgo;
     public final ScalarOps scalarOps;
     public final GroupElement groupElement;
@@ -40,7 +40,7 @@ public class EdDSAParameterSpec implements AlgorithmParameterSpec  {
      * @param groupElement the parameter B
      * @throws IllegalArgumentException if hash algorithm is unsupported or length is wrong
      */
-    EdDSAParameterSpec(final Curve curve, final String hashAlgo,
+    EdDSAParameterSpec(final BaseCurve curve, final String hashAlgo,
                        final ScalarOps scalarOps, final GroupElement groupElement) {
         try {
             final MessageDigest hash = MessageDigest.getInstance(hashAlgo);

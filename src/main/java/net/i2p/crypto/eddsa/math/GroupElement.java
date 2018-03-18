@@ -69,7 +69,7 @@ public class GroupElement  {
      * @return The group element in P2 representation.
      */
     public static GroupElement p2(
-            final Curve curve,
+            final BaseCurve curve,
             final FieldElement X,
             final FieldElement Y,
             final FieldElement Z) {
@@ -88,7 +88,7 @@ public class GroupElement  {
      * @return The group element in P3 representation.
      */
     public static GroupElement p3(
-            final Curve curve,
+            final BaseCurve curve,
             final FieldElement X,
             final FieldElement Y,
             final FieldElement Z,
@@ -108,7 +108,7 @@ public class GroupElement  {
      * @return The group element in P1P1 representation.
      */
     public static GroupElement p1p1(
-            final Curve curve,
+            final BaseCurve curve,
             final FieldElement X,
             final FieldElement Y,
             final FieldElement Z,
@@ -126,7 +126,7 @@ public class GroupElement  {
      * @return The group element in PRECOMP representation.
      */
     public static GroupElement precomp(
-            final Curve curve,
+            final BaseCurve curve,
             final FieldElement ypx,
             final FieldElement ymx,
             final FieldElement xy2d) {
@@ -144,7 +144,7 @@ public class GroupElement  {
      * @return The group element in CACHED representation.
      */
     public static GroupElement cached(
-            final Curve curve,
+            final BaseCurve curve,
             final FieldElement YpX,
             final FieldElement YmX,
             final FieldElement Z,
@@ -155,7 +155,7 @@ public class GroupElement  {
     /**
      * Variable is package private only so that tests run.
      */
-    final Curve curve;
+    final BaseCurve curve;
 
     /**
      * Variable is package private only so that tests run.
@@ -210,7 +210,7 @@ public class GroupElement  {
      * @param precomputeDouble If true, populate dblPrecmp, else set to null.
      */
     public GroupElement(
-            final Curve curve,
+            final BaseCurve curve,
             final Representation repr,
             final FieldElement X,
             final FieldElement Y,
@@ -243,7 +243,7 @@ public class GroupElement  {
      * @param curve The curve.
      * @param s The encoded point.
      */
-    public GroupElement(final Curve curve, final byte[] s) {
+    public GroupElement(final BaseCurve curve, final byte[] s) {
         this(curve, s, false);
     }
 
@@ -265,7 +265,7 @@ public class GroupElement  {
      * @param precomputeSingleAndDouble If true, populate both precmp and dblPrecmp, else set both to null.
      */
     // TODO
-    public GroupElement(final Curve curve, final byte[] s, final boolean precomputeSingleAndDouble) {
+    public GroupElement(final BaseCurve curve, final byte[] s, final boolean precomputeSingleAndDouble) {
         FieldElement x;
         final FieldElement y;
         final FieldElement yy;
@@ -328,7 +328,7 @@ public class GroupElement  {
      *
      * @return The curve.
      */
-    public Curve getCurve() {
+    public BaseCurve getCurve() {
         return this.curve;
     }
 
@@ -468,7 +468,7 @@ public class GroupElement  {
                     case P3:
                         return p3(this.curve, this.X, this.Y, this.Z, this.T, false);
                     case CACHED:
-                        return cached(this.curve, this.Y.add(this.X), this.Y.subtract(this.X), this.Z, this.T.multiply(this.curve.get2D()));
+                        return cached(this.curve, this.Y.add(this.X), this.Y.subtract(this.X), this.Z, this.T.multiply(this.curve.getD2()));
                     default:
                         throw new IllegalArgumentException();
                 }
@@ -518,7 +518,7 @@ public class GroupElement  {
                 final FieldElement recip = Bij.Z.invert();
                 final FieldElement x = Bij.X.multiply(recip);
                 final FieldElement y = Bij.Y.multiply(recip);
-                precmp[i][j] = precomp(this.curve, y.add(x), y.subtract(x), x.multiply(y).multiply(this.curve.get2D()));
+                precmp[i][j] = precomp(this.curve, y.add(x), y.subtract(x), x.multiply(y).multiply(this.curve.getD2()));
                 Bij = Bij.add(Bi.toCached()).toP3();
             }
             // Only every second summand is precomputed (16^2 = 256)
@@ -541,7 +541,7 @@ public class GroupElement  {
             final FieldElement recip = Bi.Z.invert();
             final FieldElement x = Bi.X.multiply(recip);
             final FieldElement y = Bi.Y.multiply(recip);
-            dblPrecmp[i] = precomp(this.curve, y.add(x), y.subtract(x), x.multiply(y).multiply(this.curve.get2D()));
+            dblPrecmp[i] = precomp(this.curve, y.add(x), y.subtract(x), x.multiply(y).multiply(this.curve.getD2()));
             // Bi = edwards(B,edwards(B,Bi))
             Bi = this.add(this.add(Bi.toCached()).toP3().toCached()).toP3();
         }
@@ -1069,7 +1069,7 @@ public class GroupElement  {
      * @param curve The curve to check.
      * @return true if the point lies on the curve.
      */
-    public boolean isOnCurve(final Curve curve) {
+    public boolean isOnCurve(final BaseCurve curve) {
         switch (repr) {
         case P2:
         case P3:
