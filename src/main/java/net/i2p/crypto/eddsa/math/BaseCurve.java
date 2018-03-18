@@ -41,6 +41,7 @@ public class BaseCurve implements Curve {
         zeroPrecomp = GroupElement.precomp(this, one, one, zero);
     }
 
+    @Override
     public GroupElement getZero(final GroupElement.Representation repr) {
         switch (repr) {
             case P2:
@@ -56,6 +57,7 @@ public class BaseCurve implements Curve {
         }
     }
 
+    @Override
     public GroupElement createPoint(final byte[] P, final boolean precompute) {
         final GroupElement ge = new GroupElement(this, P, precompute);
         return ge;
@@ -80,34 +82,42 @@ public class BaseCurve implements Curve {
                 getI().equals(c.getI());
     }
 
+    @Override
     public EdDSAFiniteField getEdDSAFiniteField() {
         return edDSAFiniteField;
     }
 
+    @Override
     public FieldElement getD() {
         return d;
     }
 
+    @Override
     public FieldElement getD2() {
         return d2;
     }
 
+    @Override
     public FieldElement getI() {
         return I;
     }
 
+    @Override
     public GroupElement getZeroP2() {
         return zeroP2;
     }
 
+    @Override
     public GroupElement getZeroP3() {
         return zeroP3;
     }
 
+    @Override
     public GroupElement getZeroP3PrecomputedDouble() {
         return zeroP3PrecomputedDouble;
     }
 
+    @Override
     public GroupElement getZeroPrecomp() {
         return zeroPrecomp;
     }
