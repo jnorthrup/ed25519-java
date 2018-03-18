@@ -24,7 +24,7 @@ import net.i2p.crypto.eddsa.math.GroupElement;
  */
 public class EdDSAPrivateKeySpec implements KeySpec {
     public final byte[] seed;
-    public final byte[] hasOfTheSeed;
+    public final byte[] hashOfTheSeed;
     public final byte[] privateKey;
     public final GroupElement groupElement;
     public final EdDSAParameterSpec spec;
@@ -38,14 +38,14 @@ public class EdDSAPrivateKeySpec implements KeySpec {
         assert seed.length == spec.curve.getField().getb() / 8 : "seed length is wrong";
 
         this.spec = spec;
-        this.seed = seed;
+        this.seed = seed.clone();
 
         try {
             final MessageDigest hash = MessageDigest.getInstance(spec.hashAlgo);
             final int b = spec.curve.getField().getb();
 
             // H(k)
-            hasOfTheSeed = hash.digest(seed);
+            hashOfTheSeed = hash.digest(seed);
 
             /*a = BigInteger.valueOf(2).pow(b-2);
             for (int i=3;i<(b-2);i++) {
@@ -53,10 +53,10 @@ public class EdDSAPrivateKeySpec implements KeySpec {
             }*/
             // Saves ~0.4ms per key when running signing tests.
             // TODO: are these bitflips the same for any hash function?
-            hasOfTheSeed[0] &= 248;
-            hasOfTheSeed[(b/8)-1] &= 63;
-            hasOfTheSeed[(b/8)-1] |= 64;
-            privateKey = Arrays.copyOfRange(hasOfTheSeed, 0, b/8);
+            hashOfTheSeed[0] = (byte) (hashOfTheSeed[0] & 248);
+            hashOfTheSeed[(b / 8) - 1] = (byte) (hashOfTheSeed[(b / 8) - 1] & 63);
+            hashOfTheSeed[(b / 8) - 1] = (byte) (hashOfTheSeed[(b / 8) - 1] | 64);
+            privateKey = Arrays.copyOfRange(hashOfTheSeed, 0, b/8);
 
             groupElement = spec.groupElement.scalarMultiply(privateKey);
         } catch (final NoSuchAlgorithmException e) {
@@ -69,30 +69,31 @@ public class EdDSAPrivateKeySpec implements KeySpec {
      *  getSeed() will return null if this constructor is used.
      *
      *  @param spec the parameter specification for this key
-     *  @param hasOfTheSeed the private key
+     *  @param hashOfTheSeed the private key
      *  @throws IllegalArgumentException if hash length is wrong
      *  @since 0.1.1
      */
-    public EdDSAPrivateKeySpec(final EdDSAParameterSpec spec, final byte[] hasOfTheSeed) {
-        assert hasOfTheSeed.length == spec.curve.getField().getb() / 4 : "hash length is wrong";
+    public EdDSAPrivateKeySpec(final EdDSAParameterSpec spec, final byte[] hashOfTheSeed) {
+        assert hashOfTheSeed.length == spec.curve.getField().getb() / 4 : "hash length is wrong";
 
 	this.seed = null;
-	this.hasOfTheSeed = hasOfTheSeed;
+        //noinspection AssignmentOrReturnOfFieldWithMutableType
+        this.hashOfTheSeed = hashOfTheSeed/*.clone()*/;//TODO how is cloning the array of a hash possibly breaking a test?
 	this.spec = spec;
         final int b = spec.curve.getField().getb();
 
-        hasOfTheSeed[0] &= 248;
-        hasOfTheSeed[(b/8)-1] &= 63;
-        hasOfTheSeed[(b/8)-1] |= 64;
-        privateKey = Arrays.copyOfRange(hasOfTheSeed, 0, b/8);
+        hashOfTheSeed[0] = (byte) (hashOfTheSeed[0] & 248);
+        hashOfTheSeed[(b / 8) - 1] = (byte) (hashOfTheSeed[(b / 8) - 1] & 63);
+        hashOfTheSeed[(b / 8) - 1] = (byte) (hashOfTheSeed[(b / 8) - 1] | 64);
+        privateKey = Arrays.copyOfRange(hashOfTheSeed, 0, b/8);
 
         groupElement = spec.groupElement.scalarMultiply(privateKey);
     }
 
-    public EdDSAPrivateKeySpec(final byte[] seed, final byte[] hasOfTheSeed, final byte[] privateKey, final GroupElement groupElement, final EdDSAParameterSpec spec) {
-        this.seed = seed;
-        this.hasOfTheSeed = hasOfTheSeed;
-        this.privateKey = privateKey;
+    public EdDSAPrivateKeySpec(final byte[] seed, final byte[] hashOfTheSeed, final byte[] privateKey, final GroupElement groupElement, final EdDSAParameterSpec spec) {
+        this.seed = seed.clone();
+        this.hashOfTheSeed = hashOfTheSeed.clone();
+        this.privateKey = privateKey.clone();
         this.groupElement = groupElement;
         this.spec = spec;
     }

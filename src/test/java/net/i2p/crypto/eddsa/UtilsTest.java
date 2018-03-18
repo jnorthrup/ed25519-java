@@ -70,7 +70,7 @@ public class UtilsTest {
         random.nextBytes(bytes1);
         for (int i = 0; 32 > i; i++) {
             System.arraycopy(bytes1, 0, bytes2, 0, 32);
-            bytes2[i] = (byte)(bytes2[i] ^ 0xff);
+            bytes2[i] ^= 0xff;
             Assert.assertThat(Utils.equal(bytes1, bytes2), IsEqual.equalTo(0));
         }
     }

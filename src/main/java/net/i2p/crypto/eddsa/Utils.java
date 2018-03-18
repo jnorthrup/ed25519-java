@@ -107,7 +107,7 @@ public class Utils {
      * @param s the hex string to be converted.
      * @return the byte[]
      */
-    public static byte[] hexToBytes(final String s) {
+    public static byte[] hexToBytes(final CharSequence s) {
         final int len = s.length();
         final byte[] data = new byte[len / 2];
         for (int i = 0; i < len; i += 2) {
@@ -128,8 +128,8 @@ public class Utils {
         }
         final StringBuilder hex = new StringBuilder(2 * raw.length);
         for (final byte b : raw) {
-            hex.append(Character.forDigit((b & 0xF0) >> 4, 16))
-            .append(Character.forDigit((b & 0x0F), 16));
+            hex.append(Character.forDigit(((int) b & 0xF0) >> 4, 16))
+            .append(Character.forDigit(((int) b & 0x0F), 16));
         }
         return hex.toString();
     }

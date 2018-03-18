@@ -39,13 +39,13 @@ public final class KeyPairGenerator extends KeyPairGeneratorSpi {
     public static final Hashtable<Integer, AlgorithmParameterSpec> edParameters;
 
     static {
-        edParameters = new Hashtable<Integer, AlgorithmParameterSpec>();
+        edParameters = new Hashtable<>();
 
-        edParameters.put(Integer.valueOf(256), new EdDSAGenParameterSpec(EdDSANamedCurveTable.ED_25519));
+        edParameters.put(256, new EdDSAGenParameterSpec(EdDSANamedCurveTable.ED_25519));
     }
 
     public void initialize(final int keysize, final SecureRandom random) {
-        final AlgorithmParameterSpec edParams = edParameters.get(Integer.valueOf(keysize));
+        final AlgorithmParameterSpec edParams = edParameters.get(keysize);
         Objects.requireNonNull(edParams);
         try {
             initialize(edParams, random);
@@ -87,7 +87,7 @@ public final class KeyPairGenerator extends KeyPairGeneratorSpi {
      * @return the specification for the named curve.
      * @throws InvalidAlgorithmParameterException if the named curve is unknown.
      */
-    protected EdDSANamedCurveSpec createNamedCurveSpec(final String curveName) throws InvalidAlgorithmParameterException {
+    protected EdDSANamedCurveSpec createNamedCurveSpec(final String curveName) {
         final EdDSANamedCurveSpec spec = EdDSANamedCurveTable.getByName(curveName);
         Objects.requireNonNull(spec);
         return spec;

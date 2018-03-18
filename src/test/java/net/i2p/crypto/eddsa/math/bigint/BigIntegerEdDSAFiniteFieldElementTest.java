@@ -15,6 +15,7 @@ import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.*;
 
 import java.math.BigInteger;
+import java.security.SecureRandom;
 import java.util.Random;
 
 import net.i2p.crypto.eddsa.Utils;
@@ -40,11 +41,11 @@ public class BigIntegerEdDSAFiniteFieldElementTest extends AbstractEdDSAFiniteFi
 
     static final FieldElement ZERO = new BigIntegerFieldElement(ED_25519_ED_DSA_FINITE_FIELD, BigInteger.ZERO);
     static final FieldElement ONE = new BigIntegerFieldElement(ED_25519_ED_DSA_FINITE_FIELD, BigInteger.ONE);
-    static final FieldElement TWO = new BigIntegerFieldElement(ED_25519_ED_DSA_FINITE_FIELD, BigInteger.valueOf(2));
+    static final FieldElement TWO = new BigIntegerFieldElement(ED_25519_ED_DSA_FINITE_FIELD, BigInteger.valueOf(2L));
 
     protected FieldElement getRandomFieldElement() {
         BigInteger r;
-        final Random rnd = new Random();
+        final Random rnd = new SecureRandom( );
         do {
             r = new BigInteger(255, rnd);
         } while (0 <= r.compareTo(getQ()));
@@ -70,7 +71,7 @@ public class BigIntegerEdDSAFiniteFieldElementTest extends AbstractEdDSAFiniteFi
     public void testFieldElementBigInteger() {
         assertThat(new BigIntegerFieldElement(ED_25519_ED_DSA_FINITE_FIELD, BigInteger.ZERO).bi, is(BigInteger.ZERO));
         assertThat(new BigIntegerFieldElement(ED_25519_ED_DSA_FINITE_FIELD, BigInteger.ONE).bi, is(BigInteger.ONE));
-        assertThat(new BigIntegerFieldElement(ED_25519_ED_DSA_FINITE_FIELD, BigInteger.valueOf(2)).bi, is(BigInteger.valueOf(2)));
+        assertThat(new BigIntegerFieldElement(ED_25519_ED_DSA_FINITE_FIELD, BigInteger.valueOf(2L)).bi, is(BigInteger.valueOf(2L)));
     }
 
     /**
@@ -109,7 +110,7 @@ public class BigIntegerEdDSAFiniteFieldElementTest extends AbstractEdDSAFiniteFi
     @Test
     public void testEqualsObject() {
         assertThat(new BigIntegerFieldElement(ED_25519_ED_DSA_FINITE_FIELD, BigInteger.ZERO), is(equalTo(ZERO)));
-        assertThat(new BigIntegerFieldElement(ED_25519_ED_DSA_FINITE_FIELD, BigInteger.valueOf(1000)), is(equalTo(new BigIntegerFieldElement(ED_25519_ED_DSA_FINITE_FIELD, BigInteger.valueOf(1000)))));
+        assertThat(new BigIntegerFieldElement(ED_25519_ED_DSA_FINITE_FIELD, BigInteger.valueOf(1000L)), is(equalTo(new BigIntegerFieldElement(ED_25519_ED_DSA_FINITE_FIELD, BigInteger.valueOf(1000L)))));
         assertThat(ONE, is(not(equalTo(TWO))));
     }
 

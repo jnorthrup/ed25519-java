@@ -40,10 +40,10 @@ public class EdDSANamedCurveTable {
 
 //    public static final EdDSANamedCurveSpec ED_25519 = ; // Precompute tables for B
 
-    public static volatile HashMap<String, EdDSANamedCurveSpec> curves = new HashMap<String, EdDSANamedCurveSpec>();
+    public static volatile HashMap<String, EdDSANamedCurveSpec> curves = new HashMap<>();
 
     public static synchronized void putCurve(final String name, final EdDSANamedCurveSpec curve) {
-        final HashMap<String, EdDSANamedCurveSpec> newCurves = new HashMap<String, EdDSANamedCurveSpec>(curves);
+        final HashMap<String, EdDSANamedCurveSpec> newCurves = new HashMap<>(curves);
         newCurves.put(name, curve);
         curves = newCurves;
     }

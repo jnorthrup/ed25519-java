@@ -17,6 +17,7 @@ package net.i2p.crypto.eddsa.math;
  * @author str4d
  *
  */
+@SuppressWarnings("ThisEscapedInObjectConstruction")
 public class Curve  {
 
     public final EdDSAFiniteField edDSAFiniteField;

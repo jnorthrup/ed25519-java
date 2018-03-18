@@ -37,29 +37,29 @@ public class Ed25519ScalarOps implements ScalarOps {
      */
     public byte[] reduce(final byte[] s) {
         // s0,..., s22 have 21 bits, s23 has 29 bits
-        long s0 = 0x1FFFFF & load_3(s, 0);
-        long s1 = 0x1FFFFF & (load_4(s, 2) >> 5);
-        long s2 = 0x1FFFFF & (load_3(s, 5) >> 2);
-        long s3 = 0x1FFFFF & (load_4(s, 7) >> 7);
-        long s4 = 0x1FFFFF & (load_4(s, 10) >> 4);
-        long s5 = 0x1FFFFF & (load_3(s, 13) >> 1);
-        long s6 = 0x1FFFFF & (load_4(s, 15) >> 6);
-        long s7 = 0x1FFFFF & (load_3(s, 18) >> 3);
-        long s8 = 0x1FFFFF & load_3(s, 21);
-        long s9 = 0x1FFFFF & (load_4(s, 23) >> 5);
-        long s10 = 0x1FFFFF & (load_3(s, 26) >> 2);
-        long s11 = 0x1FFFFF & (load_4(s, 28) >> 7);
-        long s12 = 0x1FFFFF & (load_4(s, 31) >> 4);
-        long s13 = 0x1FFFFF & (load_3(s, 34) >> 1);
-        long s14 = 0x1FFFFF & (load_4(s, 36) >> 6);
-        long s15 = 0x1FFFFF & (load_3(s, 39) >> 3);
-        long s16 = 0x1FFFFF & load_3(s, 42);
-        long s17 = 0x1FFFFF & (load_4(s, 44) >> 5);
-        final long s18 = 0x1FFFFF & (load_3(s, 47) >> 2);
-        final long s19 = 0x1FFFFF & (load_4(s, 49) >> 7);
-        final long s20 = 0x1FFFFF & (load_4(s, 52) >> 4);
-        final long s21 = 0x1FFFFF & (load_3(s, 55) >> 1);
-        final long s22 = 0x1FFFFF & (load_4(s, 57) >> 6);
+        long s0 = (long) (0x1FFFFF & load_3(s, 0));
+        long s1 = 0x1FFFFFL & (load_4(s, 2) >> 5);
+        long s2 = (long) (0x1FFFFF & (load_3(s, 5) >> 2));
+        long s3 = 0x1FFFFFL & (load_4(s, 7) >> 7);
+        long s4 = 0x1FFFFFL & (load_4(s, 10) >> 4);
+        long s5 = (long) (0x1FFFFF & (load_3(s, 13) >> 1));
+        long s6 = 0x1FFFFFL & (load_4(s, 15) >> 6);
+        long s7 = (long) (0x1FFFFF & (load_3(s, 18) >> 3));
+        long s8 = (long) (0x1FFFFF & load_3(s, 21));
+        long s9 = 0x1FFFFFL & (load_4(s, 23) >> 5);
+        long s10 = (long) (0x1FFFFF & (load_3(s, 26) >> 2));
+        long s11 = 0x1FFFFFL & (load_4(s, 28) >> 7);
+        long s12 = 0x1FFFFFL & (load_4(s, 31) >> 4);
+        long s13 = (long) (0x1FFFFF & (load_3(s, 34) >> 1));
+        long s14 = 0x1FFFFFL & (load_4(s, 36) >> 6);
+        long s15 = (long) (0x1FFFFF & (load_3(s, 39) >> 3));
+        long s16 = (long) (0x1FFFFF & load_3(s, 42));
+        long s17 = 0x1FFFFFL & (load_4(s, 44) >> 5);
+        final long s18 = (long) (0x1FFFFF & (load_3(s, 47) >> 2));
+        final long s19 = 0x1FFFFFL & (load_4(s, 49) >> 7);
+        final long s20 = 0x1FFFFFL & (load_4(s, 52) >> 4);
+        final long s21 = (long) (0x1FFFFF & (load_3(s, 55) >> 1));
+        final long s22 = 0x1FFFFFL & (load_4(s, 57) >> 6);
         final long s23 = (load_4(s, 60) >> 3);
         long carry0;
         long carry1;
@@ -95,157 +95,159 @@ public class Ed25519ScalarOps implements ScalarOps {
          *
          * The same procedure is then applied for s22,...,s18.
          */
-        s11 += s23 * 666643;
-        s12 += s23 * 470296;
-        s13 += s23 * 654183;
-        s14 -= s23 * 997805;
-        s15 += s23 * 136657;
-        s16 -= s23 * 683901;
+        s11 += s23 * 666643L;
+        s12 += s23 * 470296L;
+        s13 += s23 * 654183L;
+        s14 -= s23 * 997805L;
+        s15 += s23 * 136657L;
+        s16 -= s23 * 683901L;
         // not used again
         //s23 = 0;
 
-        s10 += s22 * 666643;
-        s11 += s22 * 470296;
-        s12 += s22 * 654183;
-        s13 -= s22 * 997805;
-        s14 += s22 * 136657;
-        s15 -= s22 * 683901;
+        s10 += s22 * 666643L;
+        s11 += s22 * 470296L;
+        s12 += s22 * 654183L;
+        s13 -= s22 * 997805L;
+        s14 += s22 * 136657L;
+        s15 -= s22 * 683901L;
         // not used again
         //s22 = 0;
 
-        s9 += s21 * 666643;
-        s10 += s21 * 470296;
-        s11 += s21 * 654183;
-        s12 -= s21 * 997805;
-        s13 += s21 * 136657;
-        s14 -= s21 * 683901;
+        s9 += s21 * 666643L;
+        s10 += s21 * 470296L;
+        s11 += s21 * 654183L;
+        s12 -= s21 * 997805L;
+        s13 += s21 * 136657L;
+        s14 -= s21 * 683901L;
         // not used again
         //s21 = 0;
 
-        s8 += s20 * 666643;
-        s9 += s20 * 470296;
-        s10 += s20 * 654183;
-        s11 -= s20 * 997805;
-        s12 += s20 * 136657;
-        s13 -= s20 * 683901;
+        s8 += s20 * 666643L;
+        s9 += s20 * 470296L;
+        s10 += s20 * 654183L;
+        s11 -= s20 * 997805L;
+        s12 += s20 * 136657L;
+        s13 -= s20 * 683901L;
         // not used again
         //s20 = 0;
 
-        s7 += s19 * 666643;
-        s8 += s19 * 470296;
-        s9 += s19 * 654183;
-        s10 -= s19 * 997805;
-        s11 += s19 * 136657;
-        s12 -= s19 * 683901;
+        s7 += s19 * 666643L;
+        s8 += s19 * 470296L;
+        s9 += s19 * 654183L;
+        s10 -= s19 * 997805L;
+        s11 += s19 * 136657L;
+        s12 -= s19 * 683901L;
         // not used again
         //s19 = 0;
 
-        s6 += s18 * 666643;
-        s7 += s18 * 470296;
-        s8 += s18 * 654183;
-        s9 -= s18 * 997805;
-        s10 += s18 * 136657;
-        s11 -= s18 * 683901;
+        s6 += s18 * 666643L;
+        s7 += s18 * 470296L;
+        s8 += s18 * 654183L;
+        s9 -= s18 * 997805L;
+        s10 += s18 * 136657L;
+        s11 -= s18 * 683901L;
         // not used again
         //s18 = 0;
 
         /**
          * Time to reduce the coefficient in order not to get an overflow.
          */
-        carry6 = (s6 + (1<<20)) >> 21; s7 += carry6; s6 -= carry6 << 21;
-        carry8 = (s8 + (1<<20)) >> 21; s9 += carry8; s8 -= carry8 << 21;
-        carry10 = (s10 + (1<<20)) >> 21; s11 += carry10; s10 -= carry10 << 21;
-        carry12 = (s12 + (1<<20)) >> 21; s13 += carry12; s12 -= carry12 << 21;
-        carry14 = (s14 + (1<<20)) >> 21; s15 += carry14; s14 -= carry14 << 21;
-        carry16 = (s16 + (1<<20)) >> 21; s17 += carry16; s16 -= carry16 << 21;
+        carry6 = (s6 + (long) (1 << 20)) >> 21; s7 += carry6; s6 -= carry6 << 21;
+        carry8 = (s8 + (long) (1 << 20)) >> 21; s9 += carry8; s8 -= carry8 << 21;
+        carry10 = (s10 + (long) (1 << 20)) >> 21; s11 += carry10; s10 -= carry10 << 21;
+        carry12 = (s12 + (long) (1 << 20)) >> 21; s13 += carry12; s12 -= carry12 << 21;
+        carry14 = (s14 + (long) (1 << 20)) >> 21; s15 += carry14; s14 -= carry14 << 21;
+        carry16 = (s16 + (long) (1 << 20)) >> 21; s17 += carry16; s16 -= carry16 << 21;
 
-        carry7 = (s7 + (1<<20)) >> 21; s8 += carry7; s7 -= carry7 << 21;
-        carry9 = (s9 + (1<<20)) >> 21; s10 += carry9; s9 -= carry9 << 21;
-        carry11 = (s11 + (1<<20)) >> 21; s12 += carry11; s11 -= carry11 << 21;
-        carry13 = (s13 + (1<<20)) >> 21; s14 += carry13; s13 -= carry13 << 21;
-        carry15 = (s15 + (1<<20)) >> 21; s16 += carry15; s15 -= carry15 << 21;
+        carry7 = (s7 + (long) (1 << 20)) >> 21; s8 += carry7; s7 -= carry7 << 21;
+        carry9 = (s9 + (long) (1 << 20)) >> 21; s10 += carry9; s9 -= carry9 << 21;
+        carry11 = (s11 + (long) (1 << 20)) >> 21; s12 += carry11; s11 -= carry11 << 21;
+        carry13 = (s13 + (long) (1 << 20)) >> 21; s14 += carry13; s13 -= carry13 << 21;
+        carry15 = (s15 + (long) (1 << 20)) >> 21; s16 += carry15; s15 -= carry15 << 21;
 
         /**
          * Continue with above procedure.
          */
-        s5 += s17 * 666643;
-        s6 += s17 * 470296;
-        s7 += s17 * 654183;
-        s8 -= s17 * 997805;
-        s9 += s17 * 136657;
-        s10 -= s17 * 683901;
+        s5 += s17 * 666643L;
+        s6 += s17 * 470296L;
+        s7 += s17 * 654183L;
+        s8 -= s17 * 997805L;
+        s9 += s17 * 136657L;
+        s10 -= s17 * 683901L;
         // not used again
         //s17 = 0;
 
-        s4 += s16 * 666643;
-        s5 += s16 * 470296;
-        s6 += s16 * 654183;
-        s7 -= s16 * 997805;
-        s8 += s16 * 136657;
-        s9 -= s16 * 683901;
+        s4 += s16 * 666643L;
+        s5 += s16 * 470296L;
+        s6 += s16 * 654183L;
+        s7 -= s16 * 997805L;
+        s8 += s16 * 136657L;
+        s9 -= s16 * 683901L;
         // not used again
         //s16 = 0;
 
-        s3 += s15 * 666643;
-        s4 += s15 * 470296;
-        s5 += s15 * 654183;
-        s6 -= s15 * 997805;
-        s7 += s15 * 136657;
-        s8 -= s15 * 683901;
+        s3 += s15 * 666643L;
+        s4 += s15 * 470296L;
+        s5 += s15 * 654183L;
+        s6 -= s15 * 997805L;
+        s7 += s15 * 136657L;
+        s8 -= s15 * 683901L;
         // not used again
         //s15 = 0;
 
-        s2 += s14 * 666643;
-        s3 += s14 * 470296;
-        s4 += s14 * 654183;
-        s5 -= s14 * 997805;
-        s6 += s14 * 136657;
-        s7 -= s14 * 683901;
+        s2 += s14 * 666643L;
+        s3 += s14 * 470296L;
+        s4 += s14 * 654183L;
+        s5 -= s14 * 997805L;
+        s6 += s14 * 136657L;
+        s7 -= s14 * 683901L;
         // not used again
         //s14 = 0;
 
-        s1 += s13 * 666643;
-        s2 += s13 * 470296;
-        s3 += s13 * 654183;
-        s4 -= s13 * 997805;
-        s5 += s13 * 136657;
-        s6 -= s13 * 683901;
+        s1 += s13 * 666643L;
+        s2 += s13 * 470296L;
+        s3 += s13 * 654183L;
+        s4 -= s13 * 997805L;
+        s5 += s13 * 136657L;
+        s6 -= s13 * 683901L;
         // not used again
         //s13 = 0;
 
-        s0 += s12 * 666643;
-        s1 += s12 * 470296;
-        s2 += s12 * 654183;
-        s3 -= s12 * 997805;
-        s4 += s12 * 136657;
-        s5 -= s12 * 683901;
+        s0 += s12 * 666643L;
+        s1 += s12 * 470296L;
+        s2 += s12 * 654183L;
+        s3 -= s12 * 997805L;
+        s4 += s12 * 136657L;
+        s5 -= s12 * 683901L;
         // set below
         //s12 = 0;
 
         /**
          * Reduce coefficients again.
          */
-        carry0 = (s0 + (1<<20)) >> 21; s1 += carry0; s0 -= carry0 << 21;
-        carry2 = (s2 + (1<<20)) >> 21; s3 += carry2; s2 -= carry2 << 21;
-        carry4 = (s4 + (1<<20)) >> 21; s5 += carry4; s4 -= carry4 << 21;
-        carry6 = (s6 + (1<<20)) >> 21; s7 += carry6; s6 -= carry6 << 21;
-        carry8 = (s8 + (1<<20)) >> 21; s9 += carry8; s8 -= carry8 << 21;
-        carry10 = (s10 + (1<<20)) >> 21; s11 += carry10; s10 -= carry10 << 21;
+        carry0 = (s0 + (long) (1 << 20)) >> 21; s1 += carry0; s0 -= carry0 << 21;
+        carry2 = (s2 + (long) (1 << 20)) >> 21; s3 += carry2; s2 -= carry2 << 21;
+        carry4 = (s4 + (long) (1 << 20)) >> 21; s5 += carry4; s4 -= carry4 << 21;
+        carry6 = (s6 + (long) (1 << 20)) >> 21; s7 += carry6; s6 -= carry6 << 21;
+        carry8 = (s8 + (long) (1 << 20)) >> 21; s9 += carry8; s8 -= carry8 << 21;
+        carry10 = (s10 + (long) (1 << 20)) >> 21; s11 += carry10; s10 -= carry10 << 21;
 
-        carry1 = (s1 + (1<<20)) >> 21; s2 += carry1; s1 -= carry1 << 21;
-        carry3 = (s3 + (1<<20)) >> 21; s4 += carry3; s3 -= carry3 << 21;
-        carry5 = (s5 + (1<<20)) >> 21; s6 += carry5; s5 -= carry5 << 21;
-        carry7 = (s7 + (1<<20)) >> 21; s8 += carry7; s7 -= carry7 << 21;
-        carry9 = (s9 + (1<<20)) >> 21; s10 += carry9; s9 -= carry9 << 21;
+        carry1 = (s1 + (long) (1 << 20)) >> 21; s2 += carry1; s1 -= carry1 << 21;
+        carry3 = (s3 + (long) (1 << 20)) >> 21; s4 += carry3; s3 -= carry3 << 21;
+        carry5 = (s5 + (long) (1 << 20)) >> 21; s6 += carry5; s5 -= carry5 << 21;
+        carry7 = (s7 + (long) (1 << 20)) >> 21; s8 += carry7; s7 -= carry7 << 21;
+        carry9 = (s9 + (long) (1 << 20)) >> 21; s10 += carry9; s9 -= carry9 << 21;
         //carry11 = (s11 + (1<<20)) >> 21; s12 += carry11; s11 -= carry11 << 21;
-        carry11 = (s11 + (1<<20)) >> 21; s12 = carry11; s11 -= carry11 << 21;
+        carry11 = (s11 + (long) (1 << 20)) >> 21;
+        long s12a = carry11;
+        s11 -= carry11 << 21;
 
-        s0 += s12 * 666643;
-        s1 += s12 * 470296;
-        s2 += s12 * 654183;
-        s3 -= s12 * 997805;
-        s4 += s12 * 136657;
-        s5 -= s12 * 683901;
+        s0 += s12a * 666643L;
+        s1 += s12a * 470296L;
+        s2 += s12a * 654183L;
+        s3 -= s12a * 997805L;
+        s4 += s12a * 136657L;
+        s5 -= s12a * 683901L;
         // set below
         //s12 = 0;
 
@@ -261,15 +263,17 @@ public class Ed25519ScalarOps implements ScalarOps {
         carry9 = s9 >> 21; s10 += carry9; s9 -= carry9 << 21;
         carry10 = s10 >> 21; s11 += carry10; s10 -= carry10 << 21;
         //carry11 = s11 >> 21; s12 += carry11; s11 -= carry11 << 21;
-        carry11 = s11 >> 21; s12 = carry11; s11 -= carry11 << 21;
+        carry11 = s11 >> 21;
+        long s12b = carry11;
+        s11 -= carry11 << 21;
 
         // TODO-CR BR: Is it really needed to do it TWO times? (it doesn't hurt, just a question).
-        s0 += s12 * 666643;
-        s1 += s12 * 470296;
-        s2 += s12 * 654183;
-        s3 -= s12 * 997805;
-        s4 += s12 * 136657;
-        s5 -= s12 * 683901;
+        s0 += s12b * 666643L;
+        s1 += s12b * 470296L;
+        s2 += s12b * 654183L;
+        s3 -= s12b * 997805L;
+        s4 += s12b * 136657L;
+        s5 -= s12b * 683901L;
         // not used again
         //s12 = 0;
 
@@ -339,41 +343,41 @@ public class Ed25519ScalarOps implements ScalarOps {
      * See the comments in {@link #reduce(byte[])} for an explanation of the algorithm.
      */
     public byte[] multiplyAndAdd(final byte[] a, final byte[] b, final byte[] c) {
-        final long a0 = 0x1FFFFF & load_3(a, 0);
-        final long a1 = 0x1FFFFF & (load_4(a, 2) >> 5);
-        final long a2 = 0x1FFFFF & (load_3(a, 5) >> 2);
-        final long a3 = 0x1FFFFF & (load_4(a, 7) >> 7);
-        final long a4 = 0x1FFFFF & (load_4(a, 10) >> 4);
-        final long a5 = 0x1FFFFF & (load_3(a, 13) >> 1);
-        final long a6 = 0x1FFFFF & (load_4(a, 15) >> 6);
-        final long a7 = 0x1FFFFF & (load_3(a, 18) >> 3);
-        final long a8 = 0x1FFFFF & load_3(a, 21);
-        final long a9 = 0x1FFFFF & (load_4(a, 23) >> 5);
-        final long a10 = 0x1FFFFF & (load_3(a, 26) >> 2);
+        final long a0 = (long) (0x1FFFFF & load_3(a, 0));
+        final long a1 = 0x1FFFFFL & (load_4(a, 2) >> 5);
+        final long a2 = (long) (0x1FFFFF & (load_3(a, 5) >> 2));
+        final long a3 = 0x1FFFFFL & (load_4(a, 7) >> 7);
+        final long a4 = 0x1FFFFFL & (load_4(a, 10) >> 4);
+        final long a5 = (long) (0x1FFFFF & (load_3(a, 13) >> 1));
+        final long a6 = 0x1FFFFFL & (load_4(a, 15) >> 6);
+        final long a7 = (long) (0x1FFFFF & (load_3(a, 18) >> 3));
+        final long a8 = (long) (0x1FFFFF & load_3(a, 21));
+        final long a9 = 0x1FFFFFL & (load_4(a, 23) >> 5);
+        final long a10 = (long) (0x1FFFFF & (load_3(a, 26) >> 2));
         final long a11 = (load_4(a, 28) >> 7);
-        final long b0 = 0x1FFFFF & load_3(b, 0);
-        final long b1 = 0x1FFFFF & (load_4(b, 2) >> 5);
-        final long b2 = 0x1FFFFF & (load_3(b, 5) >> 2);
-        final long b3 = 0x1FFFFF & (load_4(b, 7) >> 7);
-        final long b4 = 0x1FFFFF & (load_4(b, 10) >> 4);
-        final long b5 = 0x1FFFFF & (load_3(b, 13) >> 1);
-        final long b6 = 0x1FFFFF & (load_4(b, 15) >> 6);
-        final long b7 = 0x1FFFFF & (load_3(b, 18) >> 3);
-        final long b8 = 0x1FFFFF & load_3(b, 21);
-        final long b9 = 0x1FFFFF & (load_4(b, 23) >> 5);
-        final long b10 = 0x1FFFFF & (load_3(b, 26) >> 2);
+        final long b0 = (long) (0x1FFFFF & load_3(b, 0));
+        final long b1 = 0x1FFFFFL & (load_4(b, 2) >> 5);
+        final long b2 = (long) (0x1FFFFF & (load_3(b, 5) >> 2));
+        final long b3 = 0x1FFFFFL & (load_4(b, 7) >> 7);
+        final long b4 = 0x1FFFFFL & (load_4(b, 10) >> 4);
+        final long b5 = (long) (0x1FFFFF & (load_3(b, 13) >> 1));
+        final long b6 = 0x1FFFFFL & (load_4(b, 15) >> 6);
+        final long b7 = (long) (0x1FFFFF & (load_3(b, 18) >> 3));
+        final long b8 = (long) (0x1FFFFF & load_3(b, 21));
+        final long b9 = 0x1FFFFFL & (load_4(b, 23) >> 5);
+        final long b10 = (long) (0x1FFFFF & (load_3(b, 26) >> 2));
         final long b11 = (load_4(b, 28) >> 7);
-        final long c0 = 0x1FFFFF & load_3(c, 0);
-        final long c1 = 0x1FFFFF & (load_4(c, 2) >> 5);
-        final long c2 = 0x1FFFFF & (load_3(c, 5) >> 2);
-        final long c3 = 0x1FFFFF & (load_4(c, 7) >> 7);
-        final long c4 = 0x1FFFFF & (load_4(c, 10) >> 4);
-        final long c5 = 0x1FFFFF & (load_3(c, 13) >> 1);
-        final long c6 = 0x1FFFFF & (load_4(c, 15) >> 6);
-        final long c7 = 0x1FFFFF & (load_3(c, 18) >> 3);
-        final long c8 = 0x1FFFFF & load_3(c, 21);
-        final long c9 = 0x1FFFFF & (load_4(c, 23) >> 5);
-        final long c10 = 0x1FFFFF & (load_3(c, 26) >> 2);
+        final long c0 = (long) (0x1FFFFF & load_3(c, 0));
+        final long c1 = 0x1FFFFFL & (load_4(c, 2) >> 5);
+        final long c2 = (long) (0x1FFFFF & (load_3(c, 5) >> 2));
+        final long c3 = 0x1FFFFFL & (load_4(c, 7) >> 7);
+        final long c4 = 0x1FFFFFL & (load_4(c, 10) >> 4);
+        final long c5 = (long) (0x1FFFFF & (load_3(c, 13) >> 1));
+        final long c6 = 0x1FFFFFL & (load_4(c, 15) >> 6);
+        final long c7 = (long) (0x1FFFFF & (load_3(c, 18) >> 3));
+        final long c8 = (long) (0x1FFFFF & load_3(c, 21));
+        final long c9 = 0x1FFFFFL & (load_4(c, 23) >> 5);
+        final long c10 = (long) (0x1FFFFF & (load_3(c, 26) >> 2));
         final long c11 = (load_4(c, 28) >> 7);
         long s0;
         long s1;
@@ -449,174 +453,174 @@ public class Ed25519ScalarOps implements ScalarOps {
         // set below
         //s23 = 0;
 
-        carry0 = (s0 + (1<<20)) >> 21; s1 += carry0; s0 -= carry0 << 21;
-        carry2 = (s2 + (1<<20)) >> 21; s3 += carry2; s2 -= carry2 << 21;
-        carry4 = (s4 + (1<<20)) >> 21; s5 += carry4; s4 -= carry4 << 21;
-        carry6 = (s6 + (1<<20)) >> 21; s7 += carry6; s6 -= carry6 << 21;
-        carry8 = (s8 + (1<<20)) >> 21; s9 += carry8; s8 -= carry8 << 21;
-        carry10 = (s10 + (1<<20)) >> 21; s11 += carry10; s10 -= carry10 << 21;
-        carry12 = (s12 + (1<<20)) >> 21; s13 += carry12; s12 -= carry12 << 21;
-        carry14 = (s14 + (1<<20)) >> 21; s15 += carry14; s14 -= carry14 << 21;
-        carry16 = (s16 + (1<<20)) >> 21; s17 += carry16; s16 -= carry16 << 21;
-        carry18 = (s18 + (1<<20)) >> 21; s19 += carry18; s18 -= carry18 << 21;
-        carry20 = (s20 + (1<<20)) >> 21; s21 += carry20; s20 -= carry20 << 21;
+        carry0 = (s0 + (long) (1 << 20)) >> 21; s1 += carry0; s0 -= carry0 << 21;
+        carry2 = (s2 + (long) (1 << 20)) >> 21; s3 += carry2; s2 -= carry2 << 21;
+        carry4 = (s4 + (long) (1 << 20)) >> 21; s5 += carry4; s4 -= carry4 << 21;
+        carry6 = (s6 + (long) (1 << 20)) >> 21; s7 += carry6; s6 -= carry6 << 21;
+        carry8 = (s8 + (long) (1 << 20)) >> 21; s9 += carry8; s8 -= carry8 << 21;
+        carry10 = (s10 + (long) (1 << 20)) >> 21; s11 += carry10; s10 -= carry10 << 21;
+        carry12 = (s12 + (long) (1 << 20)) >> 21; s13 += carry12; s12 -= carry12 << 21;
+        carry14 = (s14 + (long) (1 << 20)) >> 21; s15 += carry14; s14 -= carry14 << 21;
+        carry16 = (s16 + (long) (1 << 20)) >> 21; s17 += carry16; s16 -= carry16 << 21;
+        carry18 = (s18 + (long) (1 << 20)) >> 21; s19 += carry18; s18 -= carry18 << 21;
+        carry20 = (s20 + (long) (1 << 20)) >> 21; s21 += carry20; s20 -= carry20 << 21;
         //carry22 = (s22 + (1<<20)) >> 21; s23 += carry22; s22 -= carry22 << 21;
-        carry22 = (s22 + (1<<20)) >> 21; s23 = carry22; s22 -= carry22 << 21;
+        carry22 = (s22 + (long) (1 << 20)) >> 21; s23 = carry22; s22 -= carry22 << 21;
 
-        carry1 = (s1 + (1<<20)) >> 21; s2 += carry1; s1 -= carry1 << 21;
-        carry3 = (s3 + (1<<20)) >> 21; s4 += carry3; s3 -= carry3 << 21;
-        carry5 = (s5 + (1<<20)) >> 21; s6 += carry5; s5 -= carry5 << 21;
-        carry7 = (s7 + (1<<20)) >> 21; s8 += carry7; s7 -= carry7 << 21;
-        carry9 = (s9 + (1<<20)) >> 21; s10 += carry9; s9 -= carry9 << 21;
-        carry11 = (s11 + (1<<20)) >> 21; s12 += carry11; s11 -= carry11 << 21;
-        carry13 = (s13 + (1<<20)) >> 21; s14 += carry13; s13 -= carry13 << 21;
-        carry15 = (s15 + (1<<20)) >> 21; s16 += carry15; s15 -= carry15 << 21;
-        carry17 = (s17 + (1<<20)) >> 21; s18 += carry17; s17 -= carry17 << 21;
-        carry19 = (s19 + (1<<20)) >> 21; s20 += carry19; s19 -= carry19 << 21;
-        carry21 = (s21 + (1<<20)) >> 21; s22 += carry21; s21 -= carry21 << 21;
+        carry1 = (s1 + (long) (1 << 20)) >> 21; s2 += carry1; s1 -= carry1 << 21;
+        carry3 = (s3 + (long) (1 << 20)) >> 21; s4 += carry3; s3 -= carry3 << 21;
+        carry5 = (s5 + (long) (1 << 20)) >> 21; s6 += carry5; s5 -= carry5 << 21;
+        carry7 = (s7 + (long) (1 << 20)) >> 21; s8 += carry7; s7 -= carry7 << 21;
+        carry9 = (s9 + (long) (1 << 20)) >> 21; s10 += carry9; s9 -= carry9 << 21;
+        carry11 = (s11 + (long) (1 << 20)) >> 21; s12 += carry11; s11 -= carry11 << 21;
+        carry13 = (s13 + (long) (1 << 20)) >> 21; s14 += carry13; s13 -= carry13 << 21;
+        carry15 = (s15 + (long) (1 << 20)) >> 21; s16 += carry15; s15 -= carry15 << 21;
+        carry17 = (s17 + (long) (1 << 20)) >> 21; s18 += carry17; s17 -= carry17 << 21;
+        carry19 = (s19 + (long) (1 << 20)) >> 21; s20 += carry19; s19 -= carry19 << 21;
+        carry21 = (s21 + (long) (1 << 20)) >> 21; s22 += carry21; s21 -= carry21 << 21;
 
-        s11 += s23 * 666643;
-        s12 += s23 * 470296;
-        s13 += s23 * 654183;
-        s14 -= s23 * 997805;
-        s15 += s23 * 136657;
-        s16 -= s23 * 683901;
+        s11 += s23 * 666643L;
+        s12 += s23 * 470296L;
+        s13 += s23 * 654183L;
+        s14 -= s23 * 997805L;
+        s15 += s23 * 136657L;
+        s16 -= s23 * 683901L;
         // not used again
         //s23 = 0;
 
-        s10 += s22 * 666643;
-        s11 += s22 * 470296;
-        s12 += s22 * 654183;
-        s13 -= s22 * 997805;
-        s14 += s22 * 136657;
-        s15 -= s22 * 683901;
+        s10 += s22 * 666643L;
+        s11 += s22 * 470296L;
+        s12 += s22 * 654183L;
+        s13 -= s22 * 997805L;
+        s14 += s22 * 136657L;
+        s15 -= s22 * 683901L;
         // not used again
         //s22 = 0;
 
-        s9 += s21 * 666643;
-        s10 += s21 * 470296;
-        s11 += s21 * 654183;
-        s12 -= s21 * 997805;
-        s13 += s21 * 136657;
-        s14 -= s21 * 683901;
+        s9 += s21 * 666643L;
+        s10 += s21 * 470296L;
+        s11 += s21 * 654183L;
+        s12 -= s21 * 997805L;
+        s13 += s21 * 136657L;
+        s14 -= s21 * 683901L;
         // not used again
         //s21 = 0;
 
-        s8 += s20 * 666643;
-        s9 += s20 * 470296;
-        s10 += s20 * 654183;
-        s11 -= s20 * 997805;
-        s12 += s20 * 136657;
-        s13 -= s20 * 683901;
+        s8 += s20 * 666643L;
+        s9 += s20 * 470296L;
+        s10 += s20 * 654183L;
+        s11 -= s20 * 997805L;
+        s12 += s20 * 136657L;
+        s13 -= s20 * 683901L;
         // not used again
         //s20 = 0;
 
-        s7 += s19 * 666643;
-        s8 += s19 * 470296;
-        s9 += s19 * 654183;
-        s10 -= s19 * 997805;
-        s11 += s19 * 136657;
-        s12 -= s19 * 683901;
+        s7 += s19 * 666643L;
+        s8 += s19 * 470296L;
+        s9 += s19 * 654183L;
+        s10 -= s19 * 997805L;
+        s11 += s19 * 136657L;
+        s12 -= s19 * 683901L;
         // not used again
         //s19 = 0;
 
-        s6 += s18 * 666643;
-        s7 += s18 * 470296;
-        s8 += s18 * 654183;
-        s9 -= s18 * 997805;
-        s10 += s18 * 136657;
-        s11 -= s18 * 683901;
+        s6 += s18 * 666643L;
+        s7 += s18 * 470296L;
+        s8 += s18 * 654183L;
+        s9 -= s18 * 997805L;
+        s10 += s18 * 136657L;
+        s11 -= s18 * 683901L;
         // not used again
         //s18 = 0;
 
-        carry6 = (s6 + (1<<20)) >> 21; s7 += carry6; s6 -= carry6 << 21;
-        carry8 = (s8 + (1<<20)) >> 21; s9 += carry8; s8 -= carry8 << 21;
-        carry10 = (s10 + (1<<20)) >> 21; s11 += carry10; s10 -= carry10 << 21;
-        carry12 = (s12 + (1<<20)) >> 21; s13 += carry12; s12 -= carry12 << 21;
-        carry14 = (s14 + (1<<20)) >> 21; s15 += carry14; s14 -= carry14 << 21;
-        carry16 = (s16 + (1<<20)) >> 21; s17 += carry16; s16 -= carry16 << 21;
+        carry6 = (s6 + (long) (1 << 20)) >> 21; s7 += carry6; s6 -= carry6 << 21;
+        carry8 = (s8 + (long) (1 << 20)) >> 21; s9 += carry8; s8 -= carry8 << 21;
+        carry10 = (s10 + (long) (1 << 20)) >> 21; s11 += carry10; s10 -= carry10 << 21;
+        carry12 = (s12 + (long) (1 << 20)) >> 21; s13 += carry12; s12 -= carry12 << 21;
+        carry14 = (s14 + (long) (1 << 20)) >> 21; s15 += carry14; s14 -= carry14 << 21;
+        carry16 = (s16 + (long) (1 << 20)) >> 21; s17 += carry16; s16 -= carry16 << 21;
 
-        carry7 = (s7 + (1<<20)) >> 21; s8 += carry7; s7 -= carry7 << 21;
-        carry9 = (s9 + (1<<20)) >> 21; s10 += carry9; s9 -= carry9 << 21;
-        carry11 = (s11 + (1<<20)) >> 21; s12 += carry11; s11 -= carry11 << 21;
-        carry13 = (s13 + (1<<20)) >> 21; s14 += carry13; s13 -= carry13 << 21;
-        carry15 = (s15 + (1<<20)) >> 21; s16 += carry15; s15 -= carry15 << 21;
+        carry7 = (s7 + (long) (1 << 20)) >> 21; s8 += carry7; s7 -= carry7 << 21;
+        carry9 = (s9 + (long) (1 << 20)) >> 21; s10 += carry9; s9 -= carry9 << 21;
+        carry11 = (s11 + (long) (1 << 20)) >> 21; s12 += carry11; s11 -= carry11 << 21;
+        carry13 = (s13 + (long) (1 << 20)) >> 21; s14 += carry13; s13 -= carry13 << 21;
+        carry15 = (s15 + (long) (1 << 20)) >> 21; s16 += carry15; s15 -= carry15 << 21;
 
-        s5 += s17 * 666643;
-        s6 += s17 * 470296;
-        s7 += s17 * 654183;
-        s8 -= s17 * 997805;
-        s9 += s17 * 136657;
-        s10 -= s17 * 683901;
+        s5 += s17 * 666643L;
+        s6 += s17 * 470296L;
+        s7 += s17 * 654183L;
+        s8 -= s17 * 997805L;
+        s9 += s17 * 136657L;
+        s10 -= s17 * 683901L;
         // not used again
         //s17 = 0;
 
-        s4 += s16 * 666643;
-        s5 += s16 * 470296;
-        s6 += s16 * 654183;
-        s7 -= s16 * 997805;
-        s8 += s16 * 136657;
-        s9 -= s16 * 683901;
+        s4 += s16 * 666643L;
+        s5 += s16 * 470296L;
+        s6 += s16 * 654183L;
+        s7 -= s16 * 997805L;
+        s8 += s16 * 136657L;
+        s9 -= s16 * 683901L;
         // not used again
         //s16 = 0;
 
-        s3 += s15 * 666643;
-        s4 += s15 * 470296;
-        s5 += s15 * 654183;
-        s6 -= s15 * 997805;
-        s7 += s15 * 136657;
-        s8 -= s15 * 683901;
+        s3 += s15 * 666643L;
+        s4 += s15 * 470296L;
+        s5 += s15 * 654183L;
+        s6 -= s15 * 997805L;
+        s7 += s15 * 136657L;
+        s8 -= s15 * 683901L;
         // not used again
         //s15 = 0;
 
-        s2 += s14 * 666643;
-        s3 += s14 * 470296;
-        s4 += s14 * 654183;
-        s5 -= s14 * 997805;
-        s6 += s14 * 136657;
-        s7 -= s14 * 683901;
+        s2 += s14 * 666643L;
+        s3 += s14 * 470296L;
+        s4 += s14 * 654183L;
+        s5 -= s14 * 997805L;
+        s6 += s14 * 136657L;
+        s7 -= s14 * 683901L;
         // not used again
         //s14 = 0;
 
-        s1 += s13 * 666643;
-        s2 += s13 * 470296;
-        s3 += s13 * 654183;
-        s4 -= s13 * 997805;
-        s5 += s13 * 136657;
-        s6 -= s13 * 683901;
+        s1 += s13 * 666643L;
+        s2 += s13 * 470296L;
+        s3 += s13 * 654183L;
+        s4 -= s13 * 997805L;
+        s5 += s13 * 136657L;
+        s6 -= s13 * 683901L;
         // not used again
         //s13 = 0;
 
-        s0 += s12 * 666643;
-        s1 += s12 * 470296;
-        s2 += s12 * 654183;
-        s3 -= s12 * 997805;
-        s4 += s12 * 136657;
-        s5 -= s12 * 683901;
+        s0 += s12 * 666643L;
+        s1 += s12 * 470296L;
+        s2 += s12 * 654183L;
+        s3 -= s12 * 997805L;
+        s4 += s12 * 136657L;
+        s5 -= s12 * 683901L;
         // set below
         //s12 = 0;
 
-        carry0 = (s0 + (1<<20)) >> 21; s1 += carry0; s0 -= carry0 << 21;
-        carry2 = (s2 + (1<<20)) >> 21; s3 += carry2; s2 -= carry2 << 21;
-        carry4 = (s4 + (1<<20)) >> 21; s5 += carry4; s4 -= carry4 << 21;
-        carry6 = (s6 + (1<<20)) >> 21; s7 += carry6; s6 -= carry6 << 21;
-        carry8 = (s8 + (1<<20)) >> 21; s9 += carry8; s8 -= carry8 << 21;
-        carry10 = (s10 + (1<<20)) >> 21; s11 += carry10; s10 -= carry10 << 21;
+        carry0 = (s0 + (long) (1 << 20)) >> 21; s1 += carry0; s0 -= carry0 << 21;
+        carry2 = (s2 + (long) (1 << 20)) >> 21; s3 += carry2; s2 -= carry2 << 21;
+        carry4 = (s4 + (long) (1 << 20)) >> 21; s5 += carry4; s4 -= carry4 << 21;
+        carry6 = (s6 + (long) (1 << 20)) >> 21; s7 += carry6; s6 -= carry6 << 21;
+        carry8 = (s8 + (long) (1 << 20)) >> 21; s9 += carry8; s8 -= carry8 << 21;
+        carry10 = (s10 + (long) (1 << 20)) >> 21; s11 += carry10; s10 -= carry10 << 21;
 
-        carry1 = (s1 + (1<<20)) >> 21; s2 += carry1; s1 -= carry1 << 21;
-        carry3 = (s3 + (1<<20)) >> 21; s4 += carry3; s3 -= carry3 << 21;
-        carry5 = (s5 + (1<<20)) >> 21; s6 += carry5; s5 -= carry5 << 21;
-        carry7 = (s7 + (1<<20)) >> 21; s8 += carry7; s7 -= carry7 << 21;
-        carry9 = (s9 + (1<<20)) >> 21; s10 += carry9; s9 -= carry9 << 21;
+        carry1 = (s1 + (long) (1 << 20)) >> 21; s2 += carry1; s1 -= carry1 << 21;
+        carry3 = (s3 + (long) (1 << 20)) >> 21; s4 += carry3; s3 -= carry3 << 21;
+        carry5 = (s5 + (long) (1 << 20)) >> 21; s6 += carry5; s5 -= carry5 << 21;
+        carry7 = (s7 + (long) (1 << 20)) >> 21; s8 += carry7; s7 -= carry7 << 21;
+        carry9 = (s9 + (long) (1 << 20)) >> 21; s10 += carry9; s9 -= carry9 << 21;
         //carry11 = (s11 + (1<<20)) >> 21; s12 += carry11; s11 -= carry11 << 21;
-        carry11 = (s11 + (1<<20)) >> 21; s12 = carry11; s11 -= carry11 << 21;
+        carry11 = (s11 + (long) (1 << 20)) >> 21; s12 = carry11; s11 -= carry11 << 21;
 
-        s0 += s12 * 666643;
-        s1 += s12 * 470296;
-        s2 += s12 * 654183;
-        s3 -= s12 * 997805;
-        s4 += s12 * 136657;
-        s5 -= s12 * 683901;
+        s0 += s12 * 666643L;
+        s1 += s12 * 470296L;
+        s2 += s12 * 654183L;
+        s3 -= s12 * 997805L;
+        s4 += s12 * 136657L;
+        s5 -= s12 * 683901L;
         // set below
         //s12 = 0;
 
@@ -634,12 +638,12 @@ public class Ed25519ScalarOps implements ScalarOps {
         //carry11 = s11 >> 21; s12 += carry11; s11 -= carry11 << 21;
         carry11 = s11 >> 21; s12 = carry11; s11 -= carry11 << 21;
 
-        s0 += s12 * 666643;
-        s1 += s12 * 470296;
-        s2 += s12 * 654183;
-        s3 -= s12 * 997805;
-        s4 += s12 * 136657;
-        s5 -= s12 * 683901;
+        s0 += s12 * 666643L;
+        s1 += s12 * 470296L;
+        s2 += s12 * 654183L;
+        s3 -= s12 * 997805L;
+        s4 += s12 * 136657L;
+        s5 -= s12 * 683901L;
         // not used again
         //s12 = 0;
 

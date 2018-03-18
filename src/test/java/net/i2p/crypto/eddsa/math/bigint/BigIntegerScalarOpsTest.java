@@ -40,7 +40,7 @@ public class BigIntegerScalarOpsTest {
     public void testReduce() {
         final ScalarOps sc = new BigIntegerScalarOps(ED_25519_ED_DSA_FINITE_FIELD,
                 new BigInteger("5"));
-        assertThat(sc.reduce(new byte[] {7}),
+        assertThat(sc.reduce(new byte[] {(byte) 7}),
                 is(equalTo(Utils.hexToBytes("0200000000000000000000000000000000000000000000000000000000000000"))));
 
         final ScalarOps sc2 = new BigIntegerScalarOps(ED_25519_ED_DSA_FINITE_FIELD,
@@ -57,7 +57,7 @@ public class BigIntegerScalarOpsTest {
     public void testMultiplyAndAdd() {
         final ScalarOps sc = new BigIntegerScalarOps(ED_25519_ED_DSA_FINITE_FIELD,
                 new BigInteger("5"));
-        assertThat(sc.multiplyAndAdd(new byte[] {7}, new byte[] {2}, new byte[] {5}),
+        assertThat(sc.multiplyAndAdd(new byte[] {(byte) 7}, new byte[] {(byte) 2}, new byte[] {(byte) 5}),
                 is(equalTo(Utils.hexToBytes("0400000000000000000000000000000000000000000000000000000000000000"))));
 
         final ScalarOps sc2 = new BigIntegerScalarOps(ED_25519_ED_DSA_FINITE_FIELD,

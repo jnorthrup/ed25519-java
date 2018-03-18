@@ -70,6 +70,7 @@ import sun.security.x509.X509Key;
  */
 public final class EdDSAEngine extends Signature {
     public static final String SIGNATURE_ALGORITHM = "NONEwithEdDSA";
+    public static final byte[] EMPTY = new byte[0];
 
     public MessageDigest digest;
     public ByteArrayOutputStream baos;
@@ -178,11 +179,11 @@ public final class EdDSAEngine extends Signature {
      * @throws SignatureException if in one-shot mode
      */
     @Override
-    protected void engineUpdate(final byte b) throws SignatureException {
+    protected void engineUpdate(final byte b) {
         assert !oneShotMode : "unsupported in one-shot mode";
         if (null == baos)
             baos = new ByteArrayOutputStream(256);
-        baos.write(b);
+        baos.write((int) b);
     }
 
     /**
@@ -193,7 +194,7 @@ public final class EdDSAEngine extends Signature {
             throws SignatureException {
         if (oneShotMode) {
             if (null == oneShotBytes) {
-                oneShotBytes = b;
+                oneShotBytes = b.clone();
                 oneShotOffset = off;
                 oneShotLength = len;
             } else throw new SignatureException("update() already called");
@@ -217,7 +218,7 @@ public final class EdDSAEngine extends Signature {
         }
     }
 
-    public byte[] x_engineSign() throws SignatureException {
+    public byte[] x_engineSign() {
         final Curve curve = key.getEdDSAParameterSpec().curve;
         final ScalarOps sc = key.getEdDSAParameterSpec().scalarOps;
         final byte[] a = ((EdDSAPrivateKey) key).privateKey;
@@ -231,10 +232,7 @@ public final class EdDSAEngine extends Signature {
             offset = oneShotOffset;
             length = oneShotLength;
         } else {
-            if (null == baos)
-                message = new byte[0];
-            else
-                message = baos.toByteArray();
+            message = null == baos ? EMPTY : baos.toByteArray();
             offset = 0;
             length = message.length;
         }
@@ -252,7 +250,7 @@ public final class EdDSAEngine extends Signature {
 
         // S = (r + H(Rbar,Abar,M)*a) mod l
         digest.update(Rbyte);
-        digest.update(((EdDSAPrivateKey) key).getAbyte());
+        digest.update(((EdDSAPrivateKey) key).getaByte());
         digest.update(message, offset, length);
         byte[] h = digest.digest();
         h = sc.reduce(h);
@@ -274,7 +272,7 @@ public final class EdDSAEngine extends Signature {
         }
     }
 
-    public boolean x_engineVerify(final byte[] sigBytes) throws SignatureException {
+    public boolean x_engineVerify(final byte[] sigBytes) {
         final Curve curve = key.getEdDSAParameterSpec().curve;
         final int b = curve.getField().getb();
         assert sigBytes.length == b / 4 : "signature length is wrong";
@@ -292,10 +290,7 @@ public final class EdDSAEngine extends Signature {
             offset = oneShotOffset;
             length = oneShotLength;
         } else {
-            if (null == baos)
-                message = new byte[0];
-            else
-                message = baos.toByteArray();
+            message = null == baos ? EMPTY : baos.toByteArray();
             offset = 0;
             length = message.length;
         }

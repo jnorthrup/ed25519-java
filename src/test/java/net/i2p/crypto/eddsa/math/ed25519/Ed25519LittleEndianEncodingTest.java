@@ -25,6 +25,23 @@ public class Ed25519LittleEndianEncodingTest {
 
     public static final SecureRandom random = new SecureRandom();
 
+    /**
+     * Converts a 2^25.5 bit representation to a BigInteger.
+     * <p>
+     * Value: 2^exponents[0] * t[0] + 2^exponents[1] * t[1] + ... + 2^exponents[9] * t[9]
+     *
+     * @param t The 2^25.5 bit representation.
+     * @return The BigInteger.
+     */
+    public static BigInteger toBigInteger(final int[] t) {
+        BigInteger b = BigInteger.ZERO;
+        for (int i = 0; 10 > i; i++) {
+            b = b.add(BigInteger.ONE.multiply(BigInteger.valueOf(t[i])).shiftLeft(MathUtils.exponents[i]));
+        }
+
+        return b;
+    }
+
     @Test
     public void encodeReturnsCorrectByteArrayForSimpleFieldElements() {
         // Arrange:
@@ -52,7 +69,7 @@ public class Ed25519LittleEndianEncodingTest {
                 t[j] = random.nextInt(1 << 28) - (1 << 27);
             }
             final FieldElement fieldElement1 = new Ed25519FieldElement(MathUtils.getField(), t);
-            final BigInteger b = MathUtils.toBigInteger(t);
+            final BigInteger b = toBigInteger(t);
 
             // Act:
             final byte[] bytes = MathUtils.getField().getEncoding().encode(fieldElement1);
@@ -67,13 +84,13 @@ public class Ed25519LittleEndianEncodingTest {
         // Arrange:
         final byte[] bytes1 = new byte[32];
         final byte[] bytes2 = new byte[32];
-        bytes2[0] = 1;
+        bytes2[0] = (byte) 1;
 
         // Act:
         final Ed25519FieldElement f1 = (Ed25519FieldElement)MathUtils.getField().getEncoding().decode(bytes1);
         final Ed25519FieldElement f2 = (Ed25519FieldElement)MathUtils.getField().getEncoding().decode(bytes2);
-        final BigInteger b1 = MathUtils.toBigInteger(f1.t);
-        final BigInteger b2 = MathUtils.toBigInteger(f2.t);
+        final BigInteger b1 = toBigInteger(f1.t);
+        final BigInteger b2 = toBigInteger(f2.t);
 
         // Assert:
         Assert.assertThat(b1, IsEqual.equalTo(BigInteger.ZERO));
@@ -86,12 +103,12 @@ public class Ed25519LittleEndianEncodingTest {
             // Arrange:
             final byte[] bytes = new byte[32];
             random.nextBytes(bytes);
-            bytes[31] = (byte)(bytes[31] & 0x7f);
+            bytes[31] = (byte) (bytes[31] & 0x7f);
             final BigInteger b1 = MathUtils.toBigInteger(bytes);
 
             // Act:
             final Ed25519FieldElement f = (Ed25519FieldElement)MathUtils.getField().getEncoding().decode(bytes);
-            final BigInteger b2 = MathUtils.toBigInteger(f.t).mod(MathUtils.getQ());
+            final BigInteger b2 = toBigInteger(f.t).mod(MathUtils.getQ());
 
             // Assert:
             Assert.assertThat(b2, IsEqual.equalTo(b1));
@@ -106,7 +123,7 @@ public class Ed25519LittleEndianEncodingTest {
             for (int j = 0; 10 > j; j++) {
                 t[j] = random.nextInt(1 << 28) - (1 << 27);
             }
-            final boolean isNegative = MathUtils.toBigInteger(t).mod(MathUtils.getQ()).mod(new BigInteger("2")).equals(BigInteger.ONE);
+            final boolean isNegative = toBigInteger(t).mod(MathUtils.getQ()).mod(new BigInteger("2")).equals(BigInteger.ONE);
             final FieldElement f = new Ed25519FieldElement(MathUtils.getField(), t);
 
             // Assert:

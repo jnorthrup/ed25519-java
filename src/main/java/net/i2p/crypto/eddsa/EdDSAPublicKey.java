@@ -207,24 +207,24 @@ public class EdDSAPublicKey implements EdDSAKey, PublicKey {
             final byte[] rv = new byte[totlen];
             int idx = 0;
             // sequence
-            rv[idx++] = 0x30;
+            rv[idx++] = (byte) 0x30;
             rv[idx++] = (byte) (totlen - 2);
             // Algorithm Identifier
             // sequence
-            rv[idx++] = 0x30;
-            rv[idx++] = 5;
+            rv[idx++] = (byte) 0x30;
+            rv[idx++] = (byte) 5;
             // OID
             // https://msdn.microsoft.com/en-us/library/windows/desktop/bb540809%28v=vs.85%29.aspx
-            rv[idx++] = 0x06;
-            rv[idx++] = 3;
-            rv[idx++] = (1 * 40) + 3;
-            rv[idx++] = 101;
+            rv[idx++] = (byte) 0x06;
+            rv[idx++] = (byte) 3;
+            rv[idx++] = (byte) ((1 * 40) + 3);
+            rv[idx++] = (byte) 101;
             rv[idx++] = (byte) OID_ED25519;
             // params - absent
             // the key
-            rv[idx++] = 0x03; // bit string
+            rv[idx++] = (byte) 0x03; // bit string
             rv[idx++] = (byte) (1 + abyte.length);
-            rv[idx++] = 0; // number of trailing unused bits
+            rv[idx++] = (byte) 0; // number of trailing unused bits
             System.arraycopy(abyte, 0, rv, idx, abyte.length);
             return rv;
         }

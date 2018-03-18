@@ -806,7 +806,7 @@ public class GroupElement  {
         if (!(obj instanceof GroupElement))
             return false;
         GroupElement ge = (GroupElement) obj;
-        if (!this.repr.equals(ge.repr)) {
+        if (this.repr != ge.repr) {
             try {
                 ge = ge.toRep(this.repr);
             } catch (final RuntimeException e) {

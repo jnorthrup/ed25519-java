@@ -23,8 +23,8 @@ import net.i2p.crypto.eddsa.spec.EdDSANamedCurveTable;
 public class PrecomputationTestVectors {
     // Test files were generated using base.py and base2.py from ref10
     // (by printing hex(x%q) instead of the radix-255 representation).
-    static GroupElement[][] testPrecmp = getPrecomputation("basePrecmp");
-    static GroupElement[] testDblPrecmp = getDoublePrecomputation("baseDblPrecmp");
+    static final GroupElement[][] testPrecmp = getPrecomputation("basePrecmp");
+    static final GroupElement[] testDblPrecmp = getDoublePrecomputation("baseDblPrecmp");
 
     public static GroupElement[][] getPrecomputation(final String fileName) {
         final EdDSANamedCurveSpec ed25519 = EdDSANamedCurveTable.getByName(EdDSANamedCurveTable.ED_25519);
@@ -32,33 +32,42 @@ public class PrecomputationTestVectors {
         final EdDSAFiniteField edDSAFiniteField = curve.getField();
         final GroupElement[][] precmp = new GroupElement[32][8];
         BufferedReader file = null;
-        int row = 0, col = 0;
+        int row = 0;
+        int col = 0;
         try {
             final InputStream is = PrecomputationTestVectors.class.getResourceAsStream(fileName);
             if (null == is)
                 throw new IOException("Resource not found: " + fileName);
             file = new BufferedReader(new InputStreamReader(is));
-            String line;
-            while (null != (line = file.readLine())) {
-                if (line.equals(" },"))
-                    col += 1;
-                else if (line.equals("},")) {
-                    col = 0;
-                    row += 1;
-                } else if (line.startsWith("  { ")) {
-                    final String ypxStr = line.substring(4, line.lastIndexOf(' '));
-                    final FieldElement ypx = edDSAFiniteField.fromByteArray(
-                            Utils.hexToBytes(ypxStr));
-                    line = file.readLine();
-                    final String ymxStr = line.substring(4, line.lastIndexOf(' '));
-                    final FieldElement ymx = edDSAFiniteField.fromByteArray(
-                            Utils.hexToBytes(ymxStr));
-                    line = file.readLine();
-                    final String xy2dStr = line.substring(4, line.lastIndexOf(' '));
-                    final FieldElement xy2d = edDSAFiniteField.fromByteArray(
-                            Utils.hexToBytes(xy2dStr));
-                    precmp[row][col] = GroupElement.precomp(curve,
-                            ypx, ymx, xy2d);
+            while (true) {
+                String  line = file.readLine();
+                if ((null != (line))) {
+                    if (!" },".equals(line)) {
+                        if (!"},".equals(line)) {
+                            if (line.startsWith("  { ")) {
+                                final String ypxStr = line.substring(4, line.lastIndexOf(' '));
+                                final FieldElement ypx = edDSAFiniteField.fromByteArray(
+                                        Utils.hexToBytes(ypxStr));
+                                String s = file.readLine();
+                                final String ymxStr = s.substring(4, s.lastIndexOf(' '));
+                                final FieldElement ymx = edDSAFiniteField.fromByteArray(
+                                        Utils.hexToBytes(ymxStr));
+                                String s3 = file.readLine();
+                                final String xy2dStr = s3.substring(4, s3.lastIndexOf(' '));
+                                final FieldElement xy2d = edDSAFiniteField.fromByteArray(
+                                        Utils.hexToBytes(xy2dStr));
+                                precmp[row][col] = GroupElement.precomp(curve,
+                                        ypx, ymx, xy2d);
+                            }
+                        } else {
+                            col = 0;
+                            row += 1;
+                        }
+                    } else {
+                        col += 1;
+                    }
+                } else {
+                    break;
                 }
             }
         } catch (final IOException e) {
@@ -81,24 +90,30 @@ public class PrecomputationTestVectors {
             if (null == is)
                 throw new IOException("Resource not found: " + fileName);
             file = new BufferedReader(new InputStreamReader(is));
-            String line;
-            while (null != (line = file.readLine())) {
-                if (line.equals(" },")) {
-                    row += 1;
-                } else if (line.startsWith("  { ")) {
-                    final String ypxStr = line.substring(4, line.lastIndexOf(' '));
-                    final FieldElement ypx = edDSAFiniteField.fromByteArray(
-                            Utils.hexToBytes(ypxStr));
-                    line = file.readLine();
-                    final String ymxStr = line.substring(4, line.lastIndexOf(' '));
-                    final FieldElement ymx = edDSAFiniteField.fromByteArray(
-                            Utils.hexToBytes(ymxStr));
-                    line = file.readLine();
-                    final String xy2dStr = line.substring(4, line.lastIndexOf(' '));
-                    final FieldElement xy2d = edDSAFiniteField.fromByteArray(
-                            Utils.hexToBytes(xy2dStr));
-                    dblPrecmp[row] = GroupElement.precomp(curve,
-                            ypx, ymx, xy2d);
+            while (true) {
+                String  line = file.readLine();
+                if ((null != line)) {
+                    if (!" },".equals(line)) {
+                        if (line.startsWith("  { ")) {
+                            final String ypxStr = line.substring(4, line.lastIndexOf(' '));
+                            final FieldElement ypx = edDSAFiniteField.fromByteArray(
+                                    Utils.hexToBytes(ypxStr));
+                            String s2 = file.readLine();
+                            final String ymxStr = s2.substring(4, s2.lastIndexOf(' '));
+                            final FieldElement ymx = edDSAFiniteField.fromByteArray(
+                                    Utils.hexToBytes(ymxStr));
+                            String s4 = file.readLine();
+                            final String xy2dStr = s4.substring(4, s4.lastIndexOf(' '));
+                            final FieldElement xy2d = edDSAFiniteField.fromByteArray(
+                                    Utils.hexToBytes(xy2dStr));
+                            dblPrecmp[row] = GroupElement.precomp(curve,
+                                    ypx, ymx, xy2d);
+                        }
+                    } else {
+                        row += 1;
+                    }
+                } else {
+                    break;
                 }
             }
         } catch (final IOException e) {

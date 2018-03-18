@@ -16,6 +16,7 @@ package net.i2p.crypto.eddsa.math;
  * @author str4d
  *
  */
+@SuppressWarnings("ThisEscapedInObjectConstruction")
 public class EdDSAFiniteField  {
 
     public final FieldElement ZERO;

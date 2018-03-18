@@ -30,7 +30,7 @@ import org.junit.rules.ExpectedException;
 public class EdDSASecurityProviderTest {
 
     @Rule
-    public ExpectedException exception = ExpectedException.none();
+    public final ExpectedException exception = ExpectedException.none();
 
     @Test
     public void canGetInstancesWhenProviderIsPresent() throws Exception {

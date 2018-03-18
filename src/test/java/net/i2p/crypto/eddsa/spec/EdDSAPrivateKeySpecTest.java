@@ -31,7 +31,7 @@ public class EdDSAPrivateKeySpecTest {
     static final EdDSANamedCurveSpec ed25519 = EdDSANamedCurveTable.getByName(EdDSANamedCurveTable.ED_25519);
 
     @Rule
-    public ExpectedException exception = ExpectedException.none();
+    public final ExpectedException exception = ExpectedException.none();
 
     /**
      * Test method for {@link net.i2p.crypto.eddsa.spec.EdDSAPrivateKeySpec#EdDSAPrivateKeySpec(byte[], net.i2p.crypto.eddsa.spec.EdDSAParameterSpec)}.
@@ -40,7 +40,7 @@ public class EdDSAPrivateKeySpecTest {
     public void testEdDSAPrivateKeySpecFromSeed() {
         final EdDSAPrivateKeySpec key = new EdDSAPrivateKeySpec(ZERO_SEED, ed25519);
         assertThat(key.seed, is(equalTo(ZERO_SEED)));
-        assertThat(key.hasOfTheSeed, is(equalTo(ZERO_H)));
+        assertThat(key.hashOfTheSeed, is(equalTo(ZERO_H)));
         assertThat(key.groupElement.toByteArray(), is(equalTo(ZERO_PK)));
     }
 
@@ -58,7 +58,8 @@ public class EdDSAPrivateKeySpecTest {
     public void testEdDSAPrivateKeySpecFromH() {
         final EdDSAPrivateKeySpec key = new EdDSAPrivateKeySpec(ed25519, ZERO_H);
         assertThat(key.seed, is(nullValue()));
-        assertThat(key.hasOfTheSeed, is(equalTo(ZERO_H)));
+//        assertThat(key.hashOfTheSeed, is(equalTo(ZERO_H)));
+        assertArrayEquals(key.hashOfTheSeed,ZERO_H);
         assertThat(key.groupElement.toByteArray(), is(equalTo(ZERO_PK)));
     }
 

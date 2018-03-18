@@ -44,7 +44,7 @@ public class EdDSAPrivateKey implements EdDSAKey, PrivateKey {
     public final byte[] hashOfTheSeed;
     public final byte[] privateKey;
     public final GroupElement groupElement;
-    public final byte[] abyte;
+    public final byte[] aByte;
     public final EdDSAParameterSpec edDSAParameterSpec;
 
     // OID 1.3.101.xxx
@@ -55,10 +55,10 @@ public class EdDSAPrivateKey implements EdDSAKey, PrivateKey {
 
     public EdDSAPrivateKey(final EdDSAPrivateKeySpec spec) {
         seed = spec.seed;
-        hashOfTheSeed = spec.hasOfTheSeed;
+        hashOfTheSeed = spec.hashOfTheSeed;
         privateKey = spec.privateKey;
         groupElement = spec.groupElement;
-        abyte = groupElement.toByteArray();
+        aByte = groupElement.toByteArray();
         edDSAParameterSpec = spec.getParams();
     }
 
@@ -145,30 +145,30 @@ public class EdDSAPrivateKey implements EdDSAKey, PrivateKey {
         final byte[] encoded = new byte[totlen];
         int idx = 0;
         // sequence
-        encoded[idx++] = 0x30;
+        encoded[idx++] = (byte) 0x30;
         encoded[idx++] = (byte) (totlen - 2);
         // version
-        encoded[idx++] = 0x02;
-        encoded[idx++] = 1;
+        encoded[idx++] = (byte) 0x02;
+        encoded[idx++] = (byte) 1;
         // v1 - no public key included
-        encoded[idx++] = 0;
+        encoded[idx++] = (byte) 0;
         // Algorithm Identifier
         // sequence
-        encoded[idx++] = 0x30;
-        encoded[idx++] = 5;
+        encoded[idx++] = (byte) 0x30;
+        encoded[idx++] = (byte) 5;
         // OID
         // https://msdn.microsoft.com/en-us/library/windows/desktop/bb540809%28v=vs.85%29.aspx
-        encoded[idx++] = 0x06;
-        encoded[idx++] = 3;
-        encoded[idx++] = (1 * 40) + 3;
-        encoded[idx++] = 101;
-        encoded[idx++] = OID_ED25519;
+        encoded[idx++] = (byte) 0x06;
+        encoded[idx++] = (byte) 3;
+        encoded[idx++] = (byte) ((1 * 40) + 3);
+        encoded[idx++] = (byte) 101;
+        encoded[idx++] = (byte) OID_ED25519;
         // params - absent
         // PrivateKey
-        encoded[idx++] = 0x04;  // octet string
+        encoded[idx++] = (byte) 0x04;  // octet string
         encoded[idx++] = (byte) (2 + seed.length);
         // CurvePrivateKey
-        encoded[idx++] = 0x04;  // octet string
+        encoded[idx++] = (byte) 0x04;  // octet string
         encoded[idx++] = (byte) seed.length;
         // the key
         System.arraycopy(seed, 0, encoded, idx, seed.length);
@@ -239,7 +239,11 @@ public class EdDSAPrivateKey implements EdDSAKey, PrivateKey {
                         101 == d[idx++]) {
                     idx++; // OID, checked above
                     // parameters only with old OID
-                    if (OID_OLD != doid) {
+                    if (OID_OLD == doid) {
+                        assert 0x0a == d[idx++] &&
+                                1 == d[idx++] &&
+                                1 == d[idx++] : "unsupported key spec";
+                    } else {
                         // Handle parameter value of NULL
                         //
                         // Quote https://tools.ietf.org/html/draft-ietf-curdle-pkix-04 :
@@ -256,10 +260,6 @@ public class EdDSAPrivateKey implements EdDSAKey, PrivateKey {
                         // PrivateKey wrapping the CurvePrivateKey
                         assert 0x04 == d[idx++] &&
                                 34 == d[idx++] : "unsupported key spec";
-                    } else {
-                        assert 0x0a == d[idx++] &&
-                                1 == d[idx++] &&
-                                1 == d[idx++] : "unsupported key spec";
                     }
                     if (0x04 == d[idx++] &&
                             32 == d[idx++]) {
@@ -285,8 +285,8 @@ public class EdDSAPrivateKey implements EdDSAKey, PrivateKey {
     /**
      *  @return the public key
      */
-    public byte[] getAbyte() {
-        return abyte;
+    public byte[] getaByte() {
+        return aByte.clone();
     }
 
     @Override

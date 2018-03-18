@@ -22,11 +22,11 @@ import java.util.List;
 public class Ed25519TestVectors {
     public static class TestTuple {
         public static int numCases;
-        public int caseNum;
-        public byte[] seed;
-        public byte[] pk;
-        public byte[] message;
-        public byte[] sig;
+        public final int caseNum;
+        public final byte[] seed;
+        public final byte[] pk;
+        public final byte[] message;
+        public final byte[] sig;
 
         public TestTuple(final String line) {
             caseNum = ++numCases;
@@ -38,18 +38,19 @@ public class Ed25519TestVectors {
         }
     }
 
-    public static Collection<TestTuple> testCases = getTestData("test.data");
+    public static final Collection<TestTuple> testCases = getTestData("test.data");
 
     public static Collection<TestTuple> getTestData(final String fileName) {
-        final List<TestTuple> testCases = new ArrayList<TestTuple>();
+        final Collection<TestTuple> testCases = new ArrayList<>();
         BufferedReader file = null;
         try {
             final InputStream is = Ed25519TestVectors.class.getResourceAsStream(fileName);
             if (null == is)
                 throw new IOException("Resource not found: " + fileName);
             file = new BufferedReader(new InputStreamReader(is));
-            String line;
-            while (null != (line = file.readLine())) {
+
+            while (true) {    String line= file.readLine();
+                if (!(null != (line ))) break;
                 testCases.add(new TestTuple(line));
             }
         } catch (final IOException e) {

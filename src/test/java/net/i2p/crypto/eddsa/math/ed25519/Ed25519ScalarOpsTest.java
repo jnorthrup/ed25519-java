@@ -31,6 +31,45 @@ public class Ed25519ScalarOpsTest {
 
     public static final Ed25519ScalarOps scalarOps = new Ed25519ScalarOps();
 
+    public static byte[] getRandomByteArray(final int length) {
+        final byte[] bytes = new byte[length];
+        MathUtils.random.nextBytes(bytes);
+        return bytes;
+    }
+
+    /**
+     * Calculates (a * b + c) mod group order and returns the result.
+     * <p>
+     * a, b and c are given in 2^8 bit representation.
+     *
+     * @param a The first integer.
+     * @param b The second integer.
+     * @param c The third integer.
+     * @return The mod group order reduced result.
+     */
+    public static byte[] multiplyAndAddModGroupOrder(final byte[] a, final byte[] b, final byte[] c) {
+        final BigInteger result = MathUtils.toBigInteger(a).multiply(MathUtils.toBigInteger(b)).add(MathUtils.toBigInteger(c)).mod(MathUtils.groupOrder);
+        return MathUtils.toByteArray(result);
+    }
+
+    /**
+     * Reduces an integer in 2^8 bit representation modulo the group order and returns the result.
+     *
+     * @param bytes The integer in 2^8 bit representation.
+     * @return The mod group order reduced integer.
+     */
+    public static byte[] reduceModGroupOrder(final byte[] bytes) {
+        final BigInteger b = MathUtils.toBigInteger(bytes).mod(MathUtils.groupOrder);
+        return MathUtils.toByteArray(b);
+    }
+
+    /**
+     * Gets group order = 2^252 + 27742317777372353535851937790883648493 as BigInteger.
+     */
+    public static BigInteger getGroupOrder() {
+        return MathUtils.groupOrder;
+    }
+
     /**
      * Test method for {@link net.i2p.crypto.eddsa.math.bigint.BigIntegerScalarOps#reduce(byte[])}.
      */
@@ -45,14 +84,14 @@ public class Ed25519ScalarOpsTest {
     public void reduceReturnsExpectedResult() {
         for (int i = 0; 1000 > i; i++) {
             // Arrange:
-            final byte[] bytes = MathUtils.getRandomByteArray(64);
+            final byte[] bytes = getRandomByteArray(64);
 
             // Act:
             final byte[] reduced1 = scalarOps.reduce(bytes);
-            final byte[] reduced2 = MathUtils.reduceModGroupOrder(bytes);
+            final byte[] reduced2 = reduceModGroupOrder(bytes);
 
             // Assert:
-            Assert.assertThat(MathUtils.toBigInteger(reduced1).compareTo(MathUtils.getGroupOrder()), IsEqual.equalTo(-1));
+            Assert.assertThat(MathUtils.toBigInteger(reduced1).compareTo(getGroupOrder()), IsEqual.equalTo(-1));
             Assert.assertThat(MathUtils.toBigInteger(reduced1).compareTo(new BigInteger("-1")), IsEqual.equalTo(1));
             Assert.assertThat(reduced1, IsEqual.equalTo(reduced2));
         }
@@ -75,16 +114,16 @@ public class Ed25519ScalarOpsTest {
     public void multiplyAndAddReturnsExpectedResult() {
         for (int i = 0; 1000 > i; i++) {
             // Arrange:
-            final byte[] bytes1 = MathUtils.getRandomByteArray(32);
-            final byte[] bytes2 = MathUtils.getRandomByteArray(32);
-            final byte[] bytes3 = MathUtils.getRandomByteArray(32);
+            final byte[] bytes1 = getRandomByteArray(32);
+            final byte[] bytes2 = getRandomByteArray(32);
+            final byte[] bytes3 = getRandomByteArray(32);
 
             // Act:
             final byte[] result1 = scalarOps.multiplyAndAdd(bytes1, bytes2, bytes3);
-            final byte[] result2 = MathUtils.multiplyAndAddModGroupOrder(bytes1, bytes2, bytes3);
+            final byte[] result2 = multiplyAndAddModGroupOrder(bytes1, bytes2, bytes3);
 
             // Assert:
-            Assert.assertThat(MathUtils.toBigInteger(result1).compareTo(MathUtils.getGroupOrder()), IsEqual.equalTo(-1));
+            Assert.assertThat(MathUtils.toBigInteger(result1).compareTo(getGroupOrder()), IsEqual.equalTo(-1));
             Assert.assertThat(MathUtils.toBigInteger(result1).compareTo(new BigInteger("-1")), IsEqual.equalTo(1));
             Assert.assertThat(result1, IsEqual.equalTo(result2));
         }
