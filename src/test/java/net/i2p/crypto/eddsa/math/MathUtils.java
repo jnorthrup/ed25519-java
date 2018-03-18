@@ -164,7 +164,7 @@ public class MathUtils {
      * @param repr The desired representation.
      * @return The same group element in the new representation.
      */
-    public static GroupElement toRepresentation(final GroupElement g, final GroupElement.Representation repr) {
+    public static GroupElement toRepresentation(final GroupElement g, final Representation repr) {
         final BigInteger x;
         final BigInteger y;
         final BigInteger gX = toBigInteger(g.getX().toByteArray());
@@ -246,8 +246,8 @@ public class MathUtils {
      */
     public static GroupElement addGroupElements(final GroupElement g1, final GroupElement g2) {
         // Relying on a special representation of the group elements.
-        if ((GroupElement.Representation.P2 != g1.getRepresentation() && GroupElement.Representation.P3 != g1.getRepresentation()) ||
-                (GroupElement.Representation.P2 != g2.getRepresentation() && GroupElement.Representation.P3 != g2.getRepresentation())) {
+        if ((Representation.P2 != g1.getRepresentation() && Representation.P3 != g1.getRepresentation()) ||
+                (Representation.P2 != g2.getRepresentation() && Representation.P3 != g2.getRepresentation())) {
             throw new IllegalArgumentException("g1 and g2 must have representation P2 or P3");
         }
 
@@ -303,7 +303,7 @@ public class MathUtils {
      */
     public static GroupElement scalarMultiplyGroupElement(final GroupElement g, final FieldElement f) {
         final byte[] bytes = f.toByteArray();
-        GroupElement h = curve.get(GroupElement.Representation.P3);
+        GroupElement h = curve.get(Representation.P3);
         for (int i = 254; 0 <= i; i--) {
             h = doubleGroupElement(h);
             if (1 == Utils.bit(bytes, i)) {
@@ -333,22 +333,22 @@ public class MathUtils {
             final GroupElement ga1 = getRandomGroupElement();
 
             // P3 -> P2.
-            final GroupElement h = toRepresentation(ga1, GroupElement.Representation.P2);
+            final GroupElement h = toRepresentation(ga1, Representation.P2);
             Assert.assertThat(h, IsEqual.equalTo(ga1));
             // P3 -> P1P1.
-            final GroupElement g2 = toRepresentation(ga1, GroupElement.Representation.P1P1);
+            final GroupElement g2 = toRepresentation(ga1, Representation.P1P1);
             Assert.assertThat(ga1, IsEqual.equalTo(g2));
 
             // P3 -> CACHED.
-            final GroupElement g3 = toRepresentation(ga1, GroupElement.Representation.CACHED);
+            final GroupElement g3 = toRepresentation(ga1, Representation.CACHED);
             Assert.assertThat(g3, IsEqual.equalTo(ga1));
             // P3 -> P2 -> P3.
-            final GroupElement gb1 = toRepresentation(ga1, GroupElement.Representation.P2);
-            final GroupElement g4 = toRepresentation(gb1, GroupElement.Representation.P3);
+            final GroupElement gb1 = toRepresentation(ga1, Representation.P2);
+            final GroupElement g4 = toRepresentation(gb1, Representation.P3);
             Assert.assertThat(gb1, IsEqual.equalTo(g4));
             // P3 -> P2 -> P1P1.
-            final GroupElement g = toRepresentation(gb1, GroupElement.Representation.P2);
-            final GroupElement g5 = toRepresentation(g, GroupElement.Representation.P1P1);
+            final GroupElement g = toRepresentation(gb1, Representation.P2);
+            final GroupElement g5 = toRepresentation(g, Representation.P1P1);
             Assert.assertThat(g, IsEqual.equalTo(g5));
 
 
@@ -362,7 +362,7 @@ public class MathUtils {
             final GroupElement h = MathUtils.scalarMultiplyGroupElement(g, curve.getEdDSAFiniteField().ZERO);
 
             // Assert:
-            Assert.assertThat(curve.get(GroupElement.Representation.P3), IsEqual.equalTo(h));
+            Assert.assertThat(curve.get(Representation.P3), IsEqual.equalTo(h));
         }
     }
     // End TODO BR: Remove when finished!

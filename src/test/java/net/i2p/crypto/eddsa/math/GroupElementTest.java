@@ -61,7 +61,7 @@ public class GroupElementTest {
      * @return The negated group element.
      */
     private static GroupElement negateGroupElement(final GroupElement g) {
-        if (GroupElement.Representation.P3 != g.getRepresentation()) {
+        if (Representation.P3 != g.getRepresentation()) {
             throw new IllegalArgumentException("g must have representation P3");
         }
 
@@ -126,7 +126,7 @@ public class GroupElementTest {
     public void testP2() {
         final GroupElement t = GroupElement.p2(curve, ZERO, ONE, ONE);
         assertThat(t.getCurve(), is(equalTo(curve)));
-        assertThat(t.getRepr(), is(GroupElement.Representation.P2));
+        assertThat(t.getRepr(), is(Representation.P2));
         assertThat(t.getX(), is(ZERO));
         assertThat(t.getY(), is(ONE));
         assertThat(t.getZ(), is(ONE));
@@ -140,7 +140,7 @@ public class GroupElementTest {
     public void testP3() {
         final GroupElement t = GroupElement.p3(curve, ZERO, ONE, ONE, ZERO, false);
         assertThat(t.getCurve(), is(equalTo(curve)));
-        assertThat(t.getRepr(), is(GroupElement.Representation.P3));
+        assertThat(t.getRepr(), is(Representation.P3));
         assertThat(t.getX(), is(ZERO));
         assertThat(t.getY(), is(ONE));
         assertThat(t.getZ(), is(ONE));
@@ -154,7 +154,7 @@ public class GroupElementTest {
     public void testP1p1() {
         final GroupElement t = GroupElement.p1p1(curve, ZERO, ONE, ONE, ONE);
         assertThat(t.getCurve(), is(equalTo(curve)));
-        assertThat(t.getRepr(), is(GroupElement.Representation.P1P1));
+        assertThat(t.getRepr(), is(Representation.P1P1));
         assertThat(t.getX(), is(ZERO));
         assertThat(t.getY(), is(ONE));
         assertThat(t.getZ(), is(ONE));
@@ -168,7 +168,7 @@ public class GroupElementTest {
     public void testPrecomp() {
         final GroupElement t = GroupElement.precomp(curve, ONE, ONE, ZERO);
         assertThat(t.getCurve(), is(equalTo(curve)));
-        assertThat(t.getRepr(), is(GroupElement.Representation.PRECOMP));
+        assertThat(t.getRepr(), is(Representation.PRECOMP));
         assertThat(t.getX(), is(ONE));
         assertThat(t.getY(), is(ONE));
         assertThat(t.getZ(), is(ZERO));
@@ -182,7 +182,7 @@ public class GroupElementTest {
     public void testCached() {
         final GroupElement t = GroupElement.cached(curve, ONE, ONE, ONE, ZERO);
         assertThat(t.getCurve(), is(equalTo(curve)));
-        assertThat(t.getRepr(), is(GroupElement.Representation.CACHED));
+        assertThat(t.getRepr(), is(Representation.CACHED));
         assertThat(t.getX(), is(ONE));
         assertThat(t.getY(), is(ONE));
         assertThat(t.getZ(), is(ONE));
@@ -190,13 +190,13 @@ public class GroupElementTest {
     }
 
     /**
-     * Test method for {@link GroupElement#GroupElement(Curve, GroupElement.Representation, FieldElement, FieldElement, FieldElement, FieldElement, boolean)}.
+     * Test method for {@link GroupElement#GroupElement(Curve, Representation, FieldElement, FieldElement, FieldElement, FieldElement, boolean)}.
      */
     @Test
     public void testGroupElementCurveRepresentationFieldElementFieldElementFieldElementFieldElement() {
-        final GroupElement t = new GroupElement(curve, GroupElement.Representation.P3, ZERO, ONE, ONE, ZERO, false);
+        final GroupElement t = new GroupElement(curve, Representation.P3, ZERO, ONE, ONE, ZERO, false);
         assertThat(t.getCurve(), is(equalTo(curve)));
-        assertThat(t.getRepr(), is(GroupElement.Representation.P3));
+        assertThat(t.getRepr(), is(Representation.P3));
         assertThat(t.getX(), is(ZERO));
         assertThat(t.getY(), is(ONE));
         assertThat(t.getZ(), is(ONE));
@@ -297,9 +297,9 @@ public class GroupElementTest {
      */
     @Test
     public void testToP2() {
-        final GroupElement p3zero = curve.get(GroupElement.Representation.P3);
+        final GroupElement p3zero = curve.get(Representation.P3);
         final GroupElement t = p3zero.toP2();
-        assertThat(t.getRepr(), is(GroupElement.Representation.P2));
+        assertThat(t.getRepr(), is(Representation.P2));
         assertThat(t.getX(), is(p3zero.getX()));
         assertThat(t.getY(), is(p3zero.getY()));
         assertThat(t.getZ(), is(p3zero.getZ()));
@@ -307,7 +307,7 @@ public class GroupElementTest {
 
         final GroupElement B = ed25519.groupElement;
         final GroupElement t2 = B.toP2();
-        assertThat(t2.getRepr(), is(GroupElement.Representation.P2));
+        assertThat(t2.getRepr(), is(Representation.P2));
         assertThat(t2.getX(), is(B.getX()));
         assertThat(t2.getY(), is(B.getY()));
         assertThat(t2.getZ(), is(B.getZ()));
@@ -317,7 +317,7 @@ public class GroupElementTest {
     @Test (expected = IllegalArgumentException.class)
     public void toP2ThrowsIfGroupElementHasPrecompRepresentation() {
         // Arrange:
-        final GroupElement g = MathUtils.toRepresentation(MathUtils.getRandomGroupElement(), GroupElement.Representation.PRECOMP);
+        final GroupElement g = MathUtils.toRepresentation(MathUtils.getRandomGroupElement(), Representation.PRECOMP);
 
         // Assert:
         g.toP2();
@@ -326,7 +326,7 @@ public class GroupElementTest {
     @Test (expected = IllegalArgumentException.class)
     public void toP2ThrowsIfGroupElementHasCachedRepresentation() {
         // Arrange:
-        final GroupElement g =  MathUtils.toRepresentation(MathUtils.getRandomGroupElement(), GroupElement.Representation.CACHED);
+        final GroupElement g =  MathUtils.toRepresentation(MathUtils.getRandomGroupElement(), Representation.CACHED);
 
         // Assert:
         g.toP2();
@@ -336,14 +336,14 @@ public class GroupElementTest {
     public void toP2ReturnsExpectedResultIfGroupElementHasP2Representation() {
         for (int i = 0; 10 > i; i++) {
             // Arrange:
-            final GroupElement g = MathUtils.toRepresentation(MathUtils.getRandomGroupElement(), GroupElement.Representation.P2);
+            final GroupElement g = MathUtils.toRepresentation(MathUtils.getRandomGroupElement(), Representation.P2);
 
             // Act:
             final GroupElement h = g.toP2();
 
             // Assert:
             assertThat(h, IsEqual.equalTo(g));
-            assertThat(h.getRepresentation(), IsEqual.equalTo(GroupElement.Representation.P2));
+            assertThat(h.getRepresentation(), IsEqual.equalTo(Representation.P2));
             assertThat(h.getX(), IsEqual.equalTo(g.getX()));
             assertThat(h.getY(), IsEqual.equalTo(g.getY()));
             assertThat(h.getZ(), IsEqual.equalTo(g.getZ()));
@@ -359,11 +359,11 @@ public class GroupElementTest {
 
             // Act:
             final GroupElement h1 = g.toP2();
-            final GroupElement h2 = MathUtils.toRepresentation(g, GroupElement.Representation.P2);
+            final GroupElement h2 = MathUtils.toRepresentation(g, Representation.P2);
 
             // Assert:
             assertThat(h1, IsEqual.equalTo(h2));
-            assertThat(h1.getRepresentation(), IsEqual.equalTo(GroupElement.Representation.P2));
+            assertThat(h1.getRepresentation(), IsEqual.equalTo(Representation.P2));
             assertThat(h1.getX(), IsEqual.equalTo(g.getX()));
             assertThat(h1.getY(), IsEqual.equalTo(g.getY()));
             assertThat(h1.getZ(), IsEqual.equalTo(g.getZ()));
@@ -375,15 +375,15 @@ public class GroupElementTest {
     public void toP2ReturnsExpectedResultIfGroupElementHasP1P1Representation() {
         for (int i = 0; 10 > i; i++) {
             // Arrange:
-            final GroupElement g = MathUtils.toRepresentation(MathUtils.getRandomGroupElement(), GroupElement.Representation.P1P1);
+            final GroupElement g = MathUtils.toRepresentation(MathUtils.getRandomGroupElement(), Representation.P1P1);
 
             // Act:
             final GroupElement h1 = g.toP2();
-            final GroupElement h2 = MathUtils.toRepresentation(g, GroupElement.Representation.P2);
+            final GroupElement h2 = MathUtils.toRepresentation(g, Representation.P2);
 
             // Assert:
             assertThat(h1, IsEqual.equalTo(h2));
-            assertThat(h1.getRepresentation(), IsEqual.equalTo(GroupElement.Representation.P2));
+            assertThat(h1.getRepresentation(), IsEqual.equalTo(Representation.P2));
             assertThat(h1.getX(), IsEqual.equalTo(g.getX().multiply(g.getT())));
             assertThat(h1.getY(), IsEqual.equalTo(g.getY().multiply(g.getZ())));
             assertThat(h1.getZ(), IsEqual.equalTo(g.getZ().multiply(g.getT())));
@@ -394,7 +394,7 @@ public class GroupElementTest {
     @Test (expected = IllegalArgumentException.class)
     public void toP3ThrowsIfGroupElementHasP2Representation() {
         // Arrange:
-        final GroupElement g = MathUtils.toRepresentation(MathUtils.getRandomGroupElement(), GroupElement.Representation.P2);
+        final GroupElement g = MathUtils.toRepresentation(MathUtils.getRandomGroupElement(), Representation.P2);
 
         // Assert:
         g.toP3();
@@ -403,7 +403,7 @@ public class GroupElementTest {
     @Test (expected = IllegalArgumentException.class)
     public void toP3ThrowsIfGroupElementHasPrecompRepresentation() {
         // Arrange:
-        final GroupElement g = MathUtils.toRepresentation(MathUtils.getRandomGroupElement(), GroupElement.Representation.PRECOMP);
+        final GroupElement g = MathUtils.toRepresentation(MathUtils.getRandomGroupElement(), Representation.PRECOMP);
 
         // Assert:
         g.toP3();
@@ -412,7 +412,7 @@ public class GroupElementTest {
     @Test (expected = IllegalArgumentException.class)
     public void toP3ThrowsIfGroupElementHasCachedRepresentation() {
         // Arrange:
-        final GroupElement g = MathUtils.toRepresentation(MathUtils.getRandomGroupElement(), GroupElement.Representation.CACHED);
+        final GroupElement g = MathUtils.toRepresentation(MathUtils.getRandomGroupElement(), Representation.CACHED);
 
         // Assert:
         g.toP3();
@@ -422,15 +422,15 @@ public class GroupElementTest {
     public void toP3ReturnsExpectedResultIfGroupElementHasP1P1Representation() {
         for (int i = 0; 10 > i; i++) {
             // Arrange:
-            final GroupElement g = MathUtils.toRepresentation(MathUtils.getRandomGroupElement(), GroupElement.Representation.P1P1);
+            final GroupElement g = MathUtils.toRepresentation(MathUtils.getRandomGroupElement(), Representation.P1P1);
 
             // Act:
             final GroupElement h1 = g.toP3();
-            final GroupElement h2 = MathUtils.toRepresentation(g, GroupElement.Representation.P3);
+            final GroupElement h2 = MathUtils.toRepresentation(g, Representation.P3);
 
             // Assert:
             assertThat(h1, IsEqual.equalTo(h2));
-            assertThat(h1.getRepresentation(), IsEqual.equalTo(GroupElement.Representation.P3));
+            assertThat(h1.getRepresentation(), IsEqual.equalTo(Representation.P3));
             assertThat(h1.getX(), IsEqual.equalTo(g.getX().multiply(g.getT())));
             assertThat(h1.getY(), IsEqual.equalTo(g.getY().multiply(g.getZ())));
             assertThat(h1.getZ(), IsEqual.equalTo(g.getZ().multiply(g.getT())));
@@ -449,7 +449,7 @@ public class GroupElementTest {
 
             // Assert:
             assertThat(h, IsEqual.equalTo(g));
-            assertThat(h.getRepresentation(), IsEqual.equalTo(GroupElement.Representation.P3));
+            assertThat(h.getRepresentation(), IsEqual.equalTo(Representation.P3));
             assertThat(h, IsEqual.equalTo(g));
             assertThat(h.getX(), IsEqual.equalTo(g.getX()));
             assertThat(h.getY(), IsEqual.equalTo(g.getY()));
@@ -461,7 +461,7 @@ public class GroupElementTest {
     @Test (expected = IllegalArgumentException.class)
     public void toCachedThrowsIfGroupElementHasP2Representation() {
         // Arrange:
-        final GroupElement g = MathUtils.toRepresentation(MathUtils.getRandomGroupElement(), GroupElement.Representation.P2);
+        final GroupElement g = MathUtils.toRepresentation(MathUtils.getRandomGroupElement(), Representation.P2);
 
         // Assert:
         g.toCached();
@@ -470,7 +470,7 @@ public class GroupElementTest {
     @Test (expected = IllegalArgumentException.class)
     public void toCachedThrowsIfGroupElementHasPrecompRepresentation() {
         // Arrange:
-        final GroupElement g = MathUtils.toRepresentation(MathUtils.getRandomGroupElement(), GroupElement.Representation.PRECOMP);
+        final GroupElement g = MathUtils.toRepresentation(MathUtils.getRandomGroupElement(), Representation.PRECOMP);
 
         // Assert:
         g.toCached();
@@ -479,7 +479,7 @@ public class GroupElementTest {
     @Test (expected = IllegalArgumentException.class)
     public void toCachedThrowsIfGroupElementHasP1P1Representation() {
         // Arrange:
-        final GroupElement g = MathUtils.toRepresentation(MathUtils.getRandomGroupElement(), GroupElement.Representation.P1P1);
+        final GroupElement g = MathUtils.toRepresentation(MathUtils.getRandomGroupElement(), Representation.P1P1);
 
         // Assert:
         g.toCached();
@@ -489,14 +489,14 @@ public class GroupElementTest {
     public void toCachedReturnsExpectedResultIfGroupElementHasCachedRepresentation() {
         for (int i = 0; 10 > i; i++) {
             // Arrange:
-            final GroupElement g = MathUtils.toRepresentation(MathUtils.getRandomGroupElement(), GroupElement.Representation.CACHED);
+            final GroupElement g = MathUtils.toRepresentation(MathUtils.getRandomGroupElement(), Representation.CACHED);
 
             // Act:
             final GroupElement h = g.toCached();
 
             // Assert:
             assertThat(h, IsEqual.equalTo(g));
-            assertThat(h.getRepresentation(), IsEqual.equalTo(GroupElement.Representation.CACHED));
+            assertThat(h.getRepresentation(), IsEqual.equalTo(Representation.CACHED));
             assertThat(h, IsEqual.equalTo(g));
             assertThat(h.getX(), IsEqual.equalTo(g.getX()));
             assertThat(h.getY(), IsEqual.equalTo(g.getY()));
@@ -513,11 +513,11 @@ public class GroupElementTest {
 
             // Act:
             final GroupElement h1 = g.toCached();
-            final GroupElement h2 = MathUtils.toRepresentation(g, GroupElement.Representation.CACHED);
+            final GroupElement h2 = MathUtils.toRepresentation(g, Representation.CACHED);
 
             // Assert:
             assertThat(h1, IsEqual.equalTo(h2));
-            assertThat(h1.getRepresentation(), IsEqual.equalTo(GroupElement.Representation.CACHED));
+            assertThat(h1.getRepresentation(), IsEqual.equalTo(Representation.CACHED));
             assertThat(h1, IsEqual.equalTo(g));
             assertThat(h1.getX(), IsEqual.equalTo(g.getY().add(g.getX())));
             assertThat(h1.getY(), IsEqual.equalTo(g.getY().subtract(g.getX())));
@@ -547,7 +547,7 @@ public class GroupElementTest {
         for (int i = 0; 32 > i; i++) {
             GroupElement h = g;
             for (int j = 0; 8 > j; j++) {
-                assertThat(MathUtils.toRepresentation(h, GroupElement.Representation.PRECOMP), IsEqual.equalTo(ed25519.groupElement.getPrecmp()[i][j]));
+                assertThat(MathUtils.toRepresentation(h, Representation.PRECOMP), IsEqual.equalTo(ed25519.groupElement.getPrecmp()[i][j]));
                 h = MathUtils.addGroupElements(h, g);
             }
             for (int k = 0; 8 > k; k++) {
@@ -564,7 +564,7 @@ public class GroupElementTest {
 
         // Act + Assert:
         for (int i = 0; 8 > i; i++) {
-            assertThat(MathUtils.toRepresentation(g, GroupElement.Representation.PRECOMP), IsEqual.equalTo(ed25519.groupElement.getDblPrecmp()[i]));
+            assertThat(MathUtils.toRepresentation(g, Representation.PRECOMP), IsEqual.equalTo(ed25519.groupElement.getDblPrecmp()[i]));
             g = MathUtils.addGroupElements(g, h);
         }
     }
@@ -657,9 +657,9 @@ public class GroupElementTest {
     public void equalsOnlyReturnsTrueForEquivalentObjects() {
         // Arrange:
         final GroupElement g1 = MathUtils.getRandomGroupElement();
-        final GroupElement g2 = MathUtils.toRepresentation(g1, GroupElement.Representation.P2);
-        final GroupElement g3 = MathUtils.toRepresentation(g1, GroupElement.Representation.CACHED);
-        final GroupElement g4 = MathUtils.toRepresentation(g1, GroupElement.Representation.P1P1);
+        final GroupElement g2 = MathUtils.toRepresentation(g1, Representation.P2);
+        final GroupElement g3 = MathUtils.toRepresentation(g1, Representation.CACHED);
+        final GroupElement g4 = MathUtils.toRepresentation(g1, Representation.P1P1);
         final GroupElement g5 = MathUtils.getRandomGroupElement();
 
         // Assert
@@ -676,8 +676,8 @@ public class GroupElementTest {
     public void hashCodesAreEqualForEquivalentObjects() {
         // Arrange:
         final GroupElement g1 = MathUtils.getRandomGroupElement();
-        final GroupElement g2 = MathUtils.toRepresentation(g1, GroupElement.Representation.P2);
-        final GroupElement g3 = MathUtils.toRepresentation(g1, GroupElement.Representation.P1P1);
+        final GroupElement g2 = MathUtils.toRepresentation(g1, Representation.P2);
+        final GroupElement g3 = MathUtils.toRepresentation(g1, Representation.P1P1);
         final GroupElement g4 = MathUtils.getRandomGroupElement();
 
         // Assert
@@ -730,7 +730,7 @@ public class GroupElementTest {
      */
     @Test
     public void testCmov() {
-        final GroupElement a = curve.get(GroupElement.Representation.PRECOMP);
+        final GroupElement a = curve.get(Representation.PRECOMP);
         final GroupElement b = GroupElement.precomp(curve, TWO, ZERO, TEN);
         assertThat(a.cmov(b, 0), is(equalTo(a)));
         assertThat(a.cmov(b, 1), is(equalTo(b)));
@@ -778,7 +778,7 @@ public class GroupElementTest {
         final GroupElement A = new GroupElement(curve, Utils.hexToBytes("d4cf8595571830644bd14af416954d09ab7159751ad9e0f7a6cbd92379e71a66"));
 
         assertThat("scalarMultiply(0) failed",
-                ed25519.groupElement.scalarMultiply(zero), is(equalTo(curve.get(GroupElement.Representation.P3))));
+                ed25519.groupElement.scalarMultiply(zero), is(equalTo(curve.get(Representation.P3))));
         assertThat("scalarMultiply(1) failed",
                 ed25519.groupElement.scalarMultiply(one), is(equalTo(ed25519.groupElement)));
         assertThat("scalarMultiply(2) failed",
@@ -797,7 +797,7 @@ public class GroupElementTest {
         final GroupElement g = basePoint.scalarMultiply(curve.getEdDSAFiniteField().ZERO.toByteArray());
 
         // Assert:
-        assertThat(curve.get(GroupElement.Representation.P3), IsEqual.equalTo(g));
+        assertThat(curve.get(Representation.P3), IsEqual.equalTo(g));
     }
 
     @Test
@@ -838,7 +838,7 @@ public class GroupElementTest {
         final byte[] a = Utils.hexToBytes("d072f8dd9c07fa7bc8d22a4b325d26301ee9202f6db89aa7c3731529e37e437c");
         final GroupElement A = new GroupElement(curve, Utils.hexToBytes("d4cf8595571830644bd14af416954d09ab7159751ad9e0f7a6cbd92379e71a66"));
         final GroupElement B = ed25519.groupElement;
-        final GroupElement geZero = curve.get(GroupElement.Representation.P3PrecomputedDouble);
+        final GroupElement geZero = curve.get(Representation.P3PrecomputedDouble);
 
         // 0 * GE(0) + 0 * GE(0) = GE(0)
         assertThat(geZero.doubleScalarMultiplyVariableTime(geZero, zero, zero),

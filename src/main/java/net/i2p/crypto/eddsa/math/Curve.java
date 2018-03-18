@@ -1,7 +1,7 @@
 package net.i2p.crypto.eddsa.math;
 
 public interface Curve {
-    GroupElement get(GroupElement.Representation repr);
+    GroupElement get(Representation repr);
 
     GroupElement createPoint(byte[] P, boolean precompute);
 

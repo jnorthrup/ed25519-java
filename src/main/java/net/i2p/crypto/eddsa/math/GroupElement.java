@@ -42,12 +42,13 @@ public class GroupElement {
 
     /**
      * Creates a group element for a curve.
-     *  @param curve The curve.
-     * @param repr The representation used to represent the group element.
-     * @param X The $X$ coordinate.
-     * @param Y The $Y$ coordinate.
-     * @param Z The $Z$ coordinate.
-     * @param T The $T$ coordinate.
+     *
+     * @param curve            The curve.
+     * @param repr             The representation used to represent the group element.
+     * @param X                The $X$ coordinate.
+     * @param Y                The $Y$ coordinate.
+     * @param Z                The $Z$ coordinate.
+     * @param T                The $T$ coordinate.
      * @param precomputeDouble If true, populate dblPrecmp, else set to null.
      */
     public GroupElement(
@@ -82,7 +83,7 @@ public class GroupElement {
      * </ul>
      *
      * @param curve The curve.
-     * @param s The encoded point.
+     * @param s     The encoded point.
      */
     public GroupElement(final Curve curve, final byte[] s) {
         this(curve, s, false);
@@ -101,8 +102,8 @@ public class GroupElement {
      * <li>If $sign(x) \ne$ bit 255 of $s$ then negate $x$.
      * </ul>
      *
-     * @param curve The curve.
-     * @param s The encoded point.
+     * @param curve                     The curve.
+     * @param s                         The encoded point.
      * @param precomputeSingleAndDouble If true, populate both precmp and dblPrecmp, else set both to null.
      */
     // TODO
@@ -168,9 +169,9 @@ public class GroupElement {
      * Creates a new group element in P2 representation.
      *
      * @param curve The curve.
-     * @param X The $X$ coordinate.
-     * @param Y The $Y$ coordinate.
-     * @param Z The $Z$ coordinate.
+     * @param X     The $X$ coordinate.
+     * @param Y     The $Y$ coordinate.
+     * @param Z     The $Z$ coordinate.
      * @return The group element in P2 representation.
      */
     public static GroupElement p2(
@@ -178,17 +179,17 @@ public class GroupElement {
             final FieldElement X,
             final FieldElement Y,
             final FieldElement Z) {
-        return new GroupElement(curve, Representation.P2, X, Y, Z, null, false);
+        return new P2GroupElement(curve, X, Y, Z);
     }
 
     /**
      * Creates a new group element in P3 representation.
      *
-     * @param curve The curve.
-     * @param X The $X$ coordinate.
-     * @param Y The $Y$ coordinate.
-     * @param Z The $Z$ coordinate.
-     * @param T The $T$ coordinate.
+     * @param curve                The curve.
+     * @param X                    The $X$ coordinate.
+     * @param Y                    The $Y$ coordinate.
+     * @param Z                    The $Z$ coordinate.
+     * @param T                    The $T$ coordinate.
      * @param precomputeDoubleOnly If true, populate dblPrecmp, else set to null.
      * @return The group element in P3 representation.
      */
@@ -199,17 +200,28 @@ public class GroupElement {
             final FieldElement Z,
             final FieldElement T,
             final boolean precomputeDoubleOnly) {
-        return new GroupElement(curve, Representation.P3, X, Y, Z, T, precomputeDoubleOnly);
-    }
-
-    /**
-     * Creates a new group element in P1P1 representation.
+        /**
+     * Creates a new group element in P3 representation.
      *
      * @param curve The curve.
      * @param X The $X$ coordinate.
      * @param Y The $Y$ coordinate.
      * @param Z The $Z$ coordinate.
      * @param T The $T$ coordinate.
+     * @param precomputeDoubleOnly If true, populate dblPrecmp, else set to null.
+     * @return The group element in P3 representation.
+     */
+        return precomputeDoubleOnly ? new P3PreGroupElement(curve, X, Y, Z, T) : new P3GroupElement(curve, X, Y, Z, T);
+    }
+
+    /**
+     * Creates a new group element in P1P1 representation.
+     *
+     * @param curve The curve.
+     * @param X     The $X$ coordinate.
+     * @param Y     The $Y$ coordinate.
+     * @param Z     The $Z$ coordinate.
+     * @param T     The $T$ coordinate.
      * @return The group element in P1P1 representation.
      */
     public static GroupElement p1p1(
@@ -218,16 +230,27 @@ public class GroupElement {
             final FieldElement Y,
             final FieldElement Z,
             final FieldElement T) {
-        return new GroupElement(curve, Representation.P1P1, X, Y, Z, T, false);
+
+        /**
+         * Creates a new group element in P1P1 representation.
+         *
+         * @param curve The curve.
+         * @param X The $X$ coordinate.
+         * @param Y The $Y$ coordinate.
+         * @param Z The $Z$ coordinate.
+         * @param T The $T$ coordinate.
+         * @return The group element in P1P1 representation.
+         */
+        return new P1pGroupElement(curve, X, Y, Z, T);
     }
 
     /**
      * Creates a new group element in PRECOMP representation.
      *
      * @param curve The curve.
-     * @param ypx The $y + x$ value.
-     * @param ymx The $y - x$ value.
-     * @param xy2d The $2 * d * x * y$ value.
+     * @param ypx   The $y + x$ value.
+     * @param ymx   The $y - x$ value.
+     * @param xy2d  The $2 * d * x * y$ value.
      * @return The group element in PRECOMP representation.
      */
     public static GroupElement precomp(
@@ -235,17 +258,26 @@ public class GroupElement {
             final FieldElement ypx,
             final FieldElement ymx,
             final FieldElement xy2d) {
-        return new GroupElement(curve, Representation.PRECOMP, ypx, ymx, xy2d, null, false);
+        return
+                /**
+                 * Creates a new group element in PRECOMP representation.
+                 *
+                 * @param curve The curve.
+                 * @param ypx The $y + x$ value.
+                 * @param ymx The $y - x$ value.
+                 * @param xy2d The $2 * d * x * y$ value.
+                 * @return The group element in PRECOMP representation.
+                 */new PrecompGroupElement(curve, ypx, ymx, xy2d);
     }
 
     /**
      * Creates a new group element in CACHED representation.
      *
      * @param curve The curve.
-     * @param YpX The $Y + X$ value.
-     * @param YmX The $Y - X$ value.
-     * @param Z The $Z$ coordinate.
-     * @param T2d The $2 * d * T$ value.
+     * @param YpX   The $Y + X$ value.
+     * @param YmX   The $Y - X$ value.
+     * @param Z     The $Z$ coordinate.
+     * @param T2d   The $2 * d * T$ value.
      * @return The group element in CACHED representation.
      */
     public static GroupElement cached(
@@ -254,12 +286,12 @@ public class GroupElement {
             final FieldElement YmX,
             final FieldElement Z,
             final FieldElement T2d) {
-        return new GroupElement(curve, Representation.CACHED, YpX, YmX, Z, T2d, false);
+        return new CachedGroupElement(curve, YpX, YmX, Z, T2d);
     }
 
     /**
      * Convert a to radix 16.
-     * <p>
+     *
      * Method is package public only so that tests run.
      *
      * @param a $= a[0]+256*a[1]+...+256^{31} a[31]$
@@ -904,7 +936,7 @@ public class GroupElement {
      * Method is package public only so that tests run.
      *
      * @param pos $= i/2$ for $i$ in $\{0, 2, 4,..., 62\}$
-     * @param b $= r_i$
+     * @param b   $= r_i$
      * @return the GroupElement
      */
     GroupElement select(final int pos, final int b) {
@@ -936,7 +968,8 @@ public class GroupElement {
      * Constant time.
      * <p>
      * Preconditions: (TODO: Check this applies here)
-     *   $a[31] \le 127$
+     * $a[31] \le 127$
+     *
      * @param a $= a[0]+256*a[1]+\dots+256^{31} a[31]$
      * @return the GroupElement
      */
@@ -1011,6 +1044,7 @@ public class GroupElement {
 
     /**
      * Verify that a point is on its curve.
+     *
      * @return true if the point lies on its curve.
      */
     public boolean isOnCurve() {
@@ -1019,6 +1053,7 @@ public class GroupElement {
 
     /**
      * Verify that a point is on the curve.
+     *
      * @param curve The curve to check.
      * @return true if the point lies on the curve.
      */
@@ -1044,29 +1079,4 @@ public class GroupElement {
         return "[GroupElement\nX=" + getX() + "\nY=" + getY() + "\nZ=" + getZ() + "\nT=" + getT() + "\n]";
     }
 
-    /**
-     * Available representations for a group element.
-     * <ul>
-     * <li>P2: Projective representation $(X:Y:Z)$ satisfying $x=X/Z, y=Y/Z$.
-     * <li>P3: Extended projective representation $(X:Y:Z:T)$ satisfying $x=X/Z, y=Y/Z, XY=ZT$.
-     * <li>P3PrecomputedDouble: P3 but with dblPrecmp populated.
-     * <li>P1P1: Completed representation $((X:Z), (Y:T))$ satisfying $x=X/Z, y=Y/T$.
-     * <li>PRECOMP: Precomputed representation $(y+x, y-x, 2dxy)$.
-     * <li>CACHED: Cached representation $(Y+X, Y-X, Z, 2dT)$
-     * </ul>
-     */
-    public enum Representation {
-        /** Projective ($P^2$): $(X:Y:Z)$ satisfying $x=X/Z, y=Y/Z$ */
-        P2,
-        /** Extended ($P^3$): $(X:Y:Z:T)$ satisfying $x=X/Z, y=Y/Z, XY=ZT$ */
-        P3,
-        /** P3 but also populate dblPrecmp */
-        P3PrecomputedDouble,
-        /** Completed ($P \times P$): $((X:Z),(Y:T))$ satisfying $x=X/Z, y=Y/T$ */
-        P1P1,
-        /** Precomputed (Duif): $(y+x,y-x,2dxy)$ */
-        PRECOMP,
-        /** Cached: $(Y+X,Y-X,Z,2dT)$ */
-        CACHED
-    }
 }
