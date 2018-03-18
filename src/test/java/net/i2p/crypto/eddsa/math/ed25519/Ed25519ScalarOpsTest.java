@@ -29,9 +29,9 @@ import static org.junit.Assert.assertThat;
  */
 public class Ed25519ScalarOpsTest {
 
-    public static final Ed25519ScalarOps scalarOps = new Ed25519ScalarOps();
+    private static final Ed25519ScalarOps scalarOps = new Ed25519ScalarOps();
 
-    public static byte[] getRandomByteArray(final int length) {
+    private static byte[] getRandomByteArray(final int length) {
         final byte[] bytes = new byte[length];
         MathUtils.random.nextBytes(bytes);
         return bytes;
@@ -47,7 +47,7 @@ public class Ed25519ScalarOpsTest {
      * @param c The third integer.
      * @return The mod group order reduced result.
      */
-    public static byte[] multiplyAndAddModGroupOrder(final byte[] a, final byte[] b, final byte[] c) {
+    private static byte[] multiplyAndAddModGroupOrder(final byte[] a, final byte[] b, final byte[] c) {
         final BigInteger result = MathUtils.toBigInteger(a).multiply(MathUtils.toBigInteger(b)).add(MathUtils.toBigInteger(c)).mod(MathUtils.groupOrder);
         return MathUtils.toByteArray(result);
     }
@@ -58,7 +58,7 @@ public class Ed25519ScalarOpsTest {
      * @param bytes The integer in 2^8 bit representation.
      * @return The mod group order reduced integer.
      */
-    public static byte[] reduceModGroupOrder(final byte[] bytes) {
+    private static byte[] reduceModGroupOrder(final byte[] bytes) {
         final BigInteger b = MathUtils.toBigInteger(bytes).mod(MathUtils.groupOrder);
         return MathUtils.toByteArray(b);
     }
@@ -66,7 +66,7 @@ public class Ed25519ScalarOpsTest {
     /**
      * Gets group order = 2^252 + 27742317777372353535851937790883648493 as BigInteger.
      */
-    public static BigInteger getGroupOrder() {
+    private static BigInteger getGroupOrder() {
         return MathUtils.groupOrder;
     }
 

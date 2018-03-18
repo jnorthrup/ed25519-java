@@ -21,7 +21,7 @@ import net.i2p.crypto.eddsa.math.ScalarOps;
  *
  */
 public class EdDSANamedCurveSpec extends EdDSAParameterSpec {
-    public final String name;
+    private final String name;
 
     public EdDSANamedCurveSpec(final String name, final Curve curve,
                                final String hashAlgo, final ScalarOps sc, final GroupElement B) {

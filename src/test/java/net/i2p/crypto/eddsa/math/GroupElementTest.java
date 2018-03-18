@@ -30,26 +30,26 @@ import static org.junit.Assert.assertThat;
  *
  */
 public class GroupElementTest {
-    static final byte[] BYTES_ZEROZERO = Utils.hexToBytes("0000000000000000000000000000000000000000000000000000000000000000");
-    static final byte[] BYTES_ONEONE = Utils.hexToBytes("0100000000000000000000000000000000000000000000000000000000000080");
-    static final byte[] BYTES_TENZERO = Utils.hexToBytes("0000000000000000000000000000000000000000000000000000000000000000");
-    static final byte[] BYTES_ONETEN = Utils.hexToBytes("0a00000000000000000000000000000000000000000000000000000000000080");
+    private static final byte[] BYTES_ZEROZERO = Utils.hexToBytes("0000000000000000000000000000000000000000000000000000000000000000");
+    private static final byte[] BYTES_ONEONE = Utils.hexToBytes("0100000000000000000000000000000000000000000000000000000000000080");
+    private static final byte[] BYTES_TENZERO = Utils.hexToBytes("0000000000000000000000000000000000000000000000000000000000000000");
+    private static final byte[] BYTES_ONETEN = Utils.hexToBytes("0a00000000000000000000000000000000000000000000000000000000000080");
 
-    static final EdDSANamedCurveSpec ed25519 = EdDSANamedCurveTable.getByName(EdDSANamedCurveTable.ED_25519);
-    static final Curve curve = ed25519.curve;
+    private static final EdDSANamedCurveSpec ed25519 = EdDSANamedCurveTable.getByName(EdDSANamedCurveTable.ED_25519);
+    private static final Curve curve = ed25519.curve;
 
-    static final FieldElement ZERO = curve.getEdDSAFiniteField().ZERO;
-    static final FieldElement ONE = curve.getEdDSAFiniteField().ONE;
-    static final FieldElement TWO = curve.getEdDSAFiniteField().TWO;
-    static final FieldElement TEN = curve.getEdDSAFiniteField().fromByteArray(Utils.hexToBytes("0a00000000000000000000000000000000000000000000000000000000000000"));
+    private static final FieldElement ZERO = curve.getEdDSAFiniteField().ZERO;
+    private static final FieldElement ONE = curve.getEdDSAFiniteField().ONE;
+    private static final FieldElement TWO = curve.getEdDSAFiniteField().TWO;
+    private static final FieldElement TEN = curve.getEdDSAFiniteField().fromByteArray(Utils.hexToBytes("0a00000000000000000000000000000000000000000000000000000000000000"));
 
-    static final GroupElement P2_ZERO = GroupElement.p2(curve, ZERO, ONE, ONE);
+    private static final GroupElement P2_ZERO = GroupElement.p2(curve, ZERO, ONE, ONE);
 
-    static final FieldElement[] PKR = {
+    private static final FieldElement[] PKR = {
         curve.getEdDSAFiniteField().fromByteArray(Utils.hexToBytes("5849722e338aced7b50c7f0e9328f9a10c847b08e40af5c5b0577b0fd8984f15")),
         curve.getEdDSAFiniteField().fromByteArray(Utils.hexToBytes("3b6a27bcceb6a42d62a3a8d02a6f0d73653215771de243a63ac048a18b59da29"))
         };
-    static final byte[] BYTES_PKR = Utils.hexToBytes("3b6a27bcceb6a42d62a3a8d02a6f0d73653215771de243a63ac048a18b59da29");
+    private static final byte[] BYTES_PKR = Utils.hexToBytes("3b6a27bcceb6a42d62a3a8d02a6f0d73653215771de243a63ac048a18b59da29");
 
     @Rule
     public ExpectedException exception = ExpectedException.none();
@@ -60,7 +60,7 @@ public class GroupElementTest {
      * @param g The group element.
      * @return The negated group element.
      */
-    public static GroupElement negateGroupElement(final GroupElement g) {
+    private static GroupElement negateGroupElement(final GroupElement g) {
         if (GroupElement.Representation.P3 != g.getRepresentation()) {
             throw new IllegalArgumentException("g must have representation P3");
         }
@@ -77,7 +77,7 @@ public class GroupElementTest {
      * @param f2 The second multiplier.
      * @return The resulting group element.
      */
-    public static GroupElement doubleScalarMultiplyGroupElements(
+    private static GroupElement doubleScalarMultiplyGroupElements(
             final GroupElement g1,
             final FieldElement f1,
             final GroupElement g2,
@@ -95,7 +95,7 @@ public class GroupElementTest {
      * @param bytes the byte array.
      * @return The group element.
      */
-    public static GroupElement toGroupElement(final byte[] bytes) {
+    private static GroupElement toGroupElement(final byte[] bytes) {
         final boolean shouldBeNegative = 0 != (bytes[31] >> 7);
         bytes[31] = (byte) (bytes[31] & 0x7f);
         final BigInteger y = MathUtils.toBigInteger(bytes);
@@ -690,14 +690,14 @@ public class GroupElementTest {
 
     // endregion
 
-    static final byte[] BYTES_ZERO = Utils.hexToBytes("0000000000000000000000000000000000000000000000000000000000000000");
-    static final byte[] BYTES_ONE = Utils.hexToBytes("0100000000000000000000000000000000000000000000000000000000000000");
-    static final byte[] BYTES_42 = Utils.hexToBytes("2A00000000000000000000000000000000000000000000000000000000000000");
-    static final byte[] BYTES_1234567890 = Utils.hexToBytes("D202964900000000000000000000000000000000000000000000000000000000");
+    private static final byte[] BYTES_ZERO = Utils.hexToBytes("0000000000000000000000000000000000000000000000000000000000000000");
+    private static final byte[] BYTES_ONE = Utils.hexToBytes("0100000000000000000000000000000000000000000000000000000000000000");
+    private static final byte[] BYTES_42 = Utils.hexToBytes("2A00000000000000000000000000000000000000000000000000000000000000");
+    private static final byte[] BYTES_1234567890 = Utils.hexToBytes("D202964900000000000000000000000000000000000000000000000000000000");
 
-    static final byte[] RADIX16_ZERO = Utils.hexToBytes("00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000");
-    static final byte[] RADIX16_ONE = Utils.hexToBytes("01000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000");
-    static final byte[] RADIX16_42 = Utils.hexToBytes("FA030000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000");
+    private static final byte[] RADIX16_ZERO = Utils.hexToBytes("00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000");
+    private static final byte[] RADIX16_ONE = Utils.hexToBytes("01000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000");
+    private static final byte[] RADIX16_42 = Utils.hexToBytes("FA030000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000");
 
     /**
      * Test method for {@link GroupElement#toRadix16(byte[])}.

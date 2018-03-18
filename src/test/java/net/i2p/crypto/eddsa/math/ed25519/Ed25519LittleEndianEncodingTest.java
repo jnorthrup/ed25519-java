@@ -23,7 +23,7 @@ import java.security.SecureRandom;
  */
 public class Ed25519LittleEndianEncodingTest {
 
-    public static final SecureRandom random = new SecureRandom();
+    private static final SecureRandom random = new SecureRandom();
 
     /**
      * Converts a 2^25.5 bit representation to a BigInteger.
@@ -33,7 +33,7 @@ public class Ed25519LittleEndianEncodingTest {
      * @param t The 2^25.5 bit representation.
      * @return The BigInteger.
      */
-    public static BigInteger toBigInteger(final int[] t) {
+    private static BigInteger toBigInteger(final int[] t) {
         BigInteger b = BigInteger.ZERO;
         for (int i = 0; 10 > i; i++) {
             b = b.add(BigInteger.ONE.multiply(BigInteger.valueOf(t[i])).shiftLeft(MathUtils.exponents[i]));

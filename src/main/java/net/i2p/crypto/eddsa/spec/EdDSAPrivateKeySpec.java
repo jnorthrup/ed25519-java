@@ -27,7 +27,7 @@ public class EdDSAPrivateKeySpec implements KeySpec {
     public final byte[] hashOfTheSeed;
     public final byte[] privateKey;
     public final GroupElement groupElement;
-    public final EdDSAParameterSpec spec;
+    private final EdDSAParameterSpec spec;
 
     /**
      *  @param seed the private key

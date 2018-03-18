@@ -21,14 +21,14 @@ import java.util.List;
 
 public class Ed25519TestVectors {
     public static class TestTuple {
-        public static int numCases;
+        static int numCases;
         public final int caseNum;
         public final byte[] seed;
         public final byte[] pk;
         public final byte[] message;
         public final byte[] sig;
 
-        public TestTuple(final String line) {
+        TestTuple(final String line) {
             caseNum = ++numCases;
             final String[] x = line.split(":");
             seed = Utils.hexToBytes(x[0].substring(0, 64));
@@ -40,7 +40,7 @@ public class Ed25519TestVectors {
 
     public static final Collection<TestTuple> testCases = getTestData("test.data");
 
-    public static Collection<TestTuple> getTestData(final String fileName) {
+    private static Collection<TestTuple> getTestData(final String fileName) {
         final Collection<TestTuple> testCases = new ArrayList<>();
         BufferedReader file = null;
         try {

@@ -25,14 +25,14 @@ import static org.junit.Assert.assertThat;
  *
  */
 public class UtilsTest {
-    public static final String hex1 = "3b6a27bcceb6a42d62a3a8d02a6f0d73653215771de243a63ac048a18b59da29";
-    public static final String hex2 = "47a3f5b71494bcd961f3a4e859a238d6eaf8e648746d2f56a89b5e236f98d45f";
-    public static final String hex3 = "5fd396e4a2b5dc9078f57e3ab5a87c28fd128e5f78cc4a97f4122dc45f6e4bb9";
-    public static final byte[] bytes1 = {(byte) 59, (byte) 106, (byte) 39, (byte) -68, (byte) -50, (byte) -74, (byte) -92, (byte) 45, (byte) 98, (byte) -93, (byte) -88, (byte) -48, (byte) 42, (byte) 111, (byte) 13, (byte) 115,
+    private static final String hex1 = "3b6a27bcceb6a42d62a3a8d02a6f0d73653215771de243a63ac048a18b59da29";
+    private static final String hex2 = "47a3f5b71494bcd961f3a4e859a238d6eaf8e648746d2f56a89b5e236f98d45f";
+    private static final String hex3 = "5fd396e4a2b5dc9078f57e3ab5a87c28fd128e5f78cc4a97f4122dc45f6e4bb9";
+    private static final byte[] bytes1 = {(byte) 59, (byte) 106, (byte) 39, (byte) -68, (byte) -50, (byte) -74, (byte) -92, (byte) 45, (byte) 98, (byte) -93, (byte) -88, (byte) -48, (byte) 42, (byte) 111, (byte) 13, (byte) 115,
             (byte) 101, (byte) 50, (byte) 21, (byte) 119, (byte) 29, (byte) -30, (byte) 67, (byte) -90, (byte) 58, (byte) -64, (byte) 72, (byte) -95, (byte) -117, (byte) 89, (byte) -38, (byte) 41};
-    public static final byte[] bytes2 = {(byte) 71, (byte) -93, (byte) -11, (byte) -73, (byte) 20, (byte) -108, (byte) -68, (byte) -39, (byte) 97, (byte) -13, (byte) -92, (byte) -24, (byte) 89, (byte) -94, (byte) 56, (byte) -42,
+    private static final byte[] bytes2 = {(byte) 71, (byte) -93, (byte) -11, (byte) -73, (byte) 20, (byte) -108, (byte) -68, (byte) -39, (byte) 97, (byte) -13, (byte) -92, (byte) -24, (byte) 89, (byte) -94, (byte) 56, (byte) -42,
             (byte) -22, (byte) -8, (byte) -26, (byte) 72, (byte) 116, (byte) 109, (byte) 47, (byte) 86, (byte) -88, (byte) -101, (byte) 94, (byte) 35, (byte) 111, (byte) -104, (byte) -44, (byte) 95};
-    public static final byte[] bytes3 = {(byte) 95, (byte) -45, (byte) -106, (byte) -28, (byte) -94, (byte) -75, (byte) -36, (byte) -112, (byte) 120, (byte) -11, (byte) 126, (byte) 58, (byte) -75, (byte) -88, (byte) 124, (byte) 40,
+    private static final byte[] bytes3 = {(byte) 95, (byte) -45, (byte) -106, (byte) -28, (byte) -94, (byte) -75, (byte) -36, (byte) -112, (byte) 120, (byte) -11, (byte) 126, (byte) 58, (byte) -75, (byte) -88, (byte) 124, (byte) 40,
             (byte) -3, (byte) 18, (byte) -114, (byte) 95, (byte) 120, (byte) -52, (byte) 74, (byte) -105, (byte) -12, (byte) 18, (byte) 45, (byte) -60, (byte) 95, (byte) 110, (byte) 75, (byte) -71};
 
     /**
