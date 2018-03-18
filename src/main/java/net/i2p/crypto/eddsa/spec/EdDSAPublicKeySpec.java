@@ -14,6 +14,7 @@ package net.i2p.crypto.eddsa.spec;
 import java.security.spec.KeySpec;
 
 import net.i2p.crypto.eddsa.math.GroupElement;
+import net.i2p.crypto.eddsa.math.P3GroupElement;
 
 /**
  * @author str4d
@@ -32,7 +33,7 @@ public class EdDSAPublicKeySpec implements KeySpec {
     public EdDSAPublicKeySpec(final byte[] pk, final EdDSAParameterSpec spec) {
         assert pk.length == spec.curve.getEdDSAFiniteField().getb() / 8 : "public-key length is wrong";
 
-        this.A = new GroupElement(spec.curve, pk);
+        this.A = new P3GroupElement(spec.curve, pk);
         this.spec = spec;
     }
 

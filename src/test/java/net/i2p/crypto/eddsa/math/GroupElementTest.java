@@ -235,7 +235,7 @@ public class GroupElementTest {
      */
     @Test
     public void testGroupElementCurveRepresentationFieldElementFieldElementFieldElementFieldElement() {
-        final GroupElement t = new GroupElement(curve, Representation.P3, ZERO, ONE, ONE, ZERO, false);
+        final GroupElement t = new P3GroupElement(curve,   ZERO, ONE, ONE, ZERO );
         assertThat(t.getCurve(), is(equalTo(curve)));
         assertThat(t.getRepr(), is(Representation.P3));
         assertThat(t.getX(), is(ZERO));
@@ -253,7 +253,7 @@ public class GroupElementTest {
         GroupElement t;
         for (Iterator<Ed25519TestVectors.TestTuple> iterator = Ed25519TestVectors.testCases.iterator(); iterator.hasNext(); ) {
             Ed25519TestVectors.TestTuple testCase = iterator.next();
-            t = new GroupElement(curve, testCase.pk);
+            t = new P3GroupElement(curve, testCase.pk);
             assertThat("Test case " + testCase.caseNum + " failed",
                     t.toByteArray(), is(equalTo(testCase.pk)));
         }
@@ -264,7 +264,7 @@ public class GroupElementTest {
      */
     @Test
     public void testGroupElementByteArray() {
-        final GroupElement t = new GroupElement(curve, BYTES_PKR);
+        final GroupElement t = new P3GroupElement(curve, BYTES_PKR);
         final FieldElement t1 = PKR[0].multiply(PKR[1]);
         /**
      * Creates a new group element in P3 representation.
@@ -289,7 +289,7 @@ public class GroupElementTest {
             final byte[] bytes = g.toByteArray();
 
             // Act:
-            final GroupElement h1 = new GroupElement(curve, bytes);
+            final GroupElement h1 = new P3GroupElement(curve, bytes);
             final GroupElement h2 = toGroupElement(bytes);
 
             // Assert:
@@ -836,7 +836,7 @@ public class GroupElementTest {
         final byte[] one = Utils.hexToBytes("0100000000000000000000000000000000000000000000000000000000000000");
         final byte[] two = Utils.hexToBytes("0200000000000000000000000000000000000000000000000000000000000000");
         final byte[] a = Utils.hexToBytes("d072f8dd9c07fa7bc8d22a4b325d26301ee9202f6db89aa7c3731529e37e437c");
-        final GroupElement A = new GroupElement(curve, Utils.hexToBytes("d4cf8595571830644bd14af416954d09ab7159751ad9e0f7a6cbd92379e71a66"));
+        final GroupElement A = new P3GroupElement(curve, Utils.hexToBytes("d4cf8595571830644bd14af416954d09ab7159751ad9e0f7a6cbd92379e71a66")){};
 
         assertThat("scalarMultiply(0) failed",
                 ed25519.groupElement.scalarMultiply(zero), is(equalTo(curve.get(Representation.P3))));
@@ -897,7 +897,7 @@ public class GroupElementTest {
         final byte[] one = Utils.hexToBytes("0100000000000000000000000000000000000000000000000000000000000000");
         final byte[] two = Utils.hexToBytes("0200000000000000000000000000000000000000000000000000000000000000");
         final byte[] a = Utils.hexToBytes("d072f8dd9c07fa7bc8d22a4b325d26301ee9202f6db89aa7c3731529e37e437c");
-        final GroupElement A = new GroupElement(curve, Utils.hexToBytes("d4cf8595571830644bd14af416954d09ab7159751ad9e0f7a6cbd92379e71a66"));
+        final GroupElement A = new P3GroupElement(curve, Utils.hexToBytes("d4cf8595571830644bd14af416954d09ab7159751ad9e0f7a6cbd92379e71a66"));
         final GroupElement B = ed25519.groupElement;
         final GroupElement geZero = curve.get(Representation.P3PrecomputedDouble);
 
@@ -940,7 +940,18 @@ public class GroupElementTest {
         for (int i = 0; 10 > i; i++) {
             // Arrange:
             final GroupElement basePoint = ed25519.groupElement;
-            final GroupElement g = MathUtils.getRandomGroupElement(true);
+            final byte[] bytes = new byte[32];
+            GroupElement ret;
+            while (true) {
+                try {
+                    MathUtils.random.nextBytes(bytes);
+                    ret = new GroupElement(MathUtils.curve, bytes, true);
+                    break;
+                } catch (final Throwable e) {
+                    // Will fail in about 87.5%, so try again.
+                }
+            }
+            final GroupElement g = ret;
             final FieldElement f1 = MathUtils.getRandomFieldElement();
             final FieldElement f2 = MathUtils.getRandomFieldElement();
 

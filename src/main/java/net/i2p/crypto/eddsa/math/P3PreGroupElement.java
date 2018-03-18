@@ -11,7 +11,7 @@ package net.i2p.crypto.eddsa.math;
  * @param precomputeDoubleOnly populate dblPrecmp
  * @return The group element in P3 representation.
  */
-
+public
 class P3PreGroupElement extends GroupElement {
     public P3PreGroupElement(Curve curve, FieldElement x, FieldElement y, FieldElement z, FieldElement t) {
         super(curve, Representation.P3, x, y, z, t, true);
