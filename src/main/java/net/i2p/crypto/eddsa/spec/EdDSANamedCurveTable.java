@@ -21,6 +21,7 @@ import net.i2p.crypto.eddsa.math.Curve;
 import net.i2p.crypto.eddsa.math.EdDSAFiniteField;
 import net.i2p.crypto.eddsa.math.ed25519.Ed25519LittleEndianEncoding;
 import net.i2p.crypto.eddsa.math.ed25519.Ed25519ScalarOps;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * The named EdDSA curves.
@@ -41,15 +42,16 @@ public class EdDSANamedCurveTable {
 
 //    public static final EdDSANamedCurveSpec ED_25519 = ; // Precompute tables for B
 
+    @NotNull
     private static volatile HashMap<String, EdDSANamedCurveSpec> curves = new HashMap<>();
 
     private static synchronized void putCurve(final String name, final EdDSANamedCurveSpec curve) {
-        final HashMap<String, EdDSANamedCurveSpec> newCurves = new HashMap<>(curves);
+        @NotNull final HashMap<String, EdDSANamedCurveSpec> newCurves = new HashMap<>(curves);
         newCurves.put(name, curve);
         curves = newCurves;
     }
 
-    private static void defineCurve(final EdDSANamedCurveSpec curve) {
+    private static void defineCurve(@NotNull final EdDSANamedCurveSpec curve) {
         putCurve(curve.getName().toLowerCase(Locale.ENGLISH), curve);
     }
 

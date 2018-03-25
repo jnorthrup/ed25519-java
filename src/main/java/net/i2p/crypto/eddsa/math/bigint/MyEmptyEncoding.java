@@ -3,6 +3,7 @@ package net.i2p.crypto.eddsa.math.bigint;
 import net.i2p.crypto.eddsa.math.EdDSAFiniteField;
 import net.i2p.crypto.eddsa.math.EmptyEncoding;
 import net.i2p.crypto.eddsa.math.FieldElement;
+import org.jetbrains.annotations.NotNull;
 
 import java.math.BigInteger;
 import java.util.Objects;
@@ -15,12 +16,12 @@ class MyEmptyEncoding extends EmptyEncoding {
     }
 
     @Override
-    public synchronized void setEdDSAFiniteField(final EdDSAFiniteField f) {
+    public synchronized void setEdDSAFiniteField(@NotNull final EdDSAFiniteField f) {
         super.setEdDSAFiniteField(f);
         bigIntegerLittleEndianEncoding.setMask(BigInteger.ONE.shiftLeft(f.getb()-1).subtract(BigInteger.ONE));
     }
 
-    public byte[] encode(final FieldElement x) {
+    public byte[] encode(@NotNull final FieldElement x) {
         return bigIntegerLittleEndianEncoding.convertBigIntegerToLittleEndian(((BigIntegerFieldElement)x).bi.and(bigIntegerLittleEndianEncoding.getMask()));
     }
 
@@ -33,7 +34,8 @@ class MyEmptyEncoding extends EmptyEncoding {
      *  @throws IllegalStateException if field not set
      *  @throws IllegalArgumentException if encoding is invalid
      */
-    public FieldElement decode(final byte[] in) {
+    @NotNull
+    public FieldElement decode(@NotNull final byte[] in) {
         Objects.requireNonNull(getEdDSAFiniteField(),"field not set");
         assert in.length == getEdDSAFiniteField().getb() / 8 : "Not a valid encoding";
         return new BigIntegerFieldElement(getEdDSAFiniteField(), bigIntegerLittleEndianEncoding.toBigInteger(in).and(bigIntegerLittleEndianEncoding.getMask()));
@@ -47,7 +49,7 @@ class MyEmptyEncoding extends EmptyEncoding {
      * elements of $F_q$ are $\{1, 3, 5,\dots, q-2\}$.
      * @return true if negative
      */
-    public boolean isNegative(final FieldElement x) {
+    public boolean isNegative(@NotNull final FieldElement x) {
         return ((BigIntegerFieldElement)x).bi.testBit(0);
     }
 }

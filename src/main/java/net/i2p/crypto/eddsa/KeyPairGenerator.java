@@ -26,6 +26,7 @@ import net.i2p.crypto.eddsa.spec.EdDSANamedCurveTable;
 import net.i2p.crypto.eddsa.spec.EdDSAParameterSpec;
 import net.i2p.crypto.eddsa.spec.EdDSAPrivateKeySpec;
 import net.i2p.crypto.eddsa.spec.EdDSAPublicKeySpec;
+import org.jetbrains.annotations.NotNull;
 
 /**
  *  Default keysize is 256 (Ed25519)
@@ -36,6 +37,7 @@ public final class KeyPairGenerator extends KeyPairGeneratorSpi {
     public SecureRandom random;
     public boolean initialized;
 
+    @NotNull
     public static final Hashtable<Integer, AlgorithmParameterSpec> edParameters;
 
     static {
@@ -49,7 +51,7 @@ public final class KeyPairGenerator extends KeyPairGeneratorSpi {
         Objects.requireNonNull(edParams);
         try {
             initialize(edParams, random);
-        } catch (final InvalidAlgorithmParameterException e) {
+        } catch (@NotNull final InvalidAlgorithmParameterException e) {
             throw new InvalidParameterException("key type not configurable.");
         }
     }
@@ -71,11 +73,11 @@ public final class KeyPairGenerator extends KeyPairGeneratorSpi {
         if (!initialized)
             initialize(DEFAULT_KEYSIZE, new SecureRandom());
 
-        final byte[] seed = new byte[edParams.curve.getEdDSAFiniteField().getb()/8];
+        @NotNull final byte[] seed = new byte[edParams.curve.getEdDSAFiniteField().getb()/8];
         random.nextBytes(seed);
 
-        final EdDSAPrivateKeySpec privKey = new EdDSAPrivateKeySpec(seed, edParams);
-        final EdDSAPublicKeySpec pubKey = new EdDSAPublicKeySpec(privKey.groupElement, edParams);
+        @NotNull final EdDSAPrivateKeySpec privKey = new EdDSAPrivateKeySpec(seed, edParams);
+        @NotNull final EdDSAPublicKeySpec pubKey = new EdDSAPublicKeySpec(privKey.groupElement, edParams);
 
         return new KeyPair(new EdDSAPublicKey(pubKey), new EdDSAPrivateKey(privKey));
     }
@@ -87,7 +89,7 @@ public final class KeyPairGenerator extends KeyPairGeneratorSpi {
      * @return the specification for the named curve.
      * @throws InvalidAlgorithmParameterException if the named curve is unknown.
      */
-    protected EdDSANamedCurveSpec createNamedCurveSpec(final String curveName) {
+    protected EdDSANamedCurveSpec createNamedCurveSpec(@NotNull final String curveName) {
         final EdDSANamedCurveSpec spec = EdDSANamedCurveTable.getByName(curveName);
         Objects.requireNonNull(spec);
         return spec;

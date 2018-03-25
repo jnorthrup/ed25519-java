@@ -15,6 +15,8 @@ import net.i2p.crypto.eddsa.spec.EdDSANamedCurveSpec;
 import net.i2p.crypto.eddsa.spec.EdDSANamedCurveTable;
 import net.i2p.crypto.eddsa.spec.EdDSAParameterSpec;
 import net.i2p.crypto.eddsa.spec.EdDSAPublicKeySpec;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.security.PublicKey;
 import java.security.spec.InvalidKeySpecException;
@@ -45,6 +47,7 @@ public class EdDSAPublicKey implements EdDSAKey, PublicKey {
     private static final int OID_BYTE = 8;
     private static final int IDLEN_BYTE = 3;
     private final GroupElement A;
+    @Nullable
     private final GroupElement aNeg;
     private final byte[] aByte;
     private final EdDSAParameterSpec edDSAParameterSpec;
@@ -80,6 +83,7 @@ public class EdDSAPublicKey implements EdDSAKey, PublicKey {
      *
      * @return 32 bytes for Ed25519, throws for other curves
      */
+    @NotNull
     private static byte[] decode(final byte[] d) throws InvalidKeySpecException {
         try {
             //
@@ -145,19 +149,21 @@ public class EdDSAPublicKey implements EdDSAKey, PublicKey {
             assert 0x03 == d[idx++] &&
                     33 == d[idx++] &&
                     0 == d[idx++] : "unsupported key spec";
-            final byte[] rv = new byte[32];
+            @NotNull final byte[] rv = new byte[32];
             System.arraycopy(d, idx, rv, 0, 32);
             return rv;
-        } catch (final IndexOutOfBoundsException ioobe) {
+        } catch (@NotNull final IndexOutOfBoundsException ioobe) {
             throw new InvalidKeySpecException(ioobe);
         }
     }
 
+    @NotNull
     @Override
     public String getAlgorithm() {
         return KEY_ALGORITHM;
     }
 
+    @NotNull
     @Override
     public String getFormat() {
         return "X.509";
@@ -202,12 +208,13 @@ public class EdDSAPublicKey implements EdDSAKey, PublicKey {
      *
      * @return 44 bytes for Ed25519, null for other curves
      */
+    @Nullable
     @Override
     public byte[] getEncoded() {
         if (getEdDSAParameterSpec() instanceof EdDSANamedCurveSpec && ((EdDSANamedCurveSpec) getEdDSAParameterSpec()).getName().equals(EdDSANamedCurveTable.ED_25519)) {
 
             final int totlen = 12 + getaByte().length;
-            final byte[] rv = new byte[totlen];
+            @NotNull final byte[] rv = new byte[totlen];
             int idx = 0;
             // sequence
             rv[idx++] = (byte) 0x30;
@@ -245,7 +252,7 @@ public class EdDSAPublicKey implements EdDSAKey, PublicKey {
             return true;
         if (!(o instanceof EdDSAPublicKey))
             return false;
-        final EdDSAPublicKey pk = (EdDSAPublicKey) o;
+        @NotNull final EdDSAPublicKey pk = (EdDSAPublicKey) o;
         return Arrays.equals(getaByte(), pk.getaByte()) &&
                 getEdDSAParameterSpec().equals(pk.getEdDSAParameterSpec());
     }
@@ -259,6 +266,7 @@ public class EdDSAPublicKey implements EdDSAKey, PublicKey {
         return A;
     }
 
+    @Nullable
     public GroupElement getaNeg() {
         return aNeg;
     }

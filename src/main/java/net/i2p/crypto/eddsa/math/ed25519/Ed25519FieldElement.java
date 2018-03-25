@@ -13,6 +13,7 @@ package net.i2p.crypto.eddsa.math.ed25519;
 
 import net.i2p.crypto.eddsa.Utils;
 import net.i2p.crypto.eddsa.math.*;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
 
@@ -73,9 +74,10 @@ public class Ed25519FieldElement extends BaseFieldElement {
      * @param element The field element to add.
      * @return The field element this + val.
      */
-    public FieldElement add(final FieldElement element) {
+    @NotNull
+    public FieldElement add(@NotNull final FieldElement element) {
         final int[] g = ((Ed25519FieldElement) element).t;
-        final int[] h = new int[10];
+        @NotNull final int[] h = new int[10];
         h[0] = t[0] + g[0];
         h[1] = t[1] + g[1];
         h[2] = t[2] + g[2];
@@ -109,9 +111,10 @@ public class Ed25519FieldElement extends BaseFieldElement {
      * @param fieldElement The field element to subtract.
      * @return The field element this - val.
      **/
-    public FieldElement subtract(final FieldElement fieldElement) {
+    @NotNull
+    public FieldElement subtract(@NotNull final FieldElement fieldElement) {
         final int[] g = ((Ed25519FieldElement) fieldElement).t;
-        final int[] h = new int[10];
+        @NotNull final int[] h = new int[10];
         h[0] = t[0] - g[0];
         h[1] = t[1] - g[1];
         h[2] = t[2] - g[2];
@@ -141,8 +144,9 @@ public class Ed25519FieldElement extends BaseFieldElement {
      *
      * @return The field element (-1) * this.
      */
+    @NotNull
     public FieldElement negate() {
-        final int[] h = new int[10];
+        @NotNull final int[] h = new int[10];
         h[0] = -t[0];
         h[1] = -t[1];
         h[2] = -t[2];
@@ -194,7 +198,8 @@ public class Ed25519FieldElement extends BaseFieldElement {
      * @param fieldElement The field element to multiply.
      * @return The (reasonably reduced) field element this * val.
      */
-    public FieldElement multiply(final FieldElement fieldElement) {
+    @NotNull
+    public FieldElement multiply(@NotNull final FieldElement fieldElement) {
         final int[] g = ((Ed25519FieldElement) fieldElement).t;
         final int g1_19 = 19 * g[1]; /* 1.959375*2^29 */
         final int g2_19 = 19 * g[2]; /* 1.959375*2^30; still ok */
@@ -393,7 +398,7 @@ public class Ed25519FieldElement extends BaseFieldElement {
         /* |h0| <= 2^25; from now on fits into int32 unchanged */
         /* |h1| <= 1.01*2^24 */
 
-        final int[] h = new int[10];
+        @NotNull final int[] h = new int[10];
         h[0] = (int) h0;
         h[1] = (int) h1;
         h[2] = (int) h2;
@@ -425,6 +430,7 @@ public class Ed25519FieldElement extends BaseFieldElement {
      *
      * @return The (reasonably reduced) square of this field element.
      */
+    @NotNull
     public FieldElement square() {
         final int f0 = t[0];
         final int f1 = t[1];
@@ -549,7 +555,7 @@ public class Ed25519FieldElement extends BaseFieldElement {
 
         carry0 = (h0 + (long) (1<<25)) >> 26; h1 += carry0; h0 -= carry0 << 26;
 
-        final int[] h = new int[10];
+        @NotNull final int[] h = new int[10];
         h[0] = (int) h0;
         h[1] = (int) h1;
         h[2] = (int) h2;
@@ -581,6 +587,7 @@ public class Ed25519FieldElement extends BaseFieldElement {
      *
      * @return The (reasonably reduced) square of this field element times 2.
      */
+    @NotNull
     public FieldElement squareAndDouble() {
         final int f0 = t[0];
         final int f1 = t[1];
@@ -711,7 +718,7 @@ public class Ed25519FieldElement extends BaseFieldElement {
 
         carry0 = (h0 + (long) (1<<25)) >> 26; h1 += carry0; h0 -= carry0 << 26;
 
-        final int[] h = new int[10];
+        @NotNull final int[] h = new int[10];
         h[0] = (int) h0;
         h[1] = (int) h1;
         h[2] = (int) h2;
@@ -857,6 +864,7 @@ public class Ed25519FieldElement extends BaseFieldElement {
      *
      * @return This field element to the power of $(2^{252} - 3)$.
      */
+    @NotNull
     public FieldElement pow22523() {
         FieldElement t0;
         FieldElement t1;
@@ -979,11 +987,12 @@ public class Ed25519FieldElement extends BaseFieldElement {
      * @param b must be 0 or 1, otherwise results are undefined.
      * @return a copy of this if $b == 0$, or a copy of val if $b == 1$.
      */
+    @NotNull
     @Override
     public FieldElement cmov(final FieldElement fieldElement, int b) {
-        final Ed25519FieldElement that = (Ed25519FieldElement) fieldElement;
+        @NotNull final Ed25519FieldElement that = (Ed25519FieldElement) fieldElement;
         int b1 = -b;
-        final int[] result = new int[10];
+        @NotNull final int[] result = new int[10];
         for (int i = 0; 10 > i; i++) {
             result[i] = this.t[i];
             int x = this.t[i] ^ that.t[i];
@@ -1002,10 +1011,11 @@ public class Ed25519FieldElement extends BaseFieldElement {
     public boolean equals(final Object obj) {
         if (!(obj instanceof Ed25519FieldElement))
             return false;
-        final Ed25519FieldElement fe = (Ed25519FieldElement) obj;
+        @NotNull final Ed25519FieldElement fe = (Ed25519FieldElement) obj;
         return 1 == Utils.equal(toByteArray(), fe.toByteArray());
     }
 
+    @NotNull
     @Override
     public String toString() {
         return "[Ed25519FieldElement val="+Utils.bytesToHex(toByteArray())+"]";

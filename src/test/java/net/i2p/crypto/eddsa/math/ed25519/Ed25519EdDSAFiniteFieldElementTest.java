@@ -13,6 +13,7 @@ package net.i2p.crypto.eddsa.math.ed25519;
 
 import net.i2p.crypto.eddsa.math.*;
 import org.hamcrest.core.*;
+import org.jetbrains.annotations.NotNull;
 import org.junit.*;
 
 import java.math.BigInteger;
@@ -22,18 +23,21 @@ import java.math.BigInteger;
  */
 public class Ed25519EdDSAFiniteFieldElementTest extends AbstractEdDSAFiniteFieldElementTest {
 
+    @NotNull
     protected FieldElement getRandomFieldElement() {
         return MathUtils.getRandomFieldElement();
     }
 
-    protected BigInteger toBigInteger(final FieldElement f) {
+    protected BigInteger toBigInteger(@NotNull final FieldElement f) {
         return MathUtils.toBigInteger(f);
     }
 
+    @NotNull
     protected BigInteger getQ() {
         return MathUtils.getQ();
     }
 
+    @NotNull
     protected EdDSAFiniteField getEdDSAFiniteField() {
         return MathUtils.getEdDSAFiniteField();
     }
@@ -62,12 +66,14 @@ public class Ed25519EdDSAFiniteFieldElementTest extends AbstractEdDSAFiniteField
 
     // region isNonZero
 
+    @NotNull
     protected FieldElement getZeroFieldElement() {
         return new Ed25519FieldElement(MathUtils.getEdDSAFiniteField(), new int[10]);
     }
 
+    @NotNull
     protected FieldElement getNonZeroFieldElement() {
-        final int[] t = new int[10];
+        @NotNull final int[] t = new int[10];
         t[0] = 5;
         return new Ed25519FieldElement(MathUtils.getEdDSAFiniteField(), t);
     }
@@ -79,15 +85,15 @@ public class Ed25519EdDSAFiniteFieldElementTest extends AbstractEdDSAFiniteField
     @Test
     public void toStringReturnsCorrectRepresentation() {
         // Arrange:
-        final byte[] bytes = new byte[32];
+        @NotNull final byte[] bytes = new byte[32];
         for (int i = 0; 32 > i; i++) {
             bytes[i] = (byte)(i+1);
         }
-        final FieldElement f = MathUtils.getEdDSAFiniteField().getEncoding().decode(bytes);
+        @NotNull final FieldElement f = MathUtils.getEdDSAFiniteField().getEncoding().decode(bytes);
 
         // Act:
         final String fAsString = f.toString();
-        final StringBuilder builder = new StringBuilder();
+        @NotNull final StringBuilder builder = new StringBuilder();
         builder.append("[Ed25519FieldElement val=");
         for (final byte b : bytes) {
             builder.append(String.format("%02x", Byte.valueOf(b)));

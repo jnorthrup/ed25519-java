@@ -23,6 +23,7 @@ import java.util.Objects;
 
 import net.i2p.crypto.eddsa.spec.EdDSAPrivateKeySpec;
 import net.i2p.crypto.eddsa.spec.EdDSAPublicKeySpec;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * @author str4d
@@ -30,8 +31,9 @@ import net.i2p.crypto.eddsa.spec.EdDSAPublicKeySpec;
  */
 public final class KeyFactory extends KeyFactorySpi {
 
+    @NotNull
     protected PrivateKey engineGeneratePrivate(final KeySpec keySpec) throws InvalidKeySpecException {
-        final EdDSAPrivateKey ret;
+        @NotNull final EdDSAPrivateKey ret;
         if (keySpec instanceof EdDSAPrivateKeySpec)
             ret = new EdDSAPrivateKey((EdDSAPrivateKeySpec) keySpec);
         else {
@@ -46,21 +48,23 @@ public final class KeyFactory extends KeyFactorySpi {
         return new EdDSAPublicKey((EdDSAPublicKeySpec) keySpec);
     }
 
+    @NotNull
     @SuppressWarnings("unchecked")
     protected <T extends KeySpec> T engineGetKeySpec(final Key key, final Class<T> keySpec) {
-        final T ret;
+        @NotNull final T ret;
         if (!keySpec.isAssignableFrom(EdDSAPublicKeySpec.class) || !(key instanceof EdDSAPublicKey)) {
             assert keySpec.isAssignableFrom(EdDSAPrivateKeySpec.class) && key instanceof EdDSAPrivateKey : "not implemented yet " + key + " " + keySpec;
-            final EdDSAPrivateKey k = (EdDSAPrivateKey) key;
+            @NotNull final EdDSAPrivateKey k = (EdDSAPrivateKey) key;
             ret=(T) new EdDSAPrivateKeySpec(k.getSeed(), k.getHashOfTheSeed(), k.getPrivateKey(), k.getGroupElement(), k.getEdDSAParameterSpec());
         } else {
-            final EdDSAPublicKey k = (EdDSAPublicKey) key;
+            @NotNull final EdDSAPublicKey k = (EdDSAPublicKey) key;
             Objects.requireNonNull(k.getEdDSAParameterSpec());
             ret=(T) new EdDSAPublicKeySpec(k.getA(), k.getEdDSAParameterSpec());
         }
         return ret;
     }
 
+    @NotNull
     protected Key engineTranslateKey(final Key key) throws InvalidKeyException {
         throw new InvalidKeyException("No other EdDSA key providers known");
     }

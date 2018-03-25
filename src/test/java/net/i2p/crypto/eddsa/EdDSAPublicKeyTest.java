@@ -18,6 +18,7 @@ import java.security.spec.X509EncodedKeySpec;
 
 import net.i2p.crypto.eddsa.spec.EdDSAPublicKeySpec;
 
+import org.jetbrains.annotations.NotNull;
 import org.junit.Test;
 
 /**
@@ -37,14 +38,14 @@ public class EdDSAPublicKeyTest {
     @Test
     public void testDecodeAndEncode() throws Exception {
         // Decode
-        final X509EncodedKeySpec encoded = new X509EncodedKeySpec(TEST_PUBKEY);
-        final EdDSAPublicKey keyIn = new EdDSAPublicKey(encoded);
+        @NotNull final X509EncodedKeySpec encoded = new X509EncodedKeySpec(TEST_PUBKEY);
+        @NotNull final EdDSAPublicKey keyIn = new EdDSAPublicKey(encoded);
 
         // Encode
-        final EdDSAPublicKeySpec decoded = new EdDSAPublicKeySpec(
+        @NotNull final EdDSAPublicKeySpec decoded = new EdDSAPublicKeySpec(
                 keyIn.getA(),
                 keyIn.getEdDSAParameterSpec());
-        final EdDSAPublicKey keyOut = new EdDSAPublicKey(decoded);
+        @NotNull final EdDSAPublicKey keyOut = new EdDSAPublicKey(decoded);
 
         // Check
         assertThat(keyOut.getEncoded(), is(equalTo(TEST_PUBKEY)));
@@ -53,14 +54,14 @@ public class EdDSAPublicKeyTest {
     @Test
     public void testDecodeWithNullAndEncode() throws Exception {
         // Decode
-        final X509EncodedKeySpec encoded = new X509EncodedKeySpec(TEST_PUBKEY_NULL_PARAMS);
-        final EdDSAPublicKey keyIn = new EdDSAPublicKey(encoded);
+        @NotNull final X509EncodedKeySpec encoded = new X509EncodedKeySpec(TEST_PUBKEY_NULL_PARAMS);
+        @NotNull final EdDSAPublicKey keyIn = new EdDSAPublicKey(encoded);
 
         // Encode
-        final EdDSAPublicKeySpec decoded = new EdDSAPublicKeySpec(
+        @NotNull final EdDSAPublicKeySpec decoded = new EdDSAPublicKeySpec(
                 keyIn.getA(),
                 keyIn.getEdDSAParameterSpec());
-        final EdDSAPublicKey keyOut = new EdDSAPublicKey(decoded);
+        @NotNull final EdDSAPublicKey keyOut = new EdDSAPublicKey(decoded);
 
         // Check
         assertThat(keyOut.getEncoded(), is(equalTo(TEST_PUBKEY)));
@@ -69,14 +70,14 @@ public class EdDSAPublicKeyTest {
     @Test
     public void testReEncodeOldEncoding() throws Exception {
         // Decode
-        final X509EncodedKeySpec encoded = new X509EncodedKeySpec(TEST_PUBKEY_OLD);
-        final EdDSAPublicKey keyIn = new EdDSAPublicKey(encoded);
+        @NotNull final X509EncodedKeySpec encoded = new X509EncodedKeySpec(TEST_PUBKEY_OLD);
+        @NotNull final EdDSAPublicKey keyIn = new EdDSAPublicKey(encoded);
 
         // Encode
-        final EdDSAPublicKeySpec decoded = new EdDSAPublicKeySpec(
+        @NotNull final EdDSAPublicKeySpec decoded = new EdDSAPublicKeySpec(
                 keyIn.getA(),
                 keyIn.getEdDSAParameterSpec());
-        final EdDSAPublicKey keyOut = new EdDSAPublicKey(decoded);
+        @NotNull final EdDSAPublicKey keyOut = new EdDSAPublicKey(decoded);
 
         // Check
         assertThat(keyOut.getEncoded(), is(equalTo(TEST_PUBKEY)));

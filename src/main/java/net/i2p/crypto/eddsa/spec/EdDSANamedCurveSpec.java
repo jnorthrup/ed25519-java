@@ -15,6 +15,7 @@ import net.i2p.crypto.eddsa.math.BaseGroupElement;
 import net.i2p.crypto.eddsa.math.Curve;
 import net.i2p.crypto.eddsa.math.GroupElement;
 import net.i2p.crypto.eddsa.math.ScalarOps;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * EdDSA Curve specification that can also be referred to by name.
@@ -24,7 +25,7 @@ import net.i2p.crypto.eddsa.math.ScalarOps;
 public class EdDSANamedCurveSpec extends EdDSAParameterSpec {
     private final String name;
 
-    public EdDSANamedCurveSpec(final String name, final Curve curve,
+    public EdDSANamedCurveSpec(final String name, @NotNull final Curve curve,
                                final String hashAlgo, final ScalarOps sc, final GroupElement B) {
         super(curve, hashAlgo, sc, B);
         this.name = name;

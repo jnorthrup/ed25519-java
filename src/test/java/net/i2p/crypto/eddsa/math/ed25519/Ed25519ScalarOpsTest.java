@@ -14,6 +14,7 @@ package net.i2p.crypto.eddsa.math.ed25519;
 import net.i2p.crypto.eddsa.Utils;
 import net.i2p.crypto.eddsa.math.*;
 import org.hamcrest.core.IsEqual;
+import org.jetbrains.annotations.NotNull;
 import org.junit.*;
 
 import java.math.BigInteger;
@@ -31,8 +32,9 @@ public class Ed25519ScalarOpsTest {
 
     private static final Ed25519ScalarOps scalarOps = new Ed25519ScalarOps();
 
+    @NotNull
     private static byte[] getRandomByteArray(final int length) {
-        final byte[] bytes = new byte[length];
+        @NotNull final byte[] bytes = new byte[length];
         MathUtils.random.nextBytes(bytes);
         return bytes;
     }
@@ -47,7 +49,7 @@ public class Ed25519ScalarOpsTest {
      * @param c The third integer.
      * @return The mod group order reduced result.
      */
-    private static byte[] multiplyAndAddModGroupOrder(final byte[] a, final byte[] b, final byte[] c) {
+    private static byte[] multiplyAndAddModGroupOrder(@NotNull final byte[] a, @NotNull final byte[] b, @NotNull final byte[] c) {
         final BigInteger result = MathUtils.toBigInteger(a).multiply(MathUtils.toBigInteger(b)).add(MathUtils.toBigInteger(c)).mod(MathUtils.groupOrder);
         return MathUtils.toByteArray(result);
     }
@@ -58,7 +60,7 @@ public class Ed25519ScalarOpsTest {
      * @param bytes The integer in 2^8 bit representation.
      * @return The mod group order reduced integer.
      */
-    private static byte[] reduceModGroupOrder(final byte[] bytes) {
+    private static byte[] reduceModGroupOrder(@NotNull final byte[] bytes) {
         final BigInteger b = MathUtils.toBigInteger(bytes).mod(MathUtils.groupOrder);
         return MathUtils.toByteArray(b);
     }
@@ -76,7 +78,7 @@ public class Ed25519ScalarOpsTest {
     @Test
     public void testReduce() {
         // Example from test case 1
-        final byte[] r = Utils.hexToBytes("b6b19cd8e0426f5983fa112d89a143aa97dab8bc5deb8d5b6253c928b65272f4044098c2a990039cde5b6a4818df0bfb6e40dc5dee54248032962323e701352d");
+        @NotNull final byte[] r = Utils.hexToBytes("b6b19cd8e0426f5983fa112d89a143aa97dab8bc5deb8d5b6253c928b65272f4044098c2a990039cde5b6a4818df0bfb6e40dc5dee54248032962323e701352d");
         assertThat(scalarOps.reduce(r), is(equalTo(Utils.hexToBytes("f38907308c893deaf244787db4af53682249107418afc2edc58f75ac58a07404"))));
     }
 
@@ -84,10 +86,10 @@ public class Ed25519ScalarOpsTest {
     public void reduceReturnsExpectedResult() {
         for (int i = 0; 1000 > i; i++) {
             // Arrange:
-            final byte[] bytes = getRandomByteArray(64);
+            @NotNull final byte[] bytes = getRandomByteArray(64);
 
             // Act:
-            final byte[] reduced1 = scalarOps.reduce(bytes);
+            @NotNull final byte[] reduced1 = scalarOps.reduce(bytes);
             final byte[] reduced2 = reduceModGroupOrder(bytes);
 
             // Assert:
@@ -103,10 +105,10 @@ public class Ed25519ScalarOpsTest {
     @Test
     public void testMultiplyAndAdd() {
          // Example from test case 1
-        final byte[] h = Utils.hexToBytes("86eabc8e4c96193d290504e7c600df6cf8d8256131ec2c138a3e7e162e525404");
-        final byte[] a = Utils.hexToBytes("307c83864f2833cb427a2ef1c00a013cfdff2768d980c0a3a520f006904de94f");
-        final byte[] r = Utils.hexToBytes("f38907308c893deaf244787db4af53682249107418afc2edc58f75ac58a07404");
-        final byte[] S = Utils.hexToBytes("5fb8821590a33bacc61e39701cf9b46bd25bf5f0595bbe24655141438e7a100b");
+        @NotNull final byte[] h = Utils.hexToBytes("86eabc8e4c96193d290504e7c600df6cf8d8256131ec2c138a3e7e162e525404");
+        @NotNull final byte[] a = Utils.hexToBytes("307c83864f2833cb427a2ef1c00a013cfdff2768d980c0a3a520f006904de94f");
+        @NotNull final byte[] r = Utils.hexToBytes("f38907308c893deaf244787db4af53682249107418afc2edc58f75ac58a07404");
+        @NotNull final byte[] S = Utils.hexToBytes("5fb8821590a33bacc61e39701cf9b46bd25bf5f0595bbe24655141438e7a100b");
         assertThat(scalarOps.multiplyAndAdd(h, a, r), is(equalTo(S)));
     }
 
@@ -114,12 +116,12 @@ public class Ed25519ScalarOpsTest {
     public void multiplyAndAddReturnsExpectedResult() {
         for (int i = 0; 1000 > i; i++) {
             // Arrange:
-            final byte[] bytes1 = getRandomByteArray(32);
-            final byte[] bytes2 = getRandomByteArray(32);
-            final byte[] bytes3 = getRandomByteArray(32);
+            @NotNull final byte[] bytes1 = getRandomByteArray(32);
+            @NotNull final byte[] bytes2 = getRandomByteArray(32);
+            @NotNull final byte[] bytes3 = getRandomByteArray(32);
 
             // Act:
-            final byte[] result1 = scalarOps.multiplyAndAdd(bytes1, bytes2, bytes3);
+            @NotNull final byte[] result1 = scalarOps.multiplyAndAdd(bytes1, bytes2, bytes3);
             final byte[] result2 = multiplyAndAddModGroupOrder(bytes1, bytes2, bytes3);
 
             // Assert:

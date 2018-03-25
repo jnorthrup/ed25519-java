@@ -11,6 +11,8 @@
  */
 package net.i2p.crypto.eddsa;
 
+import org.jetbrains.annotations.Nullable;
+
 import java.security.AccessController;
 import java.security.PrivilegedAction;
 import java.security.Provider;
@@ -29,6 +31,7 @@ class EdDSASecurityProvider extends Provider {
         super(PROVIDER_NAME, 0.2 /* should match POM major.minor version */, "str4d " + PROVIDER_NAME + " security provider wrapper");
 
         AccessController.doPrivileged(new PrivilegedAction<Object>() {
+            @Nullable
             @Override
             public Object run() {
                 setup();

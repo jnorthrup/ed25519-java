@@ -11,6 +11,8 @@
 package net.i2p.crypto.eddsa.math;
 
 import net.i2p.crypto.eddsa.Utils;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
 
@@ -37,7 +39,9 @@ public class BaseGroupElement implements GroupElement {
     public FieldElement Y;
     public FieldElement Z;
     public FieldElement T;
+    @Nullable
     public GroupElement[][] precmp;
+    @Nullable
     public GroupElement[] dblPrecmp;
 
     /**
@@ -89,14 +93,14 @@ public class BaseGroupElement implements GroupElement {
      * @param precomputeSingleAndDouble If true, populate both precmp and dblPrecmp, else set both to null.
      */
     // TODO
-    protected BaseGroupElement(final Curve curve, final byte[] s, final boolean precomputeSingleAndDouble) {
+    protected BaseGroupElement(final Curve curve, @NotNull final byte[] s, final boolean precomputeSingleAndDouble) {
         FieldElement x;
         final FieldElement y;
-        final FieldElement yy;
+        @NotNull final FieldElement yy;
         final FieldElement u;
         final FieldElement v;
-        final FieldElement v3;
-        final FieldElement vxx;
+        @NotNull final FieldElement v3;
+        @NotNull final FieldElement vxx;
         FieldElement check;
         y = curve.getEdDSAFiniteField().fromByteArray(s);
         yy = y.square();
@@ -197,6 +201,7 @@ public class BaseGroupElement implements GroupElement {
      * <p>
      * Variable is package public only so that tests run.
      */
+    @Nullable
     @Override
     public GroupElement[][] getPrecmp() {
         return precmp;
@@ -212,6 +217,7 @@ public class BaseGroupElement implements GroupElement {
      * <p>
      * Variable is package public only so that tests run.
      */
+    @Nullable
     @Override
     public GroupElement[] getDblPrecmp() {
         return dblPrecmp;
@@ -248,8 +254,8 @@ public class BaseGroupElement implements GroupElement {
             case P2:
             case P3:
                 final FieldElement recip = getZ().invert();
-                final FieldElement x = getX().multiply(recip);
-                final FieldElement y = getY().multiply(recip);
+                @NotNull final FieldElement x = getX().multiply(recip);
+                @NotNull final FieldElement y = getY().multiply(recip);
                 final byte[] s = y.toByteArray();
                 s[s.length - 1] |= (x.isNegative() ? (byte) 0x80 : (byte) 0);
                 return s;
@@ -261,18 +267,19 @@ public class BaseGroupElement implements GroupElement {
     /**
      * Precomputes table for {@link #scalarMultiply(byte[])}.
      */
+    @NotNull
     @Override
     public GroupElement[][] precomputeSingle() {
         // Precomputation for single scalar multiplication.
-        final GroupElement[][] precmp = new GroupElement[32][8];
+        @NotNull final GroupElement[][] precmp = new GroupElement[32][8];
         // TODO-CR BR: check that this == base point when the method is called.
-        GroupElement Bi = this;
+        @NotNull GroupElement Bi = this;
         for (int i = 0; 32 > i; i++) {
-            GroupElement Bij = Bi;
+            @NotNull GroupElement Bij = Bi;
             for (int j = 0; 8 > j; j++) {
                 final FieldElement recip = Bij.getZ().invert();
-                final FieldElement x = Bij.getX().multiply(recip);
-                final FieldElement y = Bij.getY().multiply(recip);
+                @NotNull final FieldElement x = Bij.getX().multiply(recip);
+                @NotNull final FieldElement y = Bij.getY().multiply(recip);
                 precmp[i][j] = new PrecompGroupElement(this.getCurve(), y.add(x), y.subtract(x), x.multiply(y).multiply(this.getCurve().getD2()));
                 Bij = Representation.P3.toRep(Bij.add(Representation.CACHED.toRep(Bi)));
             }
@@ -287,16 +294,17 @@ public class BaseGroupElement implements GroupElement {
     /**
      * Precomputes table for {@link #doubleScalarMultiplyVariableTime(GroupElement, byte[], byte[])}.
      */
+    @NotNull
     @Override
     public GroupElement[] precomputeDouble() {
         // Precomputation for double scalar multiplication.
         // P,3P,5P,7P,9P,11P,13P,15P
-        final GroupElement[] dblPrecmp = new GroupElement[8];
-        GroupElement Bi = this;
+        @NotNull final GroupElement[] dblPrecmp = new GroupElement[8];
+        @NotNull GroupElement Bi = this;
         for (int i = 0; 8 > i; i++) {
             final FieldElement recip = Bi.getZ().invert();
-            final FieldElement x = Bi.getX().multiply(recip);
-            final FieldElement y = Bi.getY().multiply(recip);
+            @NotNull final FieldElement x = Bi.getX().multiply(recip);
+            @NotNull final FieldElement y = Bi.getY().multiply(recip);
             dblPrecmp[i] = new PrecompGroupElement(this.getCurve(), y.add(x), y.subtract(x), x.multiply(y).multiply(this.getCurve().getD2()));
             // Bi = edwards(B,edwards(B,Bi))
             Bi = Representation.P3.toRep(this.add(Representation.CACHED.toRep(Representation.P3.toRep(this.add(Representation.CACHED.toRep(Bi))))));
@@ -337,18 +345,19 @@ public class BaseGroupElement implements GroupElement {
      *
      * @return The P1P1 representation
      */
+    @NotNull
     @Override
     public GroupElement dbl() {
         switch (this.getRepr()) {
             case P2:
             case P3: // Ignore T for P3 representation
-                final FieldElement XX;
-                final FieldElement YY;
+                @NotNull final FieldElement XX;
+                @NotNull final FieldElement YY;
                 final FieldElement B;
-                final FieldElement A;
-                final FieldElement AA;
-                final FieldElement Yn;
-                final FieldElement Zn;
+                @NotNull final FieldElement A;
+                @NotNull final FieldElement AA;
+                @NotNull final FieldElement Yn;
+                @NotNull final FieldElement Zn;
                 XX = this.getX().square();
                 YY = this.getY().square();
                 B = this.getZ().squareAndDouble();
@@ -418,17 +427,18 @@ public class BaseGroupElement implements GroupElement {
      * @param q the PRECOMP representation of the GroupElement to add.
      * @return the P1P1 representation of the result.
      */
+    @NotNull
     @Override
-    public GroupElement madd(final GroupElement q) {
+    public GroupElement madd(@NotNull final GroupElement q) {
         assert Representation.P3 == this.getRepr();
         assert Representation.PRECOMP == q.getRepr();
 
-        final FieldElement YpX;
-        final FieldElement YmX;
-        final FieldElement A;
-        final FieldElement B;
-        final FieldElement C;
-        final FieldElement D;
+        @NotNull final FieldElement YpX;
+        @NotNull final FieldElement YmX;
+        @NotNull final FieldElement A;
+        @NotNull final FieldElement B;
+        @NotNull final FieldElement C;
+        @NotNull final FieldElement D;
         YpX = this.getY().add(this.getX());
         YmX = this.getY().subtract(this.getX());
         A = YpX.multiply(q.getX()); // q->y+x
@@ -462,17 +472,18 @@ public class BaseGroupElement implements GroupElement {
      * @param q the PRECOMP representation of the GroupElement to subtract.
      * @return the P1P1 representation of the result.
      */
+    @NotNull
     @Override
-    public GroupElement msub(final GroupElement q) {
+    public GroupElement msub(@NotNull final GroupElement q) {
         assert Representation.P3 == this.getRepr();
         assert Representation.PRECOMP == q.getRepr();
 
-        final FieldElement YpX;
-        final FieldElement YmX;
-        final FieldElement A;
-        final FieldElement B;
-        final FieldElement C;
-        final FieldElement D;
+        @NotNull final FieldElement YpX;
+        @NotNull final FieldElement YmX;
+        @NotNull final FieldElement A;
+        @NotNull final FieldElement B;
+        @NotNull final FieldElement C;
+        @NotNull final FieldElement D;
         YpX = this.getY().add(this.getX());
         YmX = this.getY().subtract(this.getX());
         A = YpX.multiply(q.getY()); // q->y-x
@@ -519,18 +530,19 @@ public class BaseGroupElement implements GroupElement {
      * @param q the CACHED representation of the GroupElement to add.
      * @return the P1P1 representation of the result.
      */
+    @NotNull
     @Override
-    public GroupElement add(final GroupElement q) {
+    public GroupElement add(@NotNull final GroupElement q) {
         assert Representation.P3 == this.getRepr();
         assert Representation.CACHED == q.getRepr();
 
-        final FieldElement YpX;
-        final FieldElement YmX;
-        final FieldElement A;
-        final FieldElement B;
-        final FieldElement C;
-        final FieldElement ZZ;
-        final FieldElement D;
+        @NotNull final FieldElement YpX;
+        @NotNull final FieldElement YmX;
+        @NotNull final FieldElement A;
+        @NotNull final FieldElement B;
+        @NotNull final FieldElement C;
+        @NotNull final FieldElement ZZ;
+        @NotNull final FieldElement D;
         YpX = this.getY().add(this.getX());
         YmX = this.getY().subtract(this.getX());
         A = YpX.multiply(q.getX()); // q->Y+X
@@ -564,18 +576,19 @@ public class BaseGroupElement implements GroupElement {
      * @param q the PRECOMP representation of the GroupElement to subtract.
      * @return the P1P1 representation of the result.
      */
+    @NotNull
     @Override
-    public GroupElement sub(final GroupElement q) {
+    public GroupElement sub(@NotNull final GroupElement q) {
         assert Representation.P3 == this.getRepr();
         assert Representation.CACHED == q.getRepr();
 
-        final FieldElement YpX;
-        final FieldElement YmX;
-        final FieldElement A;
-        final FieldElement B;
-        final FieldElement C;
-        final FieldElement ZZ;
-        final FieldElement D;
+        @NotNull final FieldElement YpX;
+        @NotNull final FieldElement YmX;
+        @NotNull final FieldElement A;
+        @NotNull final FieldElement B;
+        @NotNull final FieldElement C;
+        @NotNull final FieldElement ZZ;
+        @NotNull final FieldElement D;
         YpX = getY().add(getX());
         YmX = getY().subtract(getX());
         A = YpX.multiply(q.getY()); // q->Y-X
@@ -604,6 +617,7 @@ public class BaseGroupElement implements GroupElement {
      *
      * @return The negative of this group element.
      */
+    @NotNull
     @Override
     public GroupElement negate() {
         assert Representation.P3 == this.getRepr();
@@ -621,11 +635,11 @@ public class BaseGroupElement implements GroupElement {
             return true;
         if (!(obj instanceof GroupElement))
             return false;
-        GroupElement ge = (GroupElement) obj;
+        @NotNull GroupElement ge = (GroupElement) obj;
         if (this.getRepr() != ge.getRepr()) {
             try {
                 ge = this.getRepr().toRep(ge);
-            } catch (final RuntimeException e) {
+            } catch (@NotNull final RuntimeException e) {
                 return false;
             }
         }
@@ -636,10 +650,10 @@ public class BaseGroupElement implements GroupElement {
                 if (this.getZ().equals(ge.getZ()))
                     return this.getX().equals(ge.getX()) && this.getY().equals(ge.getY());
                 // X1/Z1 = X2/Z2 --> X1*Z2 = X2*Z1
-                final FieldElement x1 = this.getX().multiply(ge.getZ());
-                final FieldElement y1 = this.getY().multiply(ge.getZ());
-                final FieldElement x2 = ge.getX().multiply(this.getZ());
-                final FieldElement y2 = ge.getY().multiply(this.getZ());
+                @NotNull final FieldElement x1 = this.getX().multiply(ge.getZ());
+                @NotNull final FieldElement y1 = this.getY().multiply(ge.getZ());
+                @NotNull final FieldElement x2 = ge.getX().multiply(this.getZ());
+                @NotNull final FieldElement y2 = ge.getY().multiply(this.getZ());
                 return x1.equals(x2) && y1.equals(y2);
             case P1P1:
                 return Representation.P2.toRep(this).equals(ge);
@@ -651,12 +665,12 @@ public class BaseGroupElement implements GroupElement {
                 if (this.getZ().equals(ge.getZ()))
                     return this.getX().equals(ge.getX()) && this.getY().equals(ge.getY()) && this.getT().equals(ge.getT());
                 // (Y+X)/Z = y+x etc.
-                final FieldElement x3 = this.getX().multiply(ge.getZ());
-                final FieldElement y3 = this.getY().multiply(ge.getZ());
-                final FieldElement t3 = this.getT().multiply(ge.getZ());
-                final FieldElement x4 = ge.getX().multiply(this.getZ());
-                final FieldElement y4 = ge.getY().multiply(this.getZ());
-                final FieldElement t4 = ge.getT().multiply(this.getZ());
+                @NotNull final FieldElement x3 = this.getX().multiply(ge.getZ());
+                @NotNull final FieldElement y3 = this.getY().multiply(ge.getZ());
+                @NotNull final FieldElement t3 = this.getT().multiply(ge.getZ());
+                @NotNull final FieldElement x4 = ge.getX().multiply(this.getZ());
+                @NotNull final FieldElement y4 = ge.getY().multiply(this.getZ());
+                @NotNull final FieldElement t4 = ge.getT().multiply(this.getZ());
                 return x3.equals(x4) && y3.equals(y4) && t3.equals(t4);
             default:
                 return false;
@@ -675,8 +689,9 @@ public class BaseGroupElement implements GroupElement {
      * @param b in $\{0, 1\}$
      * @return $u$ if $b == 1$; this if $b == 0$. Results undefined if $b$ is not in $\{0, 1\}$.
      */
+    @NotNull
     @Override
-    public PrecompGroupElement cmov(final GroupElement u, final int b) {
+    public PrecompGroupElement cmov(@NotNull final GroupElement u, final int b) {
         return
                 /**
                  * Creates a new group element in PRECOMP representation.
@@ -711,7 +726,7 @@ public class BaseGroupElement implements GroupElement {
         final int babs = b - (((-bnegative) & b) << 1);
 
         // 16^i |r_i| B
-        final  GroupElement t = this.getCurve().get(Representation.PRECOMP)
+        @NotNull final  GroupElement t = this.getCurve().get(Representation.PRECOMP)
                 .cmov(this.getPrecmp()[pos][0], Utils.equal(babs, 1))
                 .cmov(this.getPrecmp()[pos][1], Utils.equal(babs, 2))
                 .cmov(this.getPrecmp()[pos][2], Utils.equal(babs, 3))
@@ -721,7 +736,7 @@ public class BaseGroupElement implements GroupElement {
                 .cmov(this.getPrecmp()[pos][6], Utils.equal(babs, 7))
                 .cmov(this.getPrecmp()[pos][7], Utils.equal(babs, 8));
         // -16^i |r_i| B
-        final GroupElement tminus = new PrecompGroupElement(getCurve(), t.getY(), t.getX(), t.getZ().negate());
+        @NotNull final GroupElement tminus = new PrecompGroupElement(getCurve(), t.getY(), t.getX(), t.getZ().negate());
         // 16^i r_i B
         return t.cmov(tminus, bnegative);
     }
@@ -739,11 +754,11 @@ public class BaseGroupElement implements GroupElement {
      * @return the GroupElement
      */
     @Override
-    public GroupElement scalarMultiply(final byte[] a) {
+    public GroupElement scalarMultiply(@NotNull final byte[] a) {
         GroupElement t;
         int i;
 
-        final byte[] e = GroupElement.toRadix16(a);
+        @NotNull final byte[] e = GroupElement.toRadix16(a);
 
         GroupElement h = this.getCurve().get(Representation.P3);
         for (i = 1; 64 > i; i += 2) {
@@ -773,10 +788,10 @@ public class BaseGroupElement implements GroupElement {
      * @return the GroupElement
      */
     @Override
-    public GroupElement doubleScalarMultiplyVariableTime(final GroupElement A, final byte[] a, final byte[] b) {
+    public GroupElement doubleScalarMultiplyVariableTime(@NotNull final GroupElement A, final byte[] a, final byte[] b) {
         // TODO-CR BR: A check that this is the base point is needed.
-        final byte[] aslide = GroupElement.slide(a);
-        final byte[] bslide = GroupElement.slide(b);
+        @NotNull final byte[] aslide = GroupElement.slide(a);
+        @NotNull final byte[] bslide = GroupElement.slide(b);
 
         GroupElement r = this.getCurve().get(Representation.P2);
 
@@ -826,16 +841,16 @@ public class BaseGroupElement implements GroupElement {
      * @return true if the point lies on the curve.
      */
     @Override
-    public boolean isOnCurve(final Curve curve) {
+    public boolean isOnCurve(@NotNull final Curve curve) {
         switch (getRepr()) {
             case P2:
             case P3:
                 final FieldElement recip = getZ().invert();
-                final FieldElement x = getX().multiply(recip);
-                final FieldElement y = getY().multiply(recip);
-                final FieldElement xx = x.square();
-                final FieldElement yy = y.square();
-                final FieldElement dxxyy = curve.getD().multiply(xx).multiply(yy);
+                @NotNull final FieldElement x = getX().multiply(recip);
+                @NotNull final FieldElement y = getY().multiply(recip);
+                @NotNull final FieldElement xx = x.square();
+                @NotNull final FieldElement yy = y.square();
+                @NotNull final FieldElement dxxyy = curve.getD().multiply(xx).multiply(yy);
                 return curve.getEdDSAFiniteField().ONE.add(dxxyy).add(xx).equals(yy);
 
             default:
@@ -843,6 +858,7 @@ public class BaseGroupElement implements GroupElement {
         }
     }
 
+    @NotNull
     @Override
     public String toString() {
         return "[GroupElement\nX=" + getX() + "\nY=" + getY() + "\nZ=" + getZ() + "\nT=" + getT() + "\n]";

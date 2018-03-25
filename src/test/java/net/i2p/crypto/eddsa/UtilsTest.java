@@ -12,6 +12,7 @@
 package net.i2p.crypto.eddsa;
 
 import org.hamcrest.core.IsEqual;
+import org.jetbrains.annotations.NotNull;
 import org.junit.*;
 
 import java.security.SecureRandom;
@@ -52,9 +53,9 @@ public class UtilsTest {
 
     @Test
     public void equalsReturnsOneForEqualByteArrays() {
-        final SecureRandom random = new SecureRandom();
-        final byte[] bytes1 = new byte[32];
-        final byte[] bytes2 = new byte[32];
+        @NotNull final SecureRandom random = new SecureRandom();
+        @NotNull final byte[] bytes1 = new byte[32];
+        @NotNull final byte[] bytes2 = new byte[32];
         for (int i = 0; 100 > i; i++) {
             random.nextBytes(bytes1);
             System.arraycopy(bytes1, 0, bytes2, 0, 32);
@@ -64,9 +65,9 @@ public class UtilsTest {
 
     @Test
     public void equalsReturnsZeroForUnequalByteArrays() {
-        final SecureRandom random = new SecureRandom();
-        final byte[] bytes1 = new byte[32];
-        final byte[] bytes2 = new byte[32];
+        @NotNull final SecureRandom random = new SecureRandom();
+        @NotNull final byte[] bytes1 = new byte[32];
+        @NotNull final byte[] bytes2 = new byte[32];
         random.nextBytes(bytes1);
         for (int i = 0; 32 > i; i++) {
             System.arraycopy(bytes1, 0, bytes2, 0, 32);
@@ -80,8 +81,8 @@ public class UtilsTest {
      */
     @Test
     public void testByteArrayEqual() {
-        final byte[] zero = new byte[32];
-        final byte[] one = new byte[32];
+        @NotNull final byte[] zero = new byte[32];
+        @NotNull final byte[] one = new byte[32];
         one[0] = (byte) 1;
 
         assertThat(Integer.valueOf(Utils.equal(zero, zero)), is(Integer.valueOf(1)));

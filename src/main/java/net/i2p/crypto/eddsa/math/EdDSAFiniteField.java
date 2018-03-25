@@ -11,6 +11,8 @@
  */
 package net.i2p.crypto.eddsa.math;
 
+import org.jetbrains.annotations.NotNull;
+
 /**
  * An EdDSA finite field. Includes several pre-computed values.
  * @author str4d
@@ -19,18 +21,26 @@ package net.i2p.crypto.eddsa.math;
 @SuppressWarnings("ThisEscapedInObjectConstruction")
 public class EdDSAFiniteField  {
 
+    @NotNull
     public final FieldElement ZERO;
+    @NotNull
     public final FieldElement ONE;
+    @NotNull
     public final FieldElement TWO;
+    @NotNull
     private final FieldElement FOUR;
+    @NotNull
     private final FieldElement FIVE;
+    @NotNull
     private final FieldElement EIGHT;
 
     private final int b;
+    @NotNull
     private final FieldElement q;
     /**
      * q-2
      */
+    @NotNull
     private final FieldElement qm2;
     /**
      * (q-5) / 8
@@ -58,6 +68,7 @@ public class EdDSAFiniteField  {
         qm5d8 = this.q.subtract(FIVE).divide(EIGHT);
     }
 
+    @NotNull
     public FieldElement fromByteArray(final byte[] x) {
         return enc.decode(x);
     }
@@ -66,10 +77,12 @@ public class EdDSAFiniteField  {
         return b;
     }
 
+    @NotNull
     public FieldElement getQ() {
         return q;
     }
 
+    @NotNull
     public FieldElement getQm2() {
         return qm2;
     }
@@ -91,7 +104,7 @@ public class EdDSAFiniteField  {
     public boolean equals(final Object obj) {
         if (!(obj instanceof EdDSAFiniteField))
             return false;
-        final EdDSAFiniteField f = (EdDSAFiniteField) obj;
+        @NotNull final EdDSAFiniteField f = (EdDSAFiniteField) obj;
         return b == f.b && q.equals(f.q);
     }
 }

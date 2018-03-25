@@ -11,6 +11,9 @@
  */
 package net.i2p.crypto.eddsa;
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -23,14 +26,18 @@ public class Ed25519TestVectors {
     public static class TestTuple {
         static int numCases;
         public final int caseNum;
+        @NotNull
         public final byte[] seed;
+        @NotNull
         public final byte[] pk;
+        @NotNull
         public final byte[] message;
+        @NotNull
         public final byte[] sig;
 
         TestTuple(final String line) {
             caseNum = ++numCases;
-            final String[] x = line.split(":");
+            @NotNull final String[] x = line.split(":");
             seed = Utils.hexToBytes(x[0].substring(0, 64));
             pk = Utils.hexToBytes(x[1]);
             message = Utils.hexToBytes(x[2]);
@@ -40,9 +47,10 @@ public class Ed25519TestVectors {
 
     public static final Collection<TestTuple> testCases = getTestData("test.data");
 
+    @NotNull
     private static Collection<TestTuple> getTestData(final String fileName) {
-        final Collection<TestTuple> testCases = new ArrayList<>();
-        BufferedReader file = null;
+        @NotNull final Collection<TestTuple> testCases = new ArrayList<>();
+        @Nullable BufferedReader file = null;
         try {
             final InputStream is = Ed25519TestVectors.class.getResourceAsStream(fileName);
             if (null == is)
@@ -53,10 +61,10 @@ public class Ed25519TestVectors {
                 if (!(null != (line ))) break;
                 testCases.add(new TestTuple(line));
             }
-        } catch (final IOException e) {
+        } catch (@NotNull final IOException e) {
             e.printStackTrace();
         } finally {
-            if (null != file) try { file.close(); } catch (final IOException e) {}
+            if (null != file) try { file.close(); } catch (@NotNull final IOException e) {}
         }
         return testCases;
     }

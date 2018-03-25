@@ -1,6 +1,7 @@
 package net.i2p.crypto.eddsa.math;
 
 import net.i2p.crypto.eddsa.Utils;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Creates a new group element in P3 representation.
@@ -34,7 +35,7 @@ public class P3GroupElement extends BaseGroupElement {
      * @param curve The curve.
      * @param s     The encoded point.
      */
-    public P3GroupElement(final Curve curve, final byte[] s) {
+    public P3GroupElement(@NotNull final Curve curve, @NotNull final byte[] s) {
         /**
          * Creates a group element for a curve from a given encoded point.
          * <p>
@@ -75,15 +76,15 @@ public class P3GroupElement extends BaseGroupElement {
 
 
 
-final Curve curve, final byte[] s, final boolean precomputeSingleAndDouble) {
+                          final Curve curve, @NotNull final byte[] s, final boolean precomputeSingleAndDouble) {
         super();
         FieldElement x;
         final FieldElement y;
-        final FieldElement yy;
+        @NotNull final FieldElement yy;
         final FieldElement u;
         final FieldElement v;
-        final FieldElement v3;
-        final FieldElement vxx;
+        @NotNull final FieldElement v3;
+        @NotNull final FieldElement vxx;
         FieldElement check;
         y = curve.getEdDSAFiniteField().fromByteArray(s);
         yy = y.square();

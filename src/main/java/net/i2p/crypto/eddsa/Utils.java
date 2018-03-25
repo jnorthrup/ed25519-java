@@ -11,6 +11,9 @@
  */
 package net.i2p.crypto.eddsa;
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
 /**
  * Basic utilities for EdDSA.
  * Not for external use, not maintained as a public API.
@@ -107,9 +110,10 @@ public class Utils {
      * @param s the hex string to be converted.
      * @return the byte[]
      */
+    @NotNull
     public static byte[] hexToBytes(final CharSequence s) {
         final int len = s.length();
-        final byte[] data = new byte[len / 2];
+        @NotNull final byte[] data = new byte[len / 2];
         for (int i = 0; i < len; i += 2) {
             data[i / 2] = (byte) ((Character.digit(s.charAt(i), 16) << 4)
                     + Character.digit(s.charAt(i+1), 16));
@@ -122,11 +126,12 @@ public class Utils {
      * @param raw the byte[] to be converted.
      * @return the hex representation as a string.
      */
-    public static String bytesToHex(final byte[] raw) {
+    @Nullable
+    public static String bytesToHex(@Nullable final byte[] raw) {
         if (null == raw) {
             return null;
         }
-        final StringBuilder hex = new StringBuilder(2 * raw.length);
+        @NotNull final StringBuilder hex = new StringBuilder(2 * raw.length);
         for (final byte b : raw) {
             hex.append(Character.forDigit(((int) b & 0xF0) >> 4, 16))
             .append(Character.forDigit(((int) b & 0x0F), 16));

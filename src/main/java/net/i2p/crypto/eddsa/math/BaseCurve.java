@@ -10,6 +10,8 @@
  */
 package net.i2p.crypto.eddsa.math;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.EnumMap;
 import java.util.concurrent.Callable;
 
@@ -22,8 +24,10 @@ import java.util.concurrent.Callable;
 @SuppressWarnings("ThisEscapedInObjectConstruction")
 public class BaseCurve implements Curve {
 
+    @NotNull
     final EnumMap<Representation, Callable<? extends GroupElement>> source;
     final EnumMap<Representation, GroupElement> facade = new EnumMap<>(Representation.class);
+    @NotNull
     private final EdDSAFiniteField edDSAFiniteField;
     private final FieldElement d;
     private final FieldElement d2;
@@ -36,7 +40,7 @@ public class BaseCurve implements Curve {
         this.I = I;
         FieldElement zero = edDSAFiniteField.ZERO;
         FieldElement one = edDSAFiniteField.ONE;
-        Curve c = this;
+        @NotNull Curve c = this;
 
         //        this is cost of an array to lazy biootstrap the 4 used curves
         source = new EnumMap<Representation, Callable<?extends GroupElement>>(Representation.class) {
@@ -50,9 +54,10 @@ public class BaseCurve implements Curve {
     }
 
 
+    @NotNull
     @Override
     public GroupElement createPoint(byte[] P, boolean precompute) {assert precompute;
-        GroupElement ge = new P3PreGroupElement(this, P );
+        @NotNull GroupElement ge = new P3PreGroupElement(this, P );
         return ge;
     }
 
@@ -69,12 +74,13 @@ public class BaseCurve implements Curve {
             return true;
         if (!(o instanceof Curve))
             return false;
-        Curve c = (Curve) o;
+        @NotNull Curve c = (Curve) o;
         return getEdDSAFiniteField().equals(c.getEdDSAFiniteField()) &&
                 getD().equals(c.getD()) &&
                 getI().equals(c.getI());
     }
 
+    @NotNull
     @Override
     public EdDSAFiniteField getEdDSAFiniteField() {
         return edDSAFiniteField;

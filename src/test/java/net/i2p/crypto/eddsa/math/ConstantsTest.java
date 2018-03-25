@@ -23,6 +23,7 @@ import java.security.NoSuchAlgorithmException;
 import net.i2p.crypto.eddsa.spec.EdDSANamedCurveSpec;
 import net.i2p.crypto.eddsa.spec.EdDSANamedCurveTable;
 
+import org.jetbrains.annotations.NotNull;
 import org.junit.Test;
 
 /**
@@ -47,7 +48,7 @@ public class ConstantsTest {
         try {
             final MessageDigest h = MessageDigest.getInstance(ed25519.hashAlgo);
             assertThat(Integer.valueOf(8 * h.getDigestLength()), is(equalTo(Integer.valueOf(2 * b))));
-        } catch (final NoSuchAlgorithmException e) {
+        } catch (@NotNull final NoSuchAlgorithmException e) {
             fail(e.getMessage());
         }
     }

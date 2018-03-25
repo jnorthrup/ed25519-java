@@ -1,5 +1,7 @@
 package net.i2p.crypto.eddsa.math;
 
+import org.jetbrains.annotations.NotNull;
+
 public interface GroupElement {
     /**
      * Calculates a sliding-windows base 2 representation for a given value $a$.
@@ -13,8 +15,9 @@ public interface GroupElement {
      * @param a $= a[0]+256*a[1]+\dots+256^{31} a[31]$.
      * @return The byte array $r$ in the above described form.
      */
+    @NotNull
     static byte[] slide(byte[] a) {
-        final byte[] r = new byte[256];
+        @NotNull final byte[] r = new byte[256];
 
         // Put each bit of 'a' into a separate byte, 0 or 1
         for (int i = 0; 256 > i; ++i) {
@@ -57,8 +60,9 @@ public interface GroupElement {
      * @param a $= a[0]+256*a[1]+...+256^{31} a[31]$
      * @return 64 bytes, each between -8 and 7
      */
+    @NotNull
     static byte[] toRadix16(byte[] a) {
-        final byte[] e = new byte[64];
+        @NotNull final byte[] e = new byte[64];
 
         // Radix 16 notation
         e[2 * 0] = (byte) (a[0] & 15);

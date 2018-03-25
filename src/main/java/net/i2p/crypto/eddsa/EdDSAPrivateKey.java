@@ -21,6 +21,8 @@ import net.i2p.crypto.eddsa.math.GroupElement;
 import net.i2p.crypto.eddsa.spec.EdDSANamedCurveTable;
 import net.i2p.crypto.eddsa.spec.EdDSAParameterSpec;
 import net.i2p.crypto.eddsa.spec.EdDSAPrivateKeySpec;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * An EdDSA private key.
@@ -40,6 +42,7 @@ import net.i2p.crypto.eddsa.spec.EdDSAPrivateKeySpec;
  */
 public class EdDSAPrivateKey implements EdDSAKey, PrivateKey {
 
+    @Nullable
     private final byte[] seed;
     private final byte[] hashOfTheSeed;
     private final byte[] privateKey;
@@ -67,11 +70,13 @@ public class EdDSAPrivateKey implements EdDSAKey, PrivateKey {
                                      EdDSANamedCurveTable.getByName(EdDSANamedCurveTable.ED_25519)));
     }
 
+    @NotNull
     @Override
     public String getAlgorithm() {
         return KEY_ALGORITHM;
     }
 
+    @NotNull
     @Override
     public String getFormat() {
         return "PKCS#8";
@@ -135,6 +140,7 @@ public class EdDSAPrivateKey implements EdDSAKey, PrivateKey {
      *
      * @return 48 bytes for Ed25519, null for other curves
      */
+    @Nullable
     @Override
     public byte[] getEncoded() {
         if (!getEdDSAParameterSpec().equals(EdDSANamedCurveTable.getByName(EdDSANamedCurveTable.ED_25519)))
@@ -142,7 +148,7 @@ public class EdDSAPrivateKey implements EdDSAKey, PrivateKey {
         if (null == getSeed())
             return null;
         final int totlen = 16 + getSeed().length;
-        final byte[] encoded = new byte[totlen];
+        @NotNull final byte[] encoded = new byte[totlen];
         int idx = 0;
         // sequence
         encoded[idx++] = (byte) 0x30;
@@ -193,6 +199,7 @@ public class EdDSAPrivateKey implements EdDSAKey, PrivateKey {
      *
      * @return 32 bytes for Ed25519, throws for other curves
      */
+    @NotNull
     private static byte[] decode(final byte[] d) throws InvalidKeySpecException {
         try {
             //
@@ -263,7 +270,7 @@ public class EdDSAPrivateKey implements EdDSAKey, PrivateKey {
                     }
                     if (0x04 == d[idx++] &&
                             32 == d[idx++]) {
-                        final byte[] rv = new byte[32];
+                        @NotNull final byte[] rv = new byte[32];
                         System.arraycopy(d, idx, rv, 0, 32);
                         return rv;
                     }
@@ -272,7 +279,7 @@ public class EdDSAPrivateKey implements EdDSAKey, PrivateKey {
                 throw new InvalidKeySpecException("unsupported key spec");
             }
             throw new InvalidKeySpecException("invalid key spec length");
-        } catch (final IndexOutOfBoundsException ioobe) {
+        } catch (@NotNull final IndexOutOfBoundsException ioobe) {
             throw new InvalidKeySpecException(ioobe);
         }
     }
@@ -299,6 +306,7 @@ public class EdDSAPrivateKey implements EdDSAKey, PrivateKey {
         return o == this || (o instanceof EdDSAPrivateKey) && Arrays.equals(getSeed(), ((EdDSAPrivateKey) o).getSeed()) && Objects.equals(getEdDSAParameterSpec(), ((EdDSAPrivateKey) o).getEdDSAParameterSpec());
     }
 
+    @Nullable
     public byte[] getSeed() {
         return seed;
     }

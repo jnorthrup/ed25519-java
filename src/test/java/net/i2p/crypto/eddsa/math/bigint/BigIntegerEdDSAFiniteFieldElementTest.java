@@ -20,6 +20,7 @@ import java.util.Random;
 
 import net.i2p.crypto.eddsa.Utils;
 import net.i2p.crypto.eddsa.math.*;
+import org.jetbrains.annotations.NotNull;
 import org.junit.Test;
 
 /**
@@ -40,23 +41,26 @@ public class BigIntegerEdDSAFiniteFieldElementTest extends AbstractEdDSAFiniteFi
     private static final FieldElement ONE = new BigIntegerFieldElement(ED_25519_ED_DSA_FINITE_FIELD, BigInteger.ONE);
     private static final FieldElement TWO = new BigIntegerFieldElement(ED_25519_ED_DSA_FINITE_FIELD, BigInteger.valueOf(2L));
 
+    @NotNull
     protected FieldElement getRandomFieldElement() {
         BigInteger r;
-        final Random rnd = new SecureRandom( );
+        @NotNull final Random rnd = new SecureRandom( );
         do {
             r = new BigInteger(255, rnd);
         } while (0 <= r.compareTo(getQ()));
         return new BigIntegerFieldElement(ED_25519_ED_DSA_FINITE_FIELD, r);
     }
 
-    protected BigInteger toBigInteger(final FieldElement f) {
+    protected BigInteger toBigInteger(@NotNull final FieldElement f) {
         return ((BigIntegerFieldElement)f).bi;
     }
 
+    @NotNull
     protected BigInteger getQ() {
         return MathUtils.getQ();
     }
 
+    @NotNull
     protected EdDSAFiniteField getEdDSAFiniteField() {
         return ED_25519_ED_DSA_FINITE_FIELD;
     }
@@ -91,10 +95,12 @@ public class BigIntegerEdDSAFiniteFieldElementTest extends AbstractEdDSAFiniteFi
 
     // region isNonZero
 
+    @NotNull
     protected FieldElement getZeroFieldElement() {
         return ZERO;
     }
 
+    @NotNull
     protected FieldElement getNonZeroFieldElement() {
         return TWO;
     }

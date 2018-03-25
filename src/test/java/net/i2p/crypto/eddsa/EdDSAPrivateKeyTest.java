@@ -18,6 +18,7 @@ import java.security.spec.PKCS8EncodedKeySpec;
 
 import net.i2p.crypto.eddsa.spec.EdDSAPrivateKeySpec;
 
+import org.jetbrains.annotations.NotNull;
 import org.junit.Test;
 
 /**
@@ -37,17 +38,17 @@ public class EdDSAPrivateKeyTest {
     @Test
     public void testDecodeAndEncode() throws Exception {
         // Decode
-        final PKCS8EncodedKeySpec encoded = new PKCS8EncodedKeySpec(TEST_PRIVKEY);
-        final EdDSAPrivateKey keyIn = new EdDSAPrivateKey(encoded);
+        @NotNull final PKCS8EncodedKeySpec encoded = new PKCS8EncodedKeySpec(TEST_PRIVKEY);
+        @NotNull final EdDSAPrivateKey keyIn = new EdDSAPrivateKey(encoded);
 
         // Encode
-        final EdDSAPrivateKeySpec decoded = new EdDSAPrivateKeySpec(
+        @NotNull final EdDSAPrivateKeySpec decoded = new EdDSAPrivateKeySpec(
                 keyIn.getSeed(),
                 keyIn.getHashOfTheSeed(),
                 keyIn.getPrivateKey(),
                 keyIn.getGroupElement(),
                 keyIn.getEdDSAParameterSpec());
-        final EdDSAPrivateKey keyOut = new EdDSAPrivateKey(decoded);
+        @NotNull final EdDSAPrivateKey keyOut = new EdDSAPrivateKey(decoded);
 
         // Check
         assertThat(keyOut.getEncoded(), is(equalTo(TEST_PRIVKEY)));
@@ -56,17 +57,17 @@ public class EdDSAPrivateKeyTest {
     @Test
     public void testDecodeWithNullAndEncode() throws Exception {
         // Decode
-        final PKCS8EncodedKeySpec encoded = new PKCS8EncodedKeySpec(TEST_PRIVKEY_NULL_PARAMS);
-        final EdDSAPrivateKey keyIn = new EdDSAPrivateKey(encoded);
+        @NotNull final PKCS8EncodedKeySpec encoded = new PKCS8EncodedKeySpec(TEST_PRIVKEY_NULL_PARAMS);
+        @NotNull final EdDSAPrivateKey keyIn = new EdDSAPrivateKey(encoded);
 
         // Encode
-        final EdDSAPrivateKeySpec decoded = new EdDSAPrivateKeySpec(
+        @NotNull final EdDSAPrivateKeySpec decoded = new EdDSAPrivateKeySpec(
                 keyIn.getSeed(),
                 keyIn.getHashOfTheSeed(),
                 keyIn.getPrivateKey(),
                 keyIn.getGroupElement(),
                 keyIn.getEdDSAParameterSpec());
-        final EdDSAPrivateKey keyOut = new EdDSAPrivateKey(decoded);
+        @NotNull final EdDSAPrivateKey keyOut = new EdDSAPrivateKey(decoded);
 
         // Check
         assertThat(keyOut.getEncoded(), is(equalTo(TEST_PRIVKEY)));
@@ -75,17 +76,17 @@ public class EdDSAPrivateKeyTest {
     @Test
     public void testReEncodeOldEncoding() throws Exception {
         // Decode
-        final PKCS8EncodedKeySpec encoded = new PKCS8EncodedKeySpec(TEST_PRIVKEY_OLD);
-        final EdDSAPrivateKey keyIn = new EdDSAPrivateKey(encoded);
+        @NotNull final PKCS8EncodedKeySpec encoded = new PKCS8EncodedKeySpec(TEST_PRIVKEY_OLD);
+        @NotNull final EdDSAPrivateKey keyIn = new EdDSAPrivateKey(encoded);
 
         // Encode
-        final EdDSAPrivateKeySpec decoded = new EdDSAPrivateKeySpec(
+        @NotNull final EdDSAPrivateKeySpec decoded = new EdDSAPrivateKeySpec(
                 keyIn.getSeed(),
                 keyIn.getHashOfTheSeed(),
                 keyIn.getPrivateKey(),
                 keyIn.getGroupElement(),
                 keyIn.getEdDSAParameterSpec());
-        final EdDSAPrivateKey keyOut = new EdDSAPrivateKey(decoded);
+        @NotNull final EdDSAPrivateKey keyOut = new EdDSAPrivateKey(decoded);
 
         // Check
         assertThat(keyOut.getEncoded(), is(equalTo(TEST_PRIVKEY)));

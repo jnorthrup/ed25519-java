@@ -19,6 +19,7 @@ import java.security.Signature;
 
 import net.i2p.crypto.eddsa.EdDSASecurityProvider;
 
+import org.jetbrains.annotations.NotNull;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -37,7 +38,7 @@ public class EdDSASecurityProviderTest {
         Security.addProvider(new EdDSASecurityProvider());
 
         final KeyPairGenerator keyGen = KeyPairGenerator.getInstance("EdDSA", "EdDSA");
-        final KeyFactory keyFac = KeyFactory.getInstance("EdDSA", "EdDSA");
+        @NotNull final KeyFactory keyFac = KeyFactory.getInstance("EdDSA", "EdDSA");
         final Signature sgr = Signature.getInstance("NONEwithEdDSA", "EdDSA");
 
         Security.removeProvider("EdDSA");

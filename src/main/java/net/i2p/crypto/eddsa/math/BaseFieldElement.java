@@ -11,14 +11,17 @@
  */
 package net.i2p.crypto.eddsa.math;
 
+import org.jetbrains.annotations.NotNull;
+
 /**
  * Note: concrete subclasses must implement hashCode() and equals()
  */
 public abstract class BaseFieldElement implements FieldElement {
 
+    @NotNull
     private final EdDSAFiniteField edDSAFiniteField;
 
-    protected BaseFieldElement(final EdDSAFiniteField edDSAFiniteField) {
+    protected BaseFieldElement(@NotNull final EdDSAFiniteField edDSAFiniteField) {
         assert null != edDSAFiniteField : "field cannot be null";
         this.edDSAFiniteField = edDSAFiniteField;
     }
@@ -37,11 +40,13 @@ public abstract class BaseFieldElement implements FieldElement {
         return getEdDSAFiniteField().getEncoding().isNegative(this);
     }
 
+    @NotNull
     @Override
     public FieldElement addOne() {
         return add(getEdDSAFiniteField().ONE);
     }
 
+    @NotNull
     @Override
     public FieldElement subtractOne() {
         return subtract(getEdDSAFiniteField().ONE);
@@ -52,6 +57,7 @@ public abstract class BaseFieldElement implements FieldElement {
         return multiply(fieldElement).invert() ;
     }
 
+    @NotNull
     @Override
     public EdDSAFiniteField getEdDSAFiniteField() {
         return edDSAFiniteField;

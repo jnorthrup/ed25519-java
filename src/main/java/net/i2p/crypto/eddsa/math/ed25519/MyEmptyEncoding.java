@@ -2,6 +2,7 @@ package net.i2p.crypto.eddsa.math.ed25519;
 
 import net.i2p.crypto.eddsa.math.EmptyEncoding;
 import net.i2p.crypto.eddsa.math.FieldElement;
+import org.jetbrains.annotations.NotNull;
 
 class MyEmptyEncoding extends EmptyEncoding {
     private final Ed25519LittleEndianEncoding ed25519LittleEndianEncoding;
@@ -66,7 +67,8 @@ class MyEmptyEncoding extends EmptyEncoding {
      * <p>
      * Inserting the expression for $x$ into $(1)$ we get the desired expression for $q$.
      */
-    public byte[] encode(final FieldElement x) {
+    @NotNull
+    public byte[] encode(@NotNull final FieldElement x) {
         final int[] h = ((Ed25519FieldElement)x).t;
         int h0 = h[0];
         int h1 = h[1];
@@ -120,7 +122,7 @@ class MyEmptyEncoding extends EmptyEncoding {
         carry9 = h9 >> 25;               h9 -= carry9 << 25;
 
         // Step 2 (straight forward conversion):
-        final byte[] s = new byte[32];
+        @NotNull final byte[] s = new byte[32];
         s[0] = (byte) h0;
         s[1] = (byte) (h0 >> 8);
         s[2] = (byte) (h0 >> 16);
@@ -162,7 +164,8 @@ class MyEmptyEncoding extends EmptyEncoding {
      * @param in The 32 byte representation.
      * @return The field element in its $2^{25.5}$ bit representation.
      */
-    public FieldElement decode(final byte[] in) {
+    @NotNull
+    public FieldElement decode(@NotNull final byte[] in) {
         long h0 = Ed25519LittleEndianEncoding.load_4(in, 0);
         long h1 = (long) (Ed25519LittleEndianEncoding.load_3(in, 4) << 6);
         long h2 = (long) (Ed25519LittleEndianEncoding.load_3(in, 7) << 5);
@@ -197,7 +200,7 @@ class MyEmptyEncoding extends EmptyEncoding {
         carry6 = (h6 + (long) (1<<25)) >> 26; h7 += carry6; h6 -= carry6 << 26;
         carry8 = (h8 + (long) (1<<25)) >> 26; h9 += carry8; h8 -= carry8 << 26;
 
-        final int[] h = new int[10];
+        @NotNull final int[] h = new int[10];
         h[0] = (int) h0;
         h[1] = (int) h1;
         h[2] = (int) h2;
@@ -224,8 +227,8 @@ class MyEmptyEncoding extends EmptyEncoding {
      *
      * @return true if $x$ is in $\{1,3,5,\dots,q-2\}$, false otherwise.
      */
-    public boolean isNegative(final FieldElement x) {
-        final byte[] s = ed25519LittleEndianEncoding.emptyEncoding.encode(x);
+    public boolean isNegative(@NotNull final FieldElement x) {
+        @NotNull final byte[] s = ed25519LittleEndianEncoding.emptyEncoding.encode(x);
         return 0 != (s[0] & 1);
     }
 }

@@ -1,5 +1,7 @@
 package net.i2p.crypto.eddsa.math;
 
+import org.jetbrains.annotations.NotNull;
+
 public interface Encoding {
     /**
      * Encode a FieldElement in its $(b-1)$-bit encoding.
@@ -14,6 +16,7 @@ public interface Encoding {
      * @param in the $(b-1)$-bit encoding of a FieldElement.
      * @return the FieldElement represented by 'val'.
      */
+    @NotNull
     FieldElement decode(byte[] in);
 
     /**

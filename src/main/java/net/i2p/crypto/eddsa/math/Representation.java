@@ -1,5 +1,7 @@
 package net.i2p.crypto.eddsa.math;
 
+import org.jetbrains.annotations.NotNull;
+
 /**
  * Available representations for a group element.
  * <ul>
@@ -16,7 +18,8 @@ public enum Representation {
      * Projective ($P^2$): $(X:Y:Z)$ satisfying $x=X/Z, y=Y/Z$
      */
     P2 {
-        public GroupElement toRep(GroupElement groupElement) {
+        @NotNull
+        public GroupElement toRep(@NotNull GroupElement groupElement) {
             switch (groupElement.getRepr()) {
                 case P2:
                     return new P2GroupElement(groupElement.getCurve(), groupElement.getX(), groupElement.getY(), groupElement.getZ());
@@ -37,7 +40,8 @@ public enum Representation {
      * Extended ($P^3$): $(X:Y:Z:T)$ satisfying $x=X/Z, y=Y/Z, XY=ZT$
      */
     P3 {
-        public GroupElement toRep(GroupElement groupElement) {
+        @NotNull
+        public GroupElement toRep(@NotNull GroupElement groupElement) {
             switch (groupElement.getRepr()) {
                 case P2:
                     throw new IllegalArgumentException();
@@ -62,10 +66,10 @@ public enum Representation {
                 case P1P1:
 
                     final Curve curve2 = groupElement.getCurve();
-                    final FieldElement x1 = groupElement.getX().multiply(groupElement.getT());
-                    final FieldElement y1 = groupElement.getY().multiply(groupElement.getZ());
-                    final FieldElement z1 = groupElement.getZ().multiply(groupElement.getT());
-                    final FieldElement t1 = groupElement.getX().multiply(groupElement.getY());
+                    @NotNull final FieldElement x1 = groupElement.getX().multiply(groupElement.getT());
+                    @NotNull final FieldElement y1 = groupElement.getY().multiply(groupElement.getZ());
+                    @NotNull final FieldElement z1 = groupElement.getZ().multiply(groupElement.getT());
+                    @NotNull final FieldElement t1 = groupElement.getX().multiply(groupElement.getY());
                     /**
                      * Creates a new group element in P3 representation.
                      *
@@ -91,7 +95,8 @@ public enum Representation {
      * P3 but also populate dblPrecmp
      */
     P3PrecomputedDouble {
-        public GroupElement toRep(GroupElement groupElement) {
+        @NotNull
+        public GroupElement toRep(@NotNull GroupElement groupElement) {
             switch (groupElement.getRepr()) {
                 case P2:
                     throw new IllegalArgumentException();
@@ -99,10 +104,10 @@ public enum Representation {
                     throw new IllegalArgumentException();
                 case P1P1:
                     final Curve curve1 = groupElement.getCurve();
-                    final FieldElement x = groupElement.getX().multiply(groupElement.getT());
-                    final FieldElement y = groupElement.getY().multiply(groupElement.getZ());
-                    final FieldElement z = groupElement.getZ().multiply(groupElement.getT());
-                    final FieldElement t = groupElement.getX().multiply(groupElement.getY());
+                    @NotNull final FieldElement x = groupElement.getX().multiply(groupElement.getT());
+                    @NotNull final FieldElement y = groupElement.getY().multiply(groupElement.getZ());
+                    @NotNull final FieldElement z = groupElement.getZ().multiply(groupElement.getT());
+                    @NotNull final FieldElement t = groupElement.getX().multiply(groupElement.getY());
                     /**
                      * Creates a new group element in P3 representation.
                      *
@@ -128,7 +133,8 @@ public enum Representation {
      * Completed ($P \times P$): $((X:Z),(Y:T))$ satisfying $x=X/Z, y=Y/T$
      */
     P1P1 {
-        public GroupElement toRep(GroupElement groupElement) {
+        @NotNull
+        public GroupElement toRep(@NotNull GroupElement groupElement) {
             if (groupElement.getRepr() == Representation.P1P1) {
 
                 /**
@@ -152,7 +158,8 @@ public enum Representation {
      * Precomputed (Duif): $(y+x,y-x,2dxy)$
      */
     PRECOMP {
-        public GroupElement toRep(GroupElement groupElement) {
+        @NotNull
+        public GroupElement toRep(@NotNull GroupElement groupElement) {
             if (groupElement.getRepr() == Representation.PRECOMP) {
                 return
                         /**
@@ -174,7 +181,8 @@ public enum Representation {
      * Cached: $(Y+X,Y-X,Z,2dT)$
      */
     CACHED {
-        public GroupElement toRep(GroupElement groupElement) {
+        @NotNull
+        public GroupElement toRep(@NotNull GroupElement groupElement) {
             switch (groupElement.getRepr()) {
                 case P3:
                     return new CachedGroupElement(groupElement.getCurve(), groupElement.getY().add(groupElement.getX()), groupElement.getY().subtract(groupElement.getX()), groupElement.getZ(), groupElement.getT().multiply(groupElement.getCurve().getD2()));
@@ -204,5 +212,6 @@ public enum Representation {
      *
      * @param groupElement@return A new group element in the given representation.
      */
+   @NotNull
    abstract public GroupElement toRep(GroupElement groupElement);
 }

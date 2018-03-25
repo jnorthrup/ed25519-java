@@ -12,6 +12,7 @@
 package net.i2p.crypto.eddsa.math;
 
 import org.hamcrest.core.*;
+import org.jetbrains.annotations.NotNull;
 import org.junit.*;
 
 import java.math.BigInteger;
@@ -21,20 +22,25 @@ import java.math.BigInteger;
  */
 public abstract class AbstractEdDSAFiniteFieldElementTest {
 
+    @NotNull
     protected abstract FieldElement getRandomFieldElement();
     protected abstract BigInteger toBigInteger(FieldElement f);
+    @NotNull
     protected abstract BigInteger getQ();
+    @NotNull
     protected abstract EdDSAFiniteField getEdDSAFiniteField();
 
     // region isNonZero
 
+    @NotNull
     protected abstract FieldElement getZeroFieldElement();
+    @NotNull
     protected abstract FieldElement getNonZeroFieldElement();
 
     @Test
     public void isNonZeroReturnsFalseIfFieldElementIsZero() {
         // Act:
-        final FieldElement f = getZeroFieldElement();
+        @NotNull final FieldElement f = getZeroFieldElement();
 
         // Assert:
         Assert.assertThat(Boolean.valueOf(f.isNonZero()), IsEqual.equalTo(Boolean.FALSE));
@@ -43,7 +49,7 @@ public abstract class AbstractEdDSAFiniteFieldElementTest {
     @Test
     public void isNonZeroReturnsTrueIfFieldElementIsNonZero() {
         // Act:
-        final FieldElement f = getNonZeroFieldElement();
+        @NotNull final FieldElement f = getNonZeroFieldElement();
 
         // Assert:
         Assert.assertThat(Boolean.valueOf(f.isNonZero()), IsEqual.equalTo(Boolean.TRUE));
@@ -57,13 +63,13 @@ public abstract class AbstractEdDSAFiniteFieldElementTest {
     public void addReturnsCorrectResult() {
         for (int i = 0; 1000 > i; i++) {
             // Arrange:
-            final FieldElement f1 = getRandomFieldElement();
-            final FieldElement f2 = getRandomFieldElement();
+            @NotNull final FieldElement f1 = getRandomFieldElement();
+            @NotNull final FieldElement f2 = getRandomFieldElement();
             final BigInteger b1 = toBigInteger(f1);
             final BigInteger b2 = toBigInteger(f2);
 
             // Act:
-            final FieldElement f3 = f1.add(f2);
+            @NotNull final FieldElement f3 = f1.add(f2);
             final BigInteger b3 = toBigInteger(f3).mod(getQ());
 
             // Assert:
@@ -75,13 +81,13 @@ public abstract class AbstractEdDSAFiniteFieldElementTest {
     public void subtractReturnsCorrectResult() {
         for (int i = 0; 1000 > i; i++) {
             // Arrange:
-            final FieldElement f1 = getRandomFieldElement();
-            final FieldElement f2 = getRandomFieldElement();
+            @NotNull final FieldElement f1 = getRandomFieldElement();
+            @NotNull final FieldElement f2 = getRandomFieldElement();
             final BigInteger b1 = toBigInteger(f1);
             final BigInteger b2 = toBigInteger(f2);
 
             // Act:
-            final FieldElement f3 = f1.subtract(f2);
+            @NotNull final FieldElement f3 = f1.subtract(f2);
             final BigInteger b3 = toBigInteger(f3).mod(getQ());
 
             // Assert:
@@ -93,7 +99,7 @@ public abstract class AbstractEdDSAFiniteFieldElementTest {
     public void negateReturnsCorrectResult() {
         for (int i = 0; 1000 > i; i++) {
             // Arrange:
-            final FieldElement f1 = getRandomFieldElement();
+            @NotNull final FieldElement f1 = getRandomFieldElement();
             final BigInteger b1 = toBigInteger(f1);
 
             // Act:
@@ -109,13 +115,13 @@ public abstract class AbstractEdDSAFiniteFieldElementTest {
     public void multiplyReturnsCorrectResult() {
         for (int i = 0; 1000 > i; i++) {
             // Arrange:
-            final FieldElement f1 = getRandomFieldElement();
-            final FieldElement f2 = getRandomFieldElement();
+            @NotNull final FieldElement f1 = getRandomFieldElement();
+            @NotNull final FieldElement f2 = getRandomFieldElement();
             final BigInteger b1 = toBigInteger(f1);
             final BigInteger b2 = toBigInteger(f2);
 
             // Act:
-            final FieldElement f3 = f1.multiply(f2);
+            @NotNull final FieldElement f3 = f1.multiply(f2);
             final BigInteger b3 = toBigInteger(f3).mod(getQ());
 
             // Assert:
@@ -127,11 +133,11 @@ public abstract class AbstractEdDSAFiniteFieldElementTest {
     public void squareReturnsCorrectResult() {
         for (int i = 0; 1000 > i; i++) {
             // Arrange:
-            final FieldElement f1 = getRandomFieldElement();
+            @NotNull final FieldElement f1 = getRandomFieldElement();
             final BigInteger b1 = toBigInteger(f1);
 
             // Act:
-            final FieldElement f2 = f1.square();
+            @NotNull final FieldElement f2 = f1.square();
             final BigInteger b2 = toBigInteger(f2).mod(getQ());
 
             // Assert:
@@ -143,7 +149,7 @@ public abstract class AbstractEdDSAFiniteFieldElementTest {
     public void squareAndDoubleReturnsCorrectResult() {
         for (int i = 0; 1000 > i; i++) {
             // Arrange:
-            final FieldElement f1 = getRandomFieldElement();
+            @NotNull final FieldElement f1 = getRandomFieldElement();
             final BigInteger b1 = toBigInteger(f1);
 
             // Act:
@@ -159,7 +165,7 @@ public abstract class AbstractEdDSAFiniteFieldElementTest {
     public void invertReturnsCorrectResult() {
         for (int i = 0; 1000 > i; i++) {
             // Arrange:
-            final FieldElement f1 = getRandomFieldElement();
+            @NotNull final FieldElement f1 = getRandomFieldElement();
             final BigInteger b1 = toBigInteger(f1);
 
             // Act:
@@ -175,11 +181,11 @@ public abstract class AbstractEdDSAFiniteFieldElementTest {
     public void pow22523ReturnsCorrectResult() {
         for (int i = 0; 1000 > i; i++) {
             // Arrange:
-            final FieldElement f1 = getRandomFieldElement();
+            @NotNull final FieldElement f1 = getRandomFieldElement();
             final BigInteger b1 = toBigInteger(f1);
 
             // Act:
-            final FieldElement f2 = f1.pow22523();
+            @NotNull final FieldElement f2 = f1.pow22523();
             final BigInteger b2 = toBigInteger(f2).mod(getQ());
 
             // Assert:
@@ -193,9 +199,9 @@ public abstract class AbstractEdDSAFiniteFieldElementTest {
 
     @Test
     public void cmovReturnsCorrectResult() {
-        final FieldElement zero = getZeroFieldElement();
-        final FieldElement nz = getNonZeroFieldElement();
-        final FieldElement f = getRandomFieldElement();
+        @NotNull final FieldElement zero = getZeroFieldElement();
+        @NotNull final FieldElement nz = getNonZeroFieldElement();
+        @NotNull final FieldElement f = getRandomFieldElement();
 
         Assert.assertThat(zero.cmov(nz, 0), IsEqual.equalTo(zero));
         Assert.assertThat(zero.cmov(nz, 1), IsEqual.equalTo(nz));
@@ -211,10 +217,10 @@ public abstract class AbstractEdDSAFiniteFieldElementTest {
     @Test
     public void equalsOnlyReturnsTrueForEquivalentObjects() {
         // Arrange:
-        final FieldElement f1 = getRandomFieldElement();
-        final FieldElement f2 = getEdDSAFiniteField().getEncoding().decode(f1.toByteArray());
-        final FieldElement f3 = getRandomFieldElement();
-        final FieldElement f4 = getRandomFieldElement();
+        @NotNull final FieldElement f1 = getRandomFieldElement();
+        @NotNull final FieldElement f2 = getEdDSAFiniteField().getEncoding().decode(f1.toByteArray());
+        @NotNull final FieldElement f3 = getRandomFieldElement();
+        @NotNull final FieldElement f4 = getRandomFieldElement();
 
         // Assert:
         Assert.assertThat(f1, IsEqual.equalTo(f2));
@@ -226,10 +232,10 @@ public abstract class AbstractEdDSAFiniteFieldElementTest {
     @Test
     public void hashCodesAreEqualForEquivalentObjects() {
         // Arrange:
-        final FieldElement f1 = getRandomFieldElement();
-        final FieldElement f2 = getEdDSAFiniteField().getEncoding().decode(f1.toByteArray());
-        final FieldElement f3 = getRandomFieldElement();
-        final FieldElement f4 = getRandomFieldElement();
+        @NotNull final FieldElement f1 = getRandomFieldElement();
+        @NotNull final FieldElement f2 = getEdDSAFiniteField().getEncoding().decode(f1.toByteArray());
+        @NotNull final FieldElement f3 = getRandomFieldElement();
+        @NotNull final FieldElement f4 = getRandomFieldElement();
 
         // Assert:
         Assert.assertThat(Integer.valueOf(f1.hashCode()), IsEqual.equalTo(Integer.valueOf(f2.hashCode())));

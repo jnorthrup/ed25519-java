@@ -15,6 +15,7 @@ import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.*;
 import net.i2p.crypto.eddsa.Utils;
 
+import org.jetbrains.annotations.NotNull;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -38,7 +39,7 @@ public class EdDSAPrivateKeySpecTest {
      */
     @Test
     public void testEdDSAPrivateKeySpecFromSeed() {
-        final EdDSAPrivateKeySpec key = new EdDSAPrivateKeySpec(ZERO_SEED, ed25519);
+        @NotNull final EdDSAPrivateKeySpec key = new EdDSAPrivateKeySpec(ZERO_SEED, ed25519);
         assertThat(key.seed, is(equalTo(ZERO_SEED)));
         assertThat(key.hashOfTheSeed, is(equalTo(ZERO_H)));
         assertThat(key.groupElement.toByteArray(), is(equalTo(ZERO_PK)));
@@ -48,7 +49,7 @@ public class EdDSAPrivateKeySpecTest {
     public void incorrectSeedLengthThrows() {
         exception.expect(AssertionError.class);
         exception.expectMessage("seed length is wrong");
-        final EdDSAPrivateKeySpec key = new EdDSAPrivateKeySpec(new byte[2], ed25519);
+        @NotNull final EdDSAPrivateKeySpec key = new EdDSAPrivateKeySpec(new byte[2], ed25519);
     }
 
     /**
@@ -56,7 +57,7 @@ public class EdDSAPrivateKeySpecTest {
      */
     @Test
     public void testEdDSAPrivateKeySpecFromH() {
-        final EdDSAPrivateKeySpec key = new EdDSAPrivateKeySpec(ed25519, ZERO_H);
+        @NotNull final EdDSAPrivateKeySpec key = new EdDSAPrivateKeySpec(ed25519, ZERO_H);
         assertThat(key.seed, is(nullValue()));
 //        assertThat(key.hashOfTheSeed, is(equalTo(ZERO_H)));
         assertArrayEquals(key.hashOfTheSeed,ZERO_H);
@@ -67,6 +68,6 @@ public class EdDSAPrivateKeySpecTest {
     public void incorrectHashLengthThrows() {
         exception.expect(AssertionError.class);
         exception.expectMessage("hash length is wrong");
-        final EdDSAPrivateKeySpec key = new EdDSAPrivateKeySpec(ed25519, new byte[2]);
+        @NotNull final EdDSAPrivateKeySpec key = new EdDSAPrivateKeySpec(ed25519, new byte[2]);
     }
 }

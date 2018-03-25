@@ -15,6 +15,7 @@ import java.security.spec.KeySpec;
 
 import net.i2p.crypto.eddsa.math.GroupElement;
 import net.i2p.crypto.eddsa.math.P3GroupElement;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * @author str4d
@@ -22,6 +23,7 @@ import net.i2p.crypto.eddsa.math.P3GroupElement;
  */
 public class EdDSAPublicKeySpec implements KeySpec {
     public final GroupElement A;
+    @Nullable
     private GroupElement Aneg = null;
     private final EdDSAParameterSpec spec;
 
@@ -42,9 +44,10 @@ public class EdDSAPublicKeySpec implements KeySpec {
         this.spec = spec;
     }
 
+    @Nullable
     public GroupElement getNegativeA() {
         // Only read Aneg once, otherwise read re-ordering might occur between here and return. Requires all GroupElement's fields to be final.
-        GroupElement ourAneg = Aneg;
+        @Nullable GroupElement ourAneg = Aneg;
         if(null == ourAneg) {
             ourAneg = A.negate();
             Aneg = ourAneg;

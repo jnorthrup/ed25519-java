@@ -17,12 +17,15 @@ import java.security.spec.KeySpec;
 import java.util.Arrays;
 
 import net.i2p.crypto.eddsa.math.GroupElement;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * @author str4d
  *
  */
 public class EdDSAPrivateKeySpec implements KeySpec {
+    @Nullable
     public final byte[] seed;
     public final byte[] hashOfTheSeed;
     public final byte[] privateKey;
@@ -59,7 +62,7 @@ public class EdDSAPrivateKeySpec implements KeySpec {
             privateKey = Arrays.copyOfRange(hashOfTheSeed, 0, b/8);
 
             groupElement = spec.groupElement.scalarMultiply(privateKey);
-        } catch (final NoSuchAlgorithmException e) {
+        } catch (@NotNull final NoSuchAlgorithmException e) {
             throw new IllegalArgumentException("Unsupported hash algorithm");
         }
     }

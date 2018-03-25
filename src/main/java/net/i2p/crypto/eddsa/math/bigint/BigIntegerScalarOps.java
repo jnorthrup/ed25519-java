@@ -15,9 +15,11 @@ import java.math.BigInteger;
 
 import net.i2p.crypto.eddsa.math.EdDSAFiniteField;
 import net.i2p.crypto.eddsa.math.ScalarOps;
+import org.jetbrains.annotations.NotNull;
 
 public class BigIntegerScalarOps implements ScalarOps {
     private final BigInteger l;
+    @NotNull
     private final BigIntegerLittleEndianEncoding enc;
 
     public BigIntegerScalarOps(final EdDSAFiniteField f, final BigInteger l) {

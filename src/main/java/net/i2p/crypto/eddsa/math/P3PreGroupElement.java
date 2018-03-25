@@ -1,5 +1,7 @@
 package net.i2p.crypto.eddsa.math;
 
+import org.jetbrains.annotations.NotNull;
+
 /**
  * Creates a new group element in P3 representation.
  *
@@ -17,7 +19,7 @@ class P3PreGroupElement extends P3GroupElement {
         super(curve,  x, y, z, t, true);
     }
 
-    public P3PreGroupElement(Curve curve, byte[] bytes) {
+    public P3PreGroupElement(@NotNull Curve curve, @NotNull byte[] bytes) {
         super(curve, bytes,true);
     }
 }

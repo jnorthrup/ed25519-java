@@ -12,6 +12,7 @@
 package net.i2p.crypto.eddsa.math.ed25519;
 
 import net.i2p.crypto.eddsa.math.*;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Helper class for encoding/decoding from/to the 32 byte representation.
@@ -39,6 +40,7 @@ public class Ed25519LittleEndianEncoding {
         return ((long)result) & 0xffffffffL;
     }
 
+    @NotNull
     public EmptyEncoding getEmptyEncoding() {
         return emptyEncoding;
     }
