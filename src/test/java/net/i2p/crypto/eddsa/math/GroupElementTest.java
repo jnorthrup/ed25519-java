@@ -127,7 +127,7 @@ public class GroupElementTest {
             if (!v.multiply(x).multiply(x).add(u).mod(MathUtils.getQ()).equals(BigInteger.ZERO)) {
                 throw new IllegalArgumentException("not a valid GroupElement");
             }
-            x = x.multiply(MathUtils.toBigInteger(MathUtils.curve.getI())).mod(MathUtils.getQ());
+            x = x.multiply(MathUtils.toBigInteger(MathUtils.curve.getFieldElementI())).mod(MathUtils.getQ());
         }
         final boolean isNegative = x.mod(new BigInteger("2")).equals(BigInteger.ONE);
         if ((shouldBeNegative && !isNegative) || (!shouldBeNegative && isNegative)) {
@@ -588,7 +588,7 @@ public class GroupElementTest {
             assertThat(h1.getX(), IsEqual.equalTo(g.getY().add(g.getX())));
             assertThat(h1.getY(), IsEqual.equalTo(g.getY().subtract(g.getX())));
             assertThat(h1.getZ(), IsEqual.equalTo(g.getZ()));
-            assertThat(h1.getT(), IsEqual.equalTo(g.getT().multiply(curve.getD2())));
+            assertThat(h1.getT(), IsEqual.equalTo(g.getT().multiply(curve.getFieldElementD2())));
         }
     }
 

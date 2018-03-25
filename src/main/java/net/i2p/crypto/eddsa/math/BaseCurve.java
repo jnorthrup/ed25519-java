@@ -23,49 +23,43 @@ import java.util.concurrent.Callable;
  */
 @SuppressWarnings("ThisEscapedInObjectConstruction")
 public class BaseCurve implements Curve {
-
-    @NotNull
-    final EnumMap<Representation, Callable<? extends GroupElement>> source;
-    final EnumMap<Representation, GroupElement> facade = new EnumMap<>(Representation.class);
     @NotNull
     private final EdDSAFiniteField edDSAFiniteField;
-    private final FieldElement d;
-    private final FieldElement d2;
-    private final FieldElement I;
+    private final FieldElement fieldElementD;
+    private final FieldElement fieldElementD2;
+    private final FieldElement fieldElementI;
+    @NotNull
+    private final  EnumMap<Representation, Callable<? extends GroupElement>> source = new EnumMap<Representation, Callable<? extends GroupElement>>(Representation.class);
+    private final EnumMap<Representation, GroupElement> facade = new EnumMap<>(Representation.class);
 
-    public BaseCurve(EdDSAFiniteField edDSAFiniteField, byte[] d, FieldElement I) {
+    public BaseCurve(@NotNull EdDSAFiniteField edDSAFiniteField, FieldElement fieldElementD, FieldElement fieldElementD2, FieldElement fieldElementI) {
         this.edDSAFiniteField = edDSAFiniteField;
-        this.d = edDSAFiniteField.fromByteArray(d);
-        d2 = getD().add(getD());
-        this.I = I;
-        FieldElement zero = edDSAFiniteField.ZERO;
-        FieldElement one = edDSAFiniteField.ONE;
-        @NotNull Curve c = this;
+        this.fieldElementD = fieldElementD;
+        this.fieldElementD2 = fieldElementD2;
+        this.fieldElementI = fieldElementI;
+    }
 
-        //        this is cost of an array to lazy biootstrap the 4 used curves
-        source = new EnumMap<Representation, Callable<?extends GroupElement>>(Representation.class) {
-            {
-                put(Representation.P2, () -> new P2GroupElement(c, zero, one, one));
-                put(Representation.P3, () -> new P3GroupElement(c, zero, one, one, zero));
-                put(Representation.P3PrecomputedDouble, () -> new P3PrecomputedDoubleGroupElement(c, zero, one));
-                put(Representation.PRECOMP, () -> new PrecompGroupElement(c, one, one, zero));
-            }
-        };
+    private void initSource() {
+        FieldElement zero = getEdDSAFiniteField().ZERO;
+        FieldElement one = getEdDSAFiniteField().ONE;
+        source.put(Representation.P2, () -> new P2GroupElement(BaseCurve.this, zero, one, one));
+        source.put(Representation.P3, () -> new P3GroupElement(BaseCurve.this, zero, one, one, zero));
+        source.put(Representation.P3PrecomputedDouble, () -> new P3PrecomputedDoubleGroupElement(BaseCurve.this, zero, one));
+        source.put(Representation.PRECOMP, () -> new PrecompGroupElement(BaseCurve.this, one, one, zero));
     }
 
 
     @NotNull
     @Override
     public GroupElement createPoint(byte[] P, boolean precompute) {assert precompute;
-        @NotNull GroupElement ge = new P3PreGroupElement(this, P );
-        return ge;
+        return new P3PreGroupElement(this, P );
     }
 
     @Override
     public int hashCode() {
         return getEdDSAFiniteField().hashCode() ^
-                getD().hashCode() ^
-                getI().hashCode();
+                getFieldElementD().hashCode() ^
+                getFieldElementI().hashCode();
     }
 
     @Override
@@ -76,8 +70,8 @@ public class BaseCurve implements Curve {
             return false;
         @NotNull Curve c = (Curve) o;
         return getEdDSAFiniteField().equals(c.getEdDSAFiniteField()) &&
-                getD().equals(c.getD()) &&
-                getI().equals(c.getI());
+                getFieldElementD().equals(c.getFieldElementD()) &&
+                getFieldElementI().equals(c.getFieldElementI());
     }
 
     @NotNull
@@ -87,51 +81,60 @@ public class BaseCurve implements Curve {
     }
 
     @Override
-    public FieldElement getD() {
-        return d;
+    public FieldElement getFieldElementD() {
+        return fieldElementD;
     }
 
     @Override
-    public FieldElement getD2() {
-        return d2;
+    public FieldElement getFieldElementD2() {
+        return fieldElementD2;
     }
 
     @Override
-    public FieldElement getI() {
-        return I;
+    public FieldElement getFieldElementI() {
+        return fieldElementI;
     }
 
     @Override
     public GroupElement getZeroP2() throws RuntimeException {
-        return facade.computeIfAbsent(Representation.P2, this::get);
+        return get (Representation.P2 );
 
     }
 
     @Override
     public GroupElement getZeroP3() {
-        return facade.computeIfAbsent(Representation.P3, this::get);
+        return get (Representation.P3 );
 
     }
 
     @Override
     public GroupElement getZeroP3PrecomputedDouble() {
-        return facade.computeIfAbsent(Representation.P3PrecomputedDouble, this::get);
+        return get (Representation.P3PrecomputedDouble );
     }
 
     @Override
     public GroupElement getZeroPrecomp() {
-        return facade.computeIfAbsent(Representation.PRECOMP, this::get);
+        return get (Representation.PRECOMP );
 
     }
 
     public GroupElement get(Representation Representation) {
-        return facade.computeIfAbsent(Representation, representation -> {
+        if(source.isEmpty())initSource();
+        return getFacade().computeIfAbsent(Representation, representation -> {
             try {
-                return source.get(Representation).call();
+                return getSource().get(Representation).call();
             } catch (Exception e) {
                 throw new Error(e);
             }
         });
     }
 
+    @NotNull
+    public EnumMap<Representation, Callable<? extends GroupElement>> getSource() {
+        return source;
+    }
+
+    public EnumMap<Representation, GroupElement> getFacade() {
+        return facade;
+    }
 }

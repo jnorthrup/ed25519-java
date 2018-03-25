@@ -185,7 +185,7 @@ public enum Representation {
         public GroupElement toRep(@NotNull GroupElement groupElement) {
             switch (groupElement.getRepr()) {
                 case P3:
-                    return new CachedGroupElement(groupElement.getCurve(), groupElement.getY().add(groupElement.getX()), groupElement.getY().subtract(groupElement.getX()), groupElement.getZ(), groupElement.getT().multiply(groupElement.getCurve().getD2()));
+                    return new CachedGroupElement(groupElement.getCurve(), groupElement.getY().add(groupElement.getX()), groupElement.getY().subtract(groupElement.getX()), groupElement.getZ(), groupElement.getT().multiply(groupElement.getCurve().getFieldElementD2()));
                 case P1P1:
                 case PRECOMP:
                 case P2:

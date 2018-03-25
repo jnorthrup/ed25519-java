@@ -13,11 +13,11 @@ public interface Curve {
 
     EdDSAFiniteField getEdDSAFiniteField();
 
-    FieldElement getD();
+    FieldElement getFieldElementD();
 
-    FieldElement getD2();
+    FieldElement getFieldElementD2();
 
-    FieldElement getI();
+    FieldElement getFieldElementI();
 
     GroupElement getZeroP2();
 

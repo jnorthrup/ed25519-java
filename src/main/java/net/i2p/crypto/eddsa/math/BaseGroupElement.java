@@ -109,7 +109,7 @@ public class BaseGroupElement implements GroupElement {
         u = yy.subtractOne();
 
         // v = dy^2+1
-        v = yy.multiply(curve.getD()).addOne();
+        v = yy.multiply(curve.getFieldElementD()).addOne();
 
         // v3 = v^3
         v3 = v.square().multiply(v);
@@ -129,7 +129,7 @@ public class BaseGroupElement implements GroupElement {
             check = vxx.add(u);             // vx^2+u
 
             assert !check.isNonZero() : "not a valid GroupElement";
-            x = x.multiply(curve.getI());
+            x = x.multiply(curve.getFieldElementI());
         }
 
         if ((x.isNegative() ? 1 : 0) != Utils.bit(s, curve.getEdDSAFiniteField().getb() - 1)) {
@@ -280,7 +280,7 @@ public class BaseGroupElement implements GroupElement {
                 final FieldElement recip = Bij.getZ().invert();
                 @NotNull final FieldElement x = Bij.getX().multiply(recip);
                 @NotNull final FieldElement y = Bij.getY().multiply(recip);
-                precmp[i][j] = new PrecompGroupElement(this.getCurve(), y.add(x), y.subtract(x), x.multiply(y).multiply(this.getCurve().getD2()));
+                precmp[i][j] = new PrecompGroupElement(this.getCurve(), y.add(x), y.subtract(x), x.multiply(y).multiply(this.getCurve().getFieldElementD2()));
                 Bij = Representation.P3.toRep(Bij.add(Representation.CACHED.toRep(Bi)));
             }
             // Only every second summand is precomputed (16^2 = 256)
@@ -305,7 +305,7 @@ public class BaseGroupElement implements GroupElement {
             final FieldElement recip = Bi.getZ().invert();
             @NotNull final FieldElement x = Bi.getX().multiply(recip);
             @NotNull final FieldElement y = Bi.getY().multiply(recip);
-            dblPrecmp[i] = new PrecompGroupElement(this.getCurve(), y.add(x), y.subtract(x), x.multiply(y).multiply(this.getCurve().getD2()));
+            dblPrecmp[i] = new PrecompGroupElement(this.getCurve(), y.add(x), y.subtract(x), x.multiply(y).multiply(this.getCurve().getFieldElementD2()));
             // Bi = edwards(B,edwards(B,Bi))
             Bi = Representation.P3.toRep(this.add(Representation.CACHED.toRep(Representation.P3.toRep(this.add(Representation.CACHED.toRep(Bi))))));
         }
@@ -850,7 +850,7 @@ public class BaseGroupElement implements GroupElement {
                 @NotNull final FieldElement y = getY().multiply(recip);
                 @NotNull final FieldElement xx = x.square();
                 @NotNull final FieldElement yy = y.square();
-                @NotNull final FieldElement dxxyy = curve.getD().multiply(xx).multiply(yy);
+                @NotNull final FieldElement dxxyy = curve.getFieldElementD().multiply(xx).multiply(yy);
                 return curve.getEdDSAFiniteField().ONE.add(dxxyy).add(xx).equals(yy);
 
             default:

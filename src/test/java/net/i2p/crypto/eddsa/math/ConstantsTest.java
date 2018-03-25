@@ -79,7 +79,7 @@ public class ConstantsTest {
     @Test
     public void testI() {
         FieldElement q = curve.getEdDSAFiniteField().getQ();
-        assertThat(curve.getI().modPow(curve.getEdDSAFiniteField().TWO, q), is(equalTo(q.subtractOne())));
+        assertThat(curve.getFieldElementI().modPow(curve.getEdDSAFiniteField().TWO, q), is(equalTo(q.subtractOne())));
     }*/
 
     @Test

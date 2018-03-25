@@ -93,7 +93,7 @@ public class P3GroupElement extends BaseGroupElement {
         u = yy.subtractOne();
 
         // v = dy^2+1
-        v = yy.multiply(curve.getD()).addOne();
+        v = yy.multiply(curve.getFieldElementD()).addOne();
 
         // v3 = v^3
         v3 = v.square().multiply(v);
@@ -113,7 +113,7 @@ public class P3GroupElement extends BaseGroupElement {
             check = vxx.add(u);             // vx^2+u
 
             assert !check.isNonZero() : "not a valid GroupElement";
-            x = x.multiply(curve.getI());
+            x = x.multiply(curve.getFieldElementI());
         }
 
         if ((x.isNegative() ? 1 : 0) != Utils.bit(s, curve.getEdDSAFiniteField().getb() - 1)) {

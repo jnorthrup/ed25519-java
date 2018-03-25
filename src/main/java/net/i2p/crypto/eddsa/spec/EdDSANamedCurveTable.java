@@ -19,6 +19,7 @@ import net.i2p.crypto.eddsa.Utils;
 import net.i2p.crypto.eddsa.math.BaseCurve;
 import net.i2p.crypto.eddsa.math.Curve;
 import net.i2p.crypto.eddsa.math.EdDSAFiniteField;
+import net.i2p.crypto.eddsa.math.FieldElement;
 import net.i2p.crypto.eddsa.math.ed25519.Ed25519LittleEndianEncoding;
 import net.i2p.crypto.eddsa.math.ed25519.Ed25519ScalarOps;
 import org.jetbrains.annotations.NotNull;
@@ -36,7 +37,7 @@ public class EdDSANamedCurveTable {
                     Utils.hexToBytes("edffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff7f"), // q
             new Ed25519LittleEndianEncoding().getEmptyEncoding());
 
-    private static final Curve ed25519curve = new BaseCurve(ED_25519_ED_DSA_FINITE_FIELD,
+    private static final Curve ed25519curve = createBaseCurve(ED_25519_ED_DSA_FINITE_FIELD,
             Utils.hexToBytes("a3785913ca4deb75abd841414d0a700098e879777940c78c73fe6f2bee6c0352"), // d
             ED_25519_ED_DSA_FINITE_FIELD.fromByteArray(Utils.hexToBytes("b0a00e4a271beec478e42fad0618432fa7d7fb3d99004d2b0bdfc14f8024832b"))); // I
 
@@ -75,5 +76,12 @@ public class EdDSANamedCurveTable {
 
     public static EdDSANamedCurveSpec getByName(final String name) {
         return curves.get(name.toLowerCase(Locale.ENGLISH));
+    }
+
+    public static BaseCurve createBaseCurve(EdDSAFiniteField edDSAFiniteField, byte[] fieldElementD, FieldElement fieldElementI) {
+        FieldElement fieldElementD1 = edDSAFiniteField.fromByteArray(fieldElementD);
+        FieldElement add = fieldElementD1.add(fieldElementD1);
+        return new BaseCurve(  edDSAFiniteField, fieldElementD1, add, fieldElementI);
+
     }
 }
